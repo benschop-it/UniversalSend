@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UniversalSend.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +27,18 @@ namespace UniversalSend.Views
         public ReceivePage()
         {
             this.InitializeComponent();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            AliasTextBlock.Text = Settings.GetSettingContentAsString(Settings.Network_DeviceName);
+
+            List<string>IpAddrList = NetworkHelper.GetIPv4AddrList();
+            foreach(string ip in IpAddrList)
+            {
+                //Debug.WriteLine(ip);
+                HashtagTextBlock.Text += $"#{ip.Substring(ip.LastIndexOf(".")+1)} ";
+            }
         }
     }
 }

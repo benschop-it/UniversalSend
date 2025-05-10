@@ -25,9 +25,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-using static System.Net.WebRequestMethods;
+//using static System.Net.WebRequestMethods;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Restup.WebServer;
+using UniversalSend.Services;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -63,6 +64,16 @@ namespace UniversalSend.Views
         private async void WriteRequestContentToTestFileButton_Click(object sender, RoutedEventArgs e)
         {
             await StorageHelper.WriteTestFileAsync(RestupTest.requestContent);
+        }
+
+        private void NavigateToReceivePageButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(FileReceivingPage));
+        }
+
+        private void OpenDownloadFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Download
         }
     }
 }

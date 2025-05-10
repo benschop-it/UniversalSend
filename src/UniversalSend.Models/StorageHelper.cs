@@ -10,17 +10,36 @@ namespace UniversalSend.Models
 {
     public class StorageHelper
     {
+        //public static StorageFolder DefaultSaveFolder = DownloadsFolder.
+
         public static async Task<StorageFile> CreateFileInAppLocalFolderAsync(string fileName)
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             return await CreateFileAsync(folder, fileName);
         }
 
+        public static async Task<StorageFile> CreateFileInDownloadsFolderAsync(string fileName)
+        {
+            //StorageFolder folder = ApplicationData.Current.LocalFolder;
+            return await DownloadsFolder.CreateFileAsync(fileName);
+        }
+
         public static async Task<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName)
         {
+            
             if (!await IsItemExsitAsync(storageFolder, fileName))
             {
                 return await storageFolder.CreateFileAsync(fileName);
+            }else
+            {
+                string fileType = fileName.Substring(fileName.Length - fileName.LastIndexOf("."));
+                for (int i = 1;i < 999 ;i++)
+                {
+                    if (!await IsItemExsitAsync(storageFolder, fileType+$"({i})"+fileType))
+                    {
+                        return await storageFolder.CreateFileAsync(fileType+$"({i})"+fileType);
+                    }
+                }
             }
             return null;
         }

@@ -1,5 +1,6 @@
 ﻿using Restup.Webserver.Http;
 using Restup.Webserver.Rest;
+using Restup.WebServer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Models
+namespace UniversalSend.Services
 {
     public class ServiceHttpServer
     {
@@ -28,6 +29,10 @@ namespace UniversalSend.Models
             await httpServer.StartServerAsync();
             //httpServer._listener.ConnectionReceived += _listener_ConnectionReceived;
             // 输出服务器地址
+
+            OperationController.UriOperations.Add("/api/localsend/v1/send?fileId={}&token={}",/*To-Do*/OperationFunctions.SendRequestFunc);
+
+
             Debug.WriteLine($"HTTP 服务器已在{port}端口上启动");
         }
 

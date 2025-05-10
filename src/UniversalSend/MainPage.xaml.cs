@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UniversalSend.Models;
 using UniversalSend.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,7 +33,28 @@ namespace UniversalSend
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(RootPage));
+            Settings.InitUserSettings();
+            InitData();
+            string deviceFamilyVersion = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
+            ulong version = ulong.Parse(deviceFamilyVersion);
+            ulong build = (version & 0x00000000FFFF0000L) >> 16;
+            Debug.WriteLine($"系统版本Build号：{build}");
+            if (build >= 16299)
+            {
+                Frame.Navigate(typeof(RootPage));
+            }else
+            {
+                Frame.Navigate(typeof(RootPage15063));
+            }
+            
+        }
+
+        void InitData()
+        {
+            ProgramData.LocalDevice.Alias = Settings.GetSettingContentAsString(Settings.Network_DeviceName);
+            ProgramData.LocalDevice.DeviceModel = Settings.GetSettingContentAsString(Settings.Network_DeviceModel);
+            ProgramData.LocalDevice.DeviceType = Settings.GetSettingContentAsString(Settings.Network_DeviceType);
+            ProgramData.LocalDevice.Port = (int)Settings.GetSettingContent(Settings.Network_Port);
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UniversalSend.Models.RestupModels
+namespace UniversalSend.Models.HttpData
 {
-    public sealed class FileResponseData : Dictionary<string, string>
+    public sealed class FileResponseData : Dictionary<string, string> //fileId,token
     {
     }
 }

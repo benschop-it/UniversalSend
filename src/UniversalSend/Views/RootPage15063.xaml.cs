@@ -23,42 +23,38 @@ namespace UniversalSend.Views
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class RootPage : Page
+    public sealed partial class RootPage15063 : Page
     {
-        public static ServiceHttpServer ServiceServer { get; set; }
 
         bool isInited = false;
-        
-        public RootPage()
+
+        public RootPage15063()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
-            
         }
 
-        private void MainNavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void BottomAppBarSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            switch(((NavigationViewItem)sender.SelectedItem).Tag.ToString())
-            {
-                case "Receive":
-                    MainFrame.Navigate(typeof(ReceivePage));
-                    break;
-                case "Send":
-                    MainFrame.Navigate(typeof(SendPage));
-                    break;
-                case "Settings":
-                    MainFrame.Navigate(typeof(SettingsPage));
-                    break;
-            }
+            MainFrame.Navigate(typeof(SettingsPage));
+        }
+
+        private void BottomAppBarSendButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(SendPage));
+        }
+
+        private void BottomAppBarReceiveButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(ReceivePage));
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if(!isInited)
+            MainFrame.Navigate(typeof(ReceivePage));
+            if (!isInited)
             {
                 isInited = true;
-                ((NavigationViewItem)MainNavigationView.SettingsItem).Tag = "Settings";
-                MainNavigationView.SelectedItem = ReceivePageItem;
                 StartHttpServerAsync();
                 ReceiveManager.SendRequestReceived += ReceiveManager_SendRequestReceived;
             }
@@ -69,7 +65,7 @@ namespace UniversalSend.Views
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 Frame.Navigate(typeof(FileReceivingPage));
-            }); 
+            });
         }
 
         async Task StartHttpServerAsync()

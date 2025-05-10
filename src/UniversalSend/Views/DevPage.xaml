@@ -12,7 +12,9 @@
         <StackPanel>
             <Button Content="启动服务" Name="StartHttpServerButton" Click="StartHttpServerButton_Click"/>
             <Button Content="打开内部数据文件夹" Name="OpenAppLocalFolderButton" Click="OpenAppLocalFolderButton_Click"/>
+            <Button Content="打开系统下载文件夹" Name="OpenDownloadFolderButton" Click="OpenDownloadFolderButton_Click"/>
             <Button Content="将RequestContent中的数据写入test文件" Name="WriteRequestContentToTestFileButton" Click="WriteRequestContentToTestFileButton_Click"/>
+            <Button Content="打开接收文件页面" Name="NavigateToReceivePageButton" Click="NavigateToReceivePageButton_Click"/>
         </StackPanel>
     </Grid>
 </Page>

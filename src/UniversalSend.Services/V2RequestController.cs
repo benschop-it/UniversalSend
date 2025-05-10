@@ -8,10 +8,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UniversalSend.Models.RestupModels;
+using UniversalSend.Models;
+using UniversalSend.Models.HttpData;
 using Windows.Storage;
 
-namespace UniversalSend.Models
+namespace UniversalSend.Services
 {
     [RestController(InstanceCreationType.PerCall)]
     public class V2RequestController
@@ -46,7 +47,7 @@ namespace UniversalSend.Models
                 Debug.WriteLine(JsonConvert.SerializeObject(data));
             return new PostResponse(
                 PostResponse.ResponseStatus.Created,
-                "",JsonConvert.SerializeObject(ProgramData.LocalDeviceRegisterData)); // 修复：直接传递字符串，而不是匿名类型  
+                "",JsonConvert.SerializeObject(RegisterDataManager.GetRegisterDataFromDevice(ProgramData.LocalDevice)/*ProgramData.LocalDeviceRegisterData*/)); // 修复：直接传递字符串，而不是匿名类型  
         }
 
         //[UriFormat("v2/prepare-upload?fileId={fileId}&token={token}")]

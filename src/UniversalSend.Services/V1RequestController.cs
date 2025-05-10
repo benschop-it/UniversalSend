@@ -9,10 +9,14 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using UniversalSend.Models.RestupModels;
+using UniversalSend.Models;
+using UniversalSend.Models.Data;
+using UniversalSend.Models.HttpData;
+using UniversalSend.Models.Tasks;
+using Windows.Foundation;
 using Windows.Storage;
 
-namespace UniversalSend.Models
+namespace UniversalSend.Services
 {
     [RestController(InstanceCreationType.PerCall)]
     public class V1RequestController
@@ -23,37 +27,53 @@ namespace UniversalSend.Models
             Debug.WriteLine($"GET v1/info Called\nfingerprint:{fingerprint}");
             return new GetResponse(
                 GetResponse.ResponseStatus.OK,
-                ProgramData.LocalDeviceInfoData
+                InfoDataManager.GetInfoDataFromDevice(ProgramData.LocalDevice)//ProgramData.LocalDeviceInfoData
                 ); // 返回本地设备信息
         }
 
         [UriFormat("v1/send-request")]
-        public PostResponse PostSendRequest([FromContent]SendRequestData requestData)
+        public IAsyncOperation<IPostResponse> PostSendRequest([FromContent]SendRequestData requestData)
         {
             Debug.WriteLine($"POST v1 send-request Called\nrequestdata:{JsonConvert.SerializeObject(requestData)}");
+            ReceiveManager.SendRequestEvent(requestData);
             FileResponseData responseData = new FileResponseData();
             if (requestData!=null && requestData.files!=null&&requestData.files.Count!=0)
             {
                 foreach(var item in requestData.files)
                 {
-                    responseData.Add(item.Key, TokenFactory.CreateToken());
+                    string token = TokenFactory.CreateToken();
+                    responseData.Add(item.Key, token);
+                    ReceiveTaskManager.CreateReceivingTaskFromUniversalSendFile(UniversalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token));
                 }
             }
+            
             //string responseDataString = JsonConvert.SerializeObject(responseData);
             //responseDataString = responseDataString.Replace("\\","");
             //Debug.WriteLine($"responseData:{responseDataString}");
-            return new PostResponse(
+            return Task.FromResult<IPostResponse>(new PostResponse(
                 PostResponse.ResponseStatus.OK,
                 "",
                 responseData
-                );
+                )).AsAsyncOperation();
         }
 
         [UriFormat("v1/send?fileId={fileId}&token={token}")]
-        public /*async Task<*/PostResponse/*>*/ PostSendRequest(string fileId, string token)
+        public IAsyncOperation<IPostResponse> PostSendRequest(string fileId, string token)
         {
             Debug.WriteLine($"POST send Called\nfileId = {fileId},token = {token},dataLength = B");/*{requestData.Length}*/
             //SaveFileData(fileId, data);
+            return Task.FromResult<IPostResponse>(new PostResponse(
+                PostResponse.ResponseStatus.OK,
+                ""
+                )).AsAsyncOperation();
+        }
+
+        
+        [UriFormat("v1/cancel")]
+        public PostResponse PostCancel()
+        {
+            Debug.WriteLine($"GET v1/Cancel Called");
+            ReceiveManager.CancelReceivedEvent();
             return new PostResponse(
                 PostResponse.ResponseStatus.OK,
                 ""

@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:UniversalSend.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,12 +26,19 @@
             <Button>
                 <FontIcon Glyph="&#xE81C;"/>
             </Button>
-            <Button>
+            <Button Name="DeviceInfoButton">
                 <FontIcon Glyph="&#xF167;"/>
+                <Button.Flyout>
+                    <Flyout>
+                        <Grid>
+                            <controls:DeviceInfoControl/>
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
             </Button>
         </StackPanel>
-        <TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}"/>
-        <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="#101" Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBlock Margin="24,0,24,8" Grid.Row="1" HorizontalTextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}"/>
+        <TextBlock Margin="24,0,24,0" Grid.Row="2" HorizontalTextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}"/>
         <controls:QuickSaveOptionsControl Grid.Row="3" x:Name="QuickSaveOptionsControl"/>
     </Grid>
 </Page>

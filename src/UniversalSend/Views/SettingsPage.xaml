@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,6 +19,11 @@
             <StackPanel Padding="24,0,24,0">
                 <!--<TextBlock Text="通用" Style="{ThemeResource SubtitleTextBlockStyle}"/>-->
                 <TextBlock Text="网络" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <StackPanel Name="NetworkSettingsStackPanel">
+                    
+                </StackPanel>
+                <TextBlock Text="其他" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <Button Margin="0,4,0,8" Content="开发者选项" Name="NavigateToDevPageButton" Click="NavigateToDevPageButton_Click"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>
