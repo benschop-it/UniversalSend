@@ -133,6 +133,9 @@
     <Compile Include="Controls\QuickSaveOptionsControl.xaml.cs">
       <DependentUpon>QuickSaveOptionsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SendPage\SendItemButtonControl.xaml.cs">
+      <DependentUpon>SendItemButtonControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SettingControls\ComboSettingsControl.xaml.cs">
       <DependentUpon>ComboSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -201,6 +204,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\QuickSaveOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SendPage\SendItemButtonControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

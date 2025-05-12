@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:data="using:UniversalSend.Models.Data"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
 
     <Grid Padding="24,24,24,0">
         <Grid.RowDefinitions>
@@ -17,8 +18,20 @@
         </Grid.RowDefinitions>
         <TextBlock  Grid.Row="0" Text="选择" Style="{ThemeResource SubtitleTextBlockStyle}"/>
         <ScrollViewer  Grid.Row="1" Height="100">
-
+            <StackPanel Orientation="Horizontal" Name="SelectSendItemButtonsStackPanel">
+                
+            </StackPanel>
         </ScrollViewer>
+        <StackPanel Grid.RowSpan="2">
+            <TextBlock Text="选择" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+            <TextBlock Text="文件"/>
+            <TextBlock Text="大小"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Content="编辑"/>
+                <Button Content="添加"/>
+            </StackPanel>
+        </StackPanel>
         <StackPanel  Grid.Row="2" Orientation="Horizontal">
             <StackPanel.Resources>
                 <Style TargetType="Button">
