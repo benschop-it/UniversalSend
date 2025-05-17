@@ -1,0 +1,58 @@
+﻿<Page
+    x:Class="UniversalSend.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalSend.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:models="using:UniversalSend.Models"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <models:HistoryStringConverter x:Key="HistoryStringConverter"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Name="GoBackButton" Click="GoBackButton_Click" Background="Transparent">
+                <FontIcon Glyph="&#xE72B;" />
+            </Button>
+            <TextBlock Text="接收历史" VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Name="LaunchFolderButton" Content="打开文件夹" Click="LaunchFolderButton_Click"/>
+            <Button Name="ClearHistoryButton" Content="清空历史记录" Click="ClearHistoryButton_Click"/>
+        </StackPanel>
+        <ListView Grid.Row="2" Name="MainListView" IsItemClickEnabled="True" ItemClick="MainListView_ItemClick" RightTapped="MainListView_RightTapped">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:History">
+                    <Grid Height="40">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Text="{Binding File.FileName}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Converter={StaticResource HistoryStringConverter}}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ContextFlyout>
+                <MenuFlyout x:Name="ListViewMenuFlyout" Opened="ListViewMenuFlyout_Opened">
+                    <MenuFlyoutItem Text="打开文件" Name="MenuFlyout_OpenFile" Click="MenuFlyout_OpenFile_Click"/>
+                    <MenuFlyoutItem Text="打开文件位置" Name="MenuFlyout_OpenFilePath" Click="MenuFlyout_OpenFilePath_Click"/>
+                    <MenuFlyoutItem Text="信息" Visibility="Collapsed" Name="MenuFlyout_Info" Click="MenuFlyout_Info_Click"/>
+                    <MenuFlyoutItem Text="从记录中删除" Name="MenuFlyout_Delete" Click="MenuFlyout_Delete_Click"/>
+                </MenuFlyout>
+            </ListView.ContextFlyout>
+        </ListView>
+    </Grid>
+</Page>

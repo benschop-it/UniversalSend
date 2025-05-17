@@ -61,7 +61,25 @@ namespace UniversalSend.Views
                 MainNavigationView.SelectedItem = ReceivePageItem;
                 StartHttpServerAsync();
                 ReceiveManager.SendRequestReceived += ReceiveManager_SendRequestReceived;
+                SendManager.SendPrepared += SendManager_SendPrepared;
+                NavigateHelper.NavigateToHistoryPageEvent += NavigateHelper_NavigateToHistoryPageEvent;
             }
+        }
+
+        private async void NavigateHelper_NavigateToHistoryPageEvent(object sender, EventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Frame.Navigate(typeof(HistoryPage));
+            });
+        }
+
+        private async void SendManager_SendPrepared(object sender, EventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Frame.Navigate(typeof(FileSendingPage), sender);
+            });
         }
 
         private async void ReceiveManager_SendRequestReceived(object sender, EventArgs e)

@@ -13,6 +13,7 @@ namespace UniversalSend.Models
 {
     public class Settings
     {
+        
         public const string Network_DeviceName = "Network_DeviceName";
 
         public const string Network_DeviceType = "Network_DeviceType";
@@ -22,6 +23,10 @@ namespace UniversalSend.Models
         public const string Network_Port = "Network_Port";
 
         public const string Network_MulticaastAddress = "Network_MulticaastAddress";
+
+        public const string Receive_SaveToFolder = "Receive_SaveToFolder";
+
+        public const string Receive_Histories  = "Receive_Histories";
 
         public static ApplicationDataContainer UserSettings;
 

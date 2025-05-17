@@ -32,6 +32,7 @@ namespace UniversalSend.Views
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             AliasTextBlock.Text = Settings.GetSettingContentAsString(Settings.Network_DeviceName);
+            HashtagTextBlock.Text = "";
 
             List<string>IpAddrList = NetworkHelper.GetIPv4AddrList();
             foreach(string ip in IpAddrList)
@@ -39,6 +40,11 @@ namespace UniversalSend.Views
                 //Debug.WriteLine(ip);
                 HashtagTextBlock.Text += $"#{ip.Substring(ip.LastIndexOf(".")+1)} ";
             }
+        }
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateHelper.NavigateToHitoryPage();
         }
     }
 }

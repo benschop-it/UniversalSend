@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
@@ -12,15 +13,22 @@ namespace UniversalSend.Models
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            //if (value is Enum enumValue)
-            //{
-            //    var field = enumValue.GetType().GetField(enumValue.ToString());
-            //    var attributes = field.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            //    if (attributes.Length > 0)
-            //    {
-            //        return ((DescriptionAttribute)attributes[0]).Description;
-            //    }
-            //}
+            if (value is Enum enumValue)
+            {
+                MemberInfo[] memberInfo = value.GetType().GetMember(enumValue.ToString());
+
+                if (memberInfo != null && memberInfo.Length > 0)
+                {
+                    // 尝试获取 Description 特性
+                    var attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+                    if (attrs != null && attrs.Count() > 0)
+                    {
+                        // 返回 Description 特性的值
+                        return ((DescriptionAttribute)attrs.ToList()[0]).Description;
+                    }
+                }
+            }
             return value.ToString();
         }
 

@@ -34,6 +34,8 @@ namespace UniversalSend
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Settings.InitUserSettings();
+            Register.StartRegister();
+            HistoryManager.InitHistoriesList();
             InitData();
             string deviceFamilyVersion = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);

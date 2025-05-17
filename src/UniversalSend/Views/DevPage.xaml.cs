@@ -29,6 +29,8 @@ using Windows.Web.Http;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Restup.WebServer;
 using UniversalSend.Services;
+using UniversalSend.Models.Tasks;
+using UniversalSend.Models.Data;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -74,6 +76,27 @@ namespace UniversalSend.Views
         private void OpenDownloadFolderButton_Click(object sender, RoutedEventArgs e)
         {
             //Download
+        }
+
+        private async void SendSendRequestButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SendSendRequsetAsync();
+        }
+
+        async Task SendSendRequsetAsync()
+        {
+            List<StorageFile> files = new List<StorageFile>();
+            files.Add(await ApplicationData.Current.LocalFolder.GetFileAsync("test.txt"));
+            await SendTaskManager.CreateSendTasks(files);
+            //To-Do:需要一个存储已知设备的列表
+            Device device = new Device
+            {
+                Alias = "Mi12s",
+                IP = "192.168.55.150",
+                Port = 53317,
+            };
+            await SendTaskManager.SendSendRequestAsync(device);
+            await SendTaskManager.SendSendTasksAsync(device);
         }
     }
 }

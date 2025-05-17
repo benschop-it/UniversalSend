@@ -127,8 +127,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContentDialogControls\CreateTextSendTaskControl.xaml.cs">
+      <DependentUpon>CreateTextSendTaskControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContentDialogControls\ManualSendControl.xaml.cs">
+      <DependentUpon>ManualSendControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DeviceInfoControl.xaml.cs">
       <DependentUpon>DeviceInfoControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DeviceItemControl.xaml.cs">
+      <DependentUpon>DeviceItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\QuickSaveOptionsControl.xaml.cs">
       <DependentUpon>QuickSaveOptionsControl.xaml</DependentUpon>
@@ -142,6 +151,12 @@
     <Compile Include="Controls\SettingControls\NumberSettingControl.xaml.cs">
       <DependentUpon>NumberSettingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SettingControls\SaveLocationSettingControl.xaml.cs">
+      <DependentUpon>SaveLocationSettingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingControls\ServerManageControl.xaml.cs">
+      <DependentUpon>ServerManageControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SettingControls\TextSettingControl.xaml.cs">
       <DependentUpon>TextSettingControl.xaml</DependentUpon>
     </Compile>
@@ -152,8 +167,10 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ColorHelper.cs" />
+    <Compile Include="Models\ContentDialogManager.cs" />
+    <Compile Include="Models\MessageDialogManager.cs" />
+    <Compile Include="Models\NavigateHelper.cs" />
     <Compile Include="Models\NetworkHelper.cs" />
-    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\SystemHelper.cs" />
     <Compile Include="Models\Toast.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,6 +179,15 @@
     </Compile>
     <Compile Include="Views\FileReceivingPage.xaml.cs">
       <DependentUpon>FileReceivingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FileSendingPage.xaml.cs">
+      <DependentUpon>FileSendingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HistoryPage.xaml.cs">
+      <DependentUpon>HistoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReceivedTextPage.xaml.cs">
+      <DependentUpon>ReceivedTextPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReceivePage.xaml.cs">
       <DependentUpon>ReceivePage.xaml</DependentUpon>
@@ -185,13 +211,59 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\LargeTile.scale-100.png" />
+    <Content Include="Assets\LargeTile.scale-125.png" />
+    <Content Include="Assets\LargeTile.scale-150.png" />
+    <Content Include="Assets\LargeTile.scale-200.png" />
+    <Content Include="Assets\LargeTile.scale-400.png" />
+    <Content Include="Assets\logo.svg" />
+    <Content Include="Assets\SmallTile.scale-100.png" />
+    <Content Include="Assets\SmallTile.scale-125.png" />
+    <Content Include="Assets\SmallTile.scale-150.png" />
+    <Content Include="Assets\SmallTile.scale-200.png" />
+    <Content Include="Assets\SmallTile.scale-400.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-125.png" />
+    <Content Include="Assets\SplashScreen.scale-150.png" />
+    <Content Include="Assets\SplashScreen.scale-400.png" />
+    <Content Include="Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\Square150x150Logo.scale-125.png" />
+    <Content Include="Assets\Square150x150Logo.scale-150.png" />
+    <Content Include="Assets\Square150x150Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\Square44x44Logo.scale-125.png" />
+    <Content Include="Assets\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\Square44x44Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-125.png" />
+    <Content Include="Assets\StoreLogo.scale-150.png" />
+    <Content Include="Assets\StoreLogo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\UniversalSend.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-125.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-150.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
@@ -199,7 +271,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ContentDialogControls\CreateTextSendTaskControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentDialogControls\ManualSendControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DeviceInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DeviceItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -216,6 +300,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SettingControls\NumberSettingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingControls\SaveLocationSettingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingControls\ServerManageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -236,6 +328,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FileReceivingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FileSendingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReceivedTextPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

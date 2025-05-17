@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Streams;
 using Windows.System;
 
 namespace UniversalSend.Models
@@ -11,7 +15,19 @@ namespace UniversalSend.Models
     public class StorageHelper
     {
         //public static StorageFolder DefaultSaveFolder = DownloadsFolder.
-
+        public static async Task<List<StorageFile>> GetFilesInFolder(StorageFolder folder)
+        {
+            var items = await folder.GetItemsAsync();
+            List<StorageFile> files = new List<StorageFile>();
+            foreach(var item in items)
+            {
+                if (item is StorageFile)
+                    files.Add((StorageFile)item);
+                else if (item is StorageFolder)
+                    files.AddRange(await GetFilesInFolder((StorageFolder)item));
+            }
+            return files;
+        }
         public static async Task<StorageFile> CreateFileInAppLocalFolderAsync(string fileName)
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
@@ -52,6 +68,17 @@ namespace UniversalSend.Models
             }
         }
 
+        public static async Task<byte[]> ReadBytesFromFileAsync(StorageFile file)
+        {
+            if (file != null)
+            {
+                IBuffer buffer = await FileIO.ReadBufferAsync(file);
+                byte[] bytes =  buffer.ToArray();
+                return bytes;
+            }
+            return null;
+        }
+
         public static async Task<bool> IsItemExsitAsync(StorageFolder parentFolder, string itemName)
         {
 
@@ -74,6 +101,28 @@ namespace UniversalSend.Models
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile storageFile = await storageFolder.GetFileAsync("test");
             await WriteBytesToFileAsync(storageFile,content);
+        }
+
+        public static async Task<StorageFolder> GetReceiveStoageFolderAsync()
+        {
+            string folderToken = Settings.GetSettingContentAsString(Settings.Receive_SaveToFolder);
+            if(!String.IsNullOrEmpty(folderToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(folderToken))
+            {
+                try
+                {
+                    StorageFolder storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(folderToken);
+                    return storageFolder;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+            
         }
     }
 }

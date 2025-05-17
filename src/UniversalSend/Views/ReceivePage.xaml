@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:UniversalSend.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:UniversalSend.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
@@ -23,7 +24,7 @@
                     <Setter Property="Height" Value="40"/>
                 </Style>
             </StackPanel.Resources>
-            <Button>
+            <Button Name="HistoryButton" Click="HistoryButton_Click">
                 <FontIcon Glyph="&#xE81C;"/>
             </Button>
             <Button Name="DeviceInfoButton">
@@ -37,8 +38,12 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
+        <Image Source="/Assets/UniversalSend.png" MaxHeight="200" MaxWidth="200" Margin="0,48,0,0"/>
         <TextBlock Margin="24,0,24,8" Grid.Row="1" HorizontalTextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}"/>
         <TextBlock Margin="24,0,24,0" Grid.Row="2" HorizontalTextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}"/>
-        <controls:QuickSaveOptionsControl Grid.Row="3" x:Name="QuickSaveOptionsControl"/>
+        <controls:QuickSaveOptionsControl Grid.Row="3" x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="功能开发中……" IsEnabled="False"/>
+        <Border Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource SystemAltLowColor}" Padding="8">
+            <TextBlock  Text="功能开发中……" />
+        </Border>
     </Grid>
 </Page>

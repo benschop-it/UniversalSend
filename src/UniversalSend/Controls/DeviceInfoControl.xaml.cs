@@ -31,6 +31,7 @@ namespace UniversalSend.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            IP = "";
             List<string> ipList = NetworkHelper.GetIPv4AddrList();
             foreach (string ip in ipList)
             {

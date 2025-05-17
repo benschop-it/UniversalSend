@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Button x:Name="RootButton" x:FieldModifier="public" Margin="8">
+    <Button x:Name="RootButton" x:FieldModifier="public" Margin="4" Width="80" Height="60">
         <StackPanel>
             <FontIcon Glyph="{x:Bind IconGlyph,Mode=OneWay}"/>
             <TextBlock HorizontalTextAlignment="Center" Text="{x:Bind Label,Mode=OneWay}"/>

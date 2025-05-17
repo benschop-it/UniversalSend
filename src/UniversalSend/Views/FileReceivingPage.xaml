@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:tasks="using:UniversalSend.Models.Tasks"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:tasks="using:UniversalSend.Models.Tasks"
     mc:Ignorable="d"
     xmlns:models="using:UniversalSend.Models"
     Loaded="Page_Loaded"
@@ -35,7 +36,7 @@
                             <Image/>
                         </Grid>
                         <TextBlock Grid.Column="1" Text="{x:Bind file.FileName,Mode=OneWay}"/>
-                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{ThemeResource SystemAccentColor}" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

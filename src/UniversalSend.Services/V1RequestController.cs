@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using UniversalSend.Models;
@@ -21,6 +20,24 @@ namespace UniversalSend.Services
     [RestController(InstanceCreationType.PerCall)]
     public class V1RequestController
     {
+        [UriFormat("v1/register")]
+        public PostResponse PostRegister([FromContent]RegisterRequestData registerRequestData)
+        {
+
+            return new PostResponse(
+                PostResponse.ResponseStatus.OK,
+                "",
+                new RegisterResponseData
+                {
+                    alias = ProgramData.LocalDevice.Alias,
+                    deviceModel = ProgramData.LocalDevice.DeviceModel,
+                    deviceType = ProgramData.LocalDevice.DeviceType,
+                    fingerprint = ProgramData.LocalDevice.Fingerprint,
+                    announcement = false
+                }
+                );
+        }
+
         [UriFormat("v1/info?fingerprint={fingerprint}")]
         public GetResponse GetInfo(string fingerprint)
         {
@@ -43,7 +60,7 @@ namespace UniversalSend.Services
                 {
                     string token = TokenFactory.CreateToken();
                     responseData.Add(item.Key, token);
-                    ReceiveTaskManager.CreateReceivingTaskFromUniversalSendFile(UniversalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token));
+                    ReceiveTaskManager.CreateReceivingTaskFromUniversalSendFile(UniversalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token),requestData.info);
                 }
             }
             
