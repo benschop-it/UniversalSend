@@ -10,8 +10,13 @@
     d:DesignWidth="400">
 
     <StackPanel>
-        <TextBlock Text="手动发送"  Style="{ThemeResource SubtitleTextBlockStyle}"/>
+        <TextBlock Text="手动发送"  Style="{ThemeResource TitleTextBlockStyle}"/>
         <Pivot Name="MainPivot" SelectionChanged="MainPivot_SelectionChanged">
+            <Pivot.Resources>
+                <Style TargetType="PivotHeaderItem">
+                    <Setter Property="FontSize" Value="20"/>
+                </Style>
+            </Pivot.Resources>
             <PivotItem Header="标签">
                 <StackPanel Name="HashTagControls">
                     <TextBox HorizontalAlignment="Stretch" PlaceholderText="标签" x:FieldModifier="public" Name="HashTagTextBox"/>
@@ -27,8 +32,8 @@
 
         <ProgressBar Visibility="Collapsed" Margin="0,8,0,8" x:FieldModifier="public" Name="LoadingProgressBar" IsIndeterminate="True"/>
         <TextBlock Name="ErrorMessageTextBlock" Foreground="#FFFFF000" x:FieldModifier="public"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="取消" Name="CancelButton" x:FieldModifier="public" Margin="0,0,8,0"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button Content="取消" Name="CancelButton" x:FieldModifier="public" Margin="0,0,4,0"/>
             <Button Content="确认" Name="ConfirmButton" x:FieldModifier="public"/>
         </StackPanel>
     </StackPanel>

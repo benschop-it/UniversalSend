@@ -33,13 +33,15 @@ namespace UniversalSend.Views
         {
             this.InitializeComponent();
             SendManager.SendStateChanged += SendManager_SendStateChanged;
-            MainProgressBar.Maximum = SendTaskManager.SendTasks.Count;
+            
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             Device = (Device)e.Parameter;
+            UpdateUI();
+            MainProgressBar.Maximum = SendTaskManager.SendTasks.Count;
             await StartTaskAsync();
 
         }

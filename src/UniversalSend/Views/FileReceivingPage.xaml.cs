@@ -44,7 +44,7 @@ namespace UniversalSend.Views
             //FileReceivingListView.Items.Add(receiveTask);
             ReceiveManager.SendDataReceived += ReceiveManager_SendDataReceived;
             ReceiveManager.CancelReceived += ReceiveManager_CancelReceived;
-            FileReceivingListView.ItemsSource = ReceiveTaskManager.ReceivingTasks;
+            UpdateUI();
             MainProgressBar.Maximum = ReceiveTaskManager.ReceivingTasks.Count;
         }
 

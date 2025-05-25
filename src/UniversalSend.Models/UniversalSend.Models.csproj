@@ -123,6 +123,7 @@
     <Compile Include="Data\Device.cs" />
     <Compile Include="Data\UniversalSendFile.cs" />
     <Compile Include="EnumHelper.cs" />
+    <Compile Include="Favorite.cs" />
     <Compile Include="History.cs" />
     <Compile Include="HttpClientHelper.cs" />
     <Compile Include="HttpData\FileRequestData.cs" />

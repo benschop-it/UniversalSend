@@ -24,6 +24,7 @@ namespace UniversalSend.Models.Data
 
     public class DeviceManager
     {
+        public static event EventHandler KnownDevicesChanged;
         public static List<Device> KnownDevices { get; set; } = new List<Device>();
 
         public static void AddKnownDevices(Device device)
@@ -31,23 +32,34 @@ namespace UniversalSend.Models.Data
             if (KnownDevices.Find(x => x.Fingerprint == device.Fingerprint) != null || ProgramData.LocalDevice.Fingerprint == device.Fingerprint)
                 return;
             KnownDevices.Add(device);
+            KnownDevicesChanged?.Invoke(null,EventArgs.Empty);
         }
 
+        public static async Task SearchKnownDevicesAsync(List<string>ipList)
+        {
+            foreach(var ip in ipList)
+                await SearchKnownDeviceAsync(ip);
+        }
         public static async Task SearchKnownDevicesAsync()
         {
-            KnownDevices.Clear();
+            
             List<string> localIPList = NetworkHelper.GetIPv4AddrList();
-            Device device = null;
+            
             for (int i = 0; i < localIPList.Count; i++)
             {
                 localIPList[i] = localIPList[i].Substring(0, localIPList[i].LastIndexOf(".") + 1);
-                for (int j = 0; j < 256; j++)
+                for (int j = 1; j < 255; j++)
                 {
-                    device = await FindDeviceByIPAsync(localIPList[i] + j);
-                    if (device != null)
-                        AddKnownDevices(device);
+                    await SearchKnownDeviceAsync(localIPList[i] + j);
                 }
             }
+        }
+
+        static async Task SearchKnownDeviceAsync(string ip)
+        {
+            Device device = await FindDeviceByIPAsync(ip);
+            if (device != null)
+                AddKnownDevices(device);
         }
 
         public static void ClearKnownDevices()
@@ -63,6 +75,8 @@ namespace UniversalSend.Models.Data
             try
             {
                 RegisterResponseData registerResponseData = JsonConvert.DeserializeObject<RegisterResponseData>(responseString);
+                if (registerResponseData == null)
+                    return null;
                 Device device = new Device();
                 device.IP = IP;
                 device.Port = 53317;
@@ -86,7 +100,7 @@ namespace UniversalSend.Models.Data
             for (int i=0;i<localIPList.Count;i++)
             {
                 localIPList[i] = localIPList[i].Substring(0, localIPList[i].LastIndexOf(".")+1);
-                for(int j = 0; j < 256; j++)
+                for(int j = 1; j < 255; j++)
                 {
                     device = await FindDeviceByIPAsync(localIPList[i]+j);
                     if (device != null)

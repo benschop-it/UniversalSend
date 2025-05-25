@@ -12,12 +12,12 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="输入文本"  Style="{ThemeResource SubtitleTextBlockStyle}"/>
-        <TextBox Grid.Row="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" Name="MainTextBox" Margin="0,8,0,8" x:FieldModifier="public"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+        <TextBlock Text="输入文本"  Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBox Grid.Row="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" Name="MainTextBox" Margin="0,8,0,0" x:FieldModifier="public"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
             <Button Content="取消" Name="CancelButton" x:FieldModifier="public" Margin="0,0,8,0"/>
             <Button Content="确认" Name="ConfirmButton" x:FieldModifier="public"/>
         </StackPanel>

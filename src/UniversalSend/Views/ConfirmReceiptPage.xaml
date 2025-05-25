@@ -1,0 +1,46 @@
+﻿<Page
+    x:Class="UniversalSend.Views.ConfirmReceiptPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalSend.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <FontIcon/>
+        <TextBlock Grid.Row="1" Text="{x:Bind SendRequestData.info.alias}"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock Text="{x:Bind SendRequestData.info.deviceModel}"/>
+        </StackPanel>
+        <TextBlock Grid.Row="3">
+            <Run Text="想要发送给你"/>
+            <Run Text="{x:Bind SendRequestData.files.Count}"/>
+            <Run Text="个文件"/>
+        </TextBlock>
+        
+        <StackPanel Grid.Row="5" Orientation="Horizontal">
+            <Button Name="CancelButton" Click="CancelButton_Click">
+                <StackPanel>
+                    <FontIcon Glyph="&#xE711;" />
+                    <TextBlock Text="拒绝"/>
+                </StackPanel>
+            </Button>
+            <Button Name="AcceptButton" Click="AcceptButton_Click">
+                <StackPanel>
+                    <FontIcon Glyph="&#xE8FB;" />
+                    <TextBlock Text="接受"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -22,11 +22,13 @@ namespace UniversalSend.Models
 
         public const string Network_Port = "Network_Port";
 
-        public const string Network_MulticaastAddress = "Network_MulticaastAddress";
+        public const string Network_MulticastAddress = "Network_MulticaastAddress";
 
         public const string Receive_SaveToFolder = "Receive_SaveToFolder";
 
         public const string Receive_Histories  = "Receive_Histories";
+
+        public const string Favorite_Favorites = "Favorite_Favorites";//设备收藏夹
 
         public static ApplicationDataContainer UserSettings;
 
@@ -72,7 +74,7 @@ namespace UniversalSend.Models
             //端口
             SetInitSetting(Network_Port, 53317);
             //广播地址
-            SetInitSetting(Network_MulticaastAddress, "224.0.0.167");
+            SetInitSetting(Network_MulticastAddress, "224.0.0.167");
         }
 
         public static bool SetSetting(string key,object value)

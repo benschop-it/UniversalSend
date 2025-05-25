@@ -49,7 +49,7 @@ namespace UniversalSend.Views
             MainFrame.Navigate(typeof(ReceivePage));
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(typeof(ReceivePage));
             if (!isInited)
@@ -59,6 +59,10 @@ namespace UniversalSend.Views
                 ReceiveManager.SendRequestReceived += ReceiveManager_SendRequestReceived;
                 SendManager.SendPrepared += SendManager_SendPrepared;
                 NavigateHelper.NavigateToHistoryPageEvent += NavigateHelper_NavigateToHistoryPageEvent;
+            }
+            while (await StorageHelper.GetReceiveStoageFolderAsync() == null)
+            {
+                await ContentDialogManager.ShowPickReceiveFolderDialogAsync();
             }
         }
 

@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:settingcontrols="using:UniversalSend.Controls.SettingControls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
@@ -14,9 +14,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="设置" Style="{ThemeResource TitleTextBlockStyle}" Margin="24"/>
+        <TextBlock Text="设置" Style="{ThemeResource TitleTextBlockStyle}" Name="PageHeader"/>
         <ScrollViewer Grid.Row="1">
-            <StackPanel Padding="24,0,24,0">
+            <StackPanel Name="RootStackPanel">
                 <TextBlock Text="接收" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                 <StackPanel Name="ReceiveSettingsStackPanel">
                     
@@ -28,34 +28,8 @@
                 <TextBlock Text="其他" Style="{ThemeResource SubtitleTextBlockStyle}" Visibility="Collapsed"/>
                 <Button Margin="0,4,0,8" Content="开发者选项" Name="NavigateToDevPageButton" Visibility="Collapsed" Click="NavigateToDevPageButton_Click"/>
                 <TextBlock Text="关于" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                
-                <StackPanel Margin="0,0,0,48">
-                    <Image Source="/Assets/StoreLogo.png" Height="64" Width="64" HorizontalAlignment="Left"/>
-                    <TextBlock Text="UniversalSend"/>
-                    <TextBlock Name="About_AppMessageTextBlock" Text=""/>
-                    <TextBlock Name="About_UpdateMessage"/>
-                    <ProgressBar IsIndeterminate="True" Name="CheckForUpdateProgressBar" Visibility="Collapsed"/>
-                    <Button Content="检查更新" Name="About_CheckForUpdateButton" Click="About_CheckForUpdateButton_Click"/>
-                    <HyperlinkButton Content="项目仓库（Github）" NavigateUri="https://github.com/Pigeon-Ming/UniversalSend"/>
-                    <TextBlock Text="引用" Style="{ThemeResource BodyTextBlockStyle}" Margin="0,16,0,0"/>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center" Style="{ThemeResource CaptionTextBlockStyle}" Text="传输协议" />
-                        <HyperlinkButton Grid.Column="1" Content="localsend/protocol" NavigateUri="https://github.com/localsend/protocol"/>
-                        <TextBlock VerticalAlignment="Center" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1" Text="HTTP服务器" Margin="0,0,8,0"/>
-                        <HyperlinkButton Grid.Column="1" Grid.Row="1" Content="tomkuijsten/restup（有所修改）" NavigateUri="https://github.com/tomkuijsten/restup"/>
-                        <HyperlinkButton Grid.Column="2" Grid.Row="1" Content="查看修改后的restup副本" NavigateUri="https://github.com/Pigeon-Ming/restup"/>
-                    </Grid>
-                </StackPanel>
+
+                <settingcontrols:AboutControl/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

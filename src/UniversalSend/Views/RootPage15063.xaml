@@ -11,13 +11,13 @@
     <Page.BottomAppBar>
         <AppBar ClosedDisplayMode="Compact" Margin="0,0,-48,0">
             <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Center">
-                <AppBarButton Label="接收"  Name="BottomAppBarReceiveButton" Click="BottomAppBarReceiveButton_Click">
+                <AppBarButton x:Uid="RootPage15063_ReceivePageItem"  Name="BottomAppBarReceiveButton" Click="BottomAppBarReceiveButton_Click">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xEC3F;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="发送" Icon="Send" Name="BottomAppBarSendButton" Click="BottomAppBarSendButton_Click"/>
-                <AppBarButton Label="设置" Icon="Setting" Name="BottomAppBarSettingsButton" Click="BottomAppBarSettingsButton_Click"/>
+                <AppBarButton x:Uid="RootPage15063_SendPageItem" Icon="Send" Name="BottomAppBarSendButton" Click="BottomAppBarSendButton_Click"/>
+                <AppBarButton x:Uid="RootPage15063_SettingPageItem" Icon="Setting" Name="BottomAppBarSettingsButton" Click="BottomAppBarSettingsButton_Click"/>
             </CommandBar>
         </AppBar>
     </Page.BottomAppBar>

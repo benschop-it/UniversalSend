@@ -53,6 +53,7 @@ namespace UniversalSend.Services
         {
             Debug.WriteLine($"POST v1 send-request Called\nrequestdata:{JsonConvert.SerializeObject(requestData)}");
             ReceiveManager.SendRequestEvent(requestData);
+            
             FileResponseData responseData = new FileResponseData();
             if (requestData!=null && requestData.files!=null&&requestData.files.Count!=0)
             {
@@ -63,15 +64,37 @@ namespace UniversalSend.Services
                     ReceiveTaskManager.CreateReceivingTaskFromUniversalSendFile(UniversalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token),requestData.info);
                 }
             }
-            
-            //string responseDataString = JsonConvert.SerializeObject(responseData);
-            //responseDataString = responseDataString.Replace("\\","");
-            //Debug.WriteLine($"responseData:{responseDataString}");
-            return Task.FromResult<IPostResponse>(new PostResponse(
-                PostResponse.ResponseStatus.OK,
-                "",
-                responseData
-                )).AsAsyncOperation();
+            //if (ReceiveManager.QuickSave == ReceiveManager.QuickSaveMode.Off)
+            //{
+            //    if (await ReceiveManager.GetChosenOption())
+            //    {
+            //        return Task.FromResult<IPostResponse>(new PostResponse(
+            //        PostResponse.ResponseStatus.OK,
+            //        "",
+            //        responseData
+            //        )).AsAsyncOperation();
+            //    }
+            //    else
+            //    {
+            //        return Task.FromResult<IPostResponse>(new PostResponse(
+            //        PostResponse.ResponseStatus.OK,
+            //        "",
+            //        new FileResponseData()
+            //        )).AsAsyncOperation();
+            //    }
+            //}
+            //else
+            {
+                return Task.FromResult<IPostResponse>(new PostResponse(
+                    PostResponse.ResponseStatus.OK,
+                    "",
+                    responseData
+                    )).AsAsyncOperation();
+            }
+                //string responseDataString = JsonConvert.SerializeObject(responseData);
+                //responseDataString = responseDataString.Replace("\\","");
+                //Debug.WriteLine($"responseData:{responseDataString}");
+                
         }
 
         [UriFormat("v1/send?fileId={fileId}&token={token}")]

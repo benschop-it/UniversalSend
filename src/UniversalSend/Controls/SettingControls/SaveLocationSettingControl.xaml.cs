@@ -35,7 +35,7 @@ namespace UniversalSend.Controls.SettingControls
             if (folder != null)
                 PathTextBlock.Text = "路径：" + folder.Path;
             else
-                PathTextBlock.Text = "路径：系统“下载”文件夹";
+                PathTextBlock.Text = "请重新选择文件夹！";
         }
 
         private async void MainButton_Click(object sender, RoutedEventArgs e)

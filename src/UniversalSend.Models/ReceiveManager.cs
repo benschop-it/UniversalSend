@@ -12,16 +12,47 @@ namespace UniversalSend.Models
     {
         public static event EventHandler SendRequestReceived;//接收到Send-Request事件
 
-        public static event EventHandler AcceptSendRequset;//用户接受Send-Request事件
-
         public static event EventHandler SendDataReceived;//接收到Send事件
 
         public static event EventHandler CancelReceived;//接收到Cancel事件
+
+        public enum QuickSaveMode
+        {
+            Off,
+            Favorites,
+            On,
+        }
+
+        public static QuickSaveMode QuickSave { get; set; } = QuickSaveMode.Off;
+
+        public static bool? ChosenOption { get; set; }
+
+        public static async Task<bool> GetChosenOption()
+        {
+            await Task.Run(async () =>
+            {
+                int waitTime = 0;
+                while (ChosenOption == null)
+                {
+                    await Task.Delay(500);
+                    if (waitTime++ > 100)
+                    {
+                        ChosenOption = false;
+                        return;
+                    }
+
+                }
+            });
+            bool option = (bool)ChosenOption;
+            ChosenOption = null;
+            return option;
+        }
 
         public static void SendRequestEvent(SendRequestData sendRequestData)
         {
             SendRequestReceived?.Invoke(sendRequestData,EventArgs.Empty);
         }
+
 
         public static void SendDataReceivedEvent(ReceiveTask receiveTask)
         {

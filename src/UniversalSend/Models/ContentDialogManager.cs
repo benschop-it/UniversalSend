@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniversalSend.Controls.ContentDialogControls;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Models
@@ -42,6 +43,11 @@ namespace UniversalSend.Models
         public static void HideContentDialog()
         {
             ContentDialog.Hide();
+        }
+
+        public static async Task ShowPickReceiveFolderDialogAsync()
+        {
+            await ShowContentDialogAsync(new PickReceiveFolderControl());
         }
     }
 }

@@ -34,10 +34,26 @@ namespace UniversalSend.Models
             return await CreateFileAsync(folder, fileName);
         }
 
+        public static async Task<StorageFolder> CreateFolderInAppLocalFolderAsync(string folderName)
+        {
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            IStorageItem storageItem = await folder.GetItemAsync(folderName);
+            if (storageItem == null || storageItem is StorageFile)
+                return await folder.CreateFolderAsync(folderName);
+            else
+                return await folder.GetFolderAsync(folderName);
+        }
+
         public static async Task<StorageFile> CreateFileInDownloadsFolderAsync(string fileName)
         {
             //StorageFolder folder = ApplicationData.Current.LocalFolder;
             return await DownloadsFolder.CreateFileAsync(fileName);
+        }
+
+        public static async Task<StorageFile> CreateTempFile(string fileName)
+        {
+            StorageFolder folder = await CreateFolderInAppLocalFolderAsync("Temp");
+            return await CreateFileAsync(folder,fileName);
         }
 
         public static async Task<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName)

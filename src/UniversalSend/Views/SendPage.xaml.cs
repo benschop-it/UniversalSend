@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +11,7 @@ using UniversalSend.Controls.SendPage;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Tasks;
+using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -33,18 +35,75 @@ namespace UniversalSend.Views
     {
         bool Inited = false;
 
+        bool ShareActivated = false;
+
         public SendPage()
         {
             this.InitializeComponent();
             Register.NewDeviceRegister += Register_NewDeviceRegister;
+            DeviceManager.KnownDevicesChanged += DeviceManager_KnownDevicesChanged;
+            SendManager.SendCreated += SendManager_SendCreated;
+            RootGrid.Margin = UIManager.RootElementMargin;
+            SearchFavoriteDevicesAsync();
+        }
+
+        private async void SendManager_SendCreated(object sender, EventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                UpdateView();
+            });
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter == null)
+                return;
+            if (e.Parameter is string)
+            {
+                if(e.Parameter.ToString() == "ShareActivated")
+                {
+                    ShareActivated = true;
+                    SendManager.SendPrepared += SendManager_SendPrepared;
+                }
+            }
+            //if(e.Parameter is List<SendTask>)
+            //{
+            //    List<SendTask>sendTasks = ((List<SendTask>)e.Parameter);
+            //    SendTaskManager.SendTasks.AddRange(sendTasks);
+            //    SendManager.SendCreatedEvent();
+            //}
+
+
+        }
+
+        private async void SendManager_SendPrepared(object sender, EventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Frame.Navigate(typeof(FileSendingPage),sender);
+            });
+        }
+
+        private async void DeviceManager_KnownDevicesChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine("刷新已知设备列表");
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Task.Delay(1000);
+                KnownDeviceListView.ItemsSource = null;
+                KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+            });
         }
 
         private async void Register_NewDeviceRegister(object sender, EventArgs e)
         {
+            Debug.WriteLine("刷新已知设备列表");
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                Debug.WriteLine("刷新已知设备列表");
-                Task.Delay(800);
+                
+                Task.Delay(1000);
                 KnownDeviceListView.ItemsSource = null;
                 KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
             });
@@ -58,7 +117,8 @@ namespace UniversalSend.Views
             {
                 InitButton();
             }
-            Inited = true; UpdateView();
+            Inited = true; 
+            UpdateView();
         }
 
         void InitButton()
@@ -110,13 +170,14 @@ namespace UniversalSend.Views
                 SelectSendItemButtons.Visibility = Visibility.Collapsed;
                 SendQueueStackPanel.Visibility = Visibility.Visible;
                 long totalSize = 0;
-                foreach(var item in SendTaskManager.SendTasks)
+                SendQueueItemsStackpanel.Children.Clear();
+                foreach (var item in SendTaskManager.SendTasks)
                 {
                     SendQueueItemsStackpanel.Children.Add(new Border { Background = new SolidColorBrush { Color = Colors.DarkGray},Height = 45,Width = 45,Margin = new Thickness(2,2,2,2)});
                     totalSize += item.File.Size;
                 }
-                FileCountTextBlock.Text = $"文件：{SendTaskManager.SendTasks.Count}";
-                FileSizeTextBlock.Text = $"大小：{totalSize}{StringHelper.GetByteUnit(totalSize)}";
+                FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{SendTaskManager.SendTasks.Count}";
+                FileSizeTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileSize")}{StringHelper.GetByteUnit(totalSize)}";
             }
             else
             {
@@ -133,6 +194,8 @@ namespace UniversalSend.Views
 
         async Task OpenFileAsync()
         {
+            ProcessProgressBar.Visibility = Visibility.Visible;
+            SelectSendItemButtons.IsEnabled = false;
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
@@ -154,8 +217,9 @@ namespace UniversalSend.Views
                     }
                 }
             }
-           
-            
+            SelectSendItemButtons.IsEnabled = true;
+            ProcessProgressBar.Visibility = Visibility.Collapsed;
+
         }
 
         public void TextButton_Click(object sender, RoutedEventArgs e)
@@ -188,6 +252,7 @@ namespace UniversalSend.Views
 
         async Task OpenFolderAsync()
         {
+            ProcessProgressBar.Visibility = Visibility.Visible;
             var picker = new Windows.Storage.Pickers.FolderPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
@@ -203,7 +268,7 @@ namespace UniversalSend.Views
                     AddItemToSendQueue(await SendTaskManager.CreateSendTask(file));
                 }
             }
-
+            ProcessProgressBar.Visibility = Visibility.Collapsed;
 
         }
 
@@ -289,8 +354,30 @@ namespace UniversalSend.Views
             await SearchDevicesAsync();
         }
 
+        async Task SearchFavoriteDevicesAsync()
+        {
+            DeviceManager.KnownDevices.Clear();
+            SearchDevicesButtonIcon.Visibility = Visibility.Collapsed;
+            SearchDevicesButtonProgressRing.Visibility = Visibility.Visible;
+            List<string> ipList = new List<string>();
+            foreach (var favorite in FavoriteManager.Favorites)
+            {
+                ipList.Add(favorite.IPAddr);
+            }
+            await DeviceManager.SearchKnownDevicesAsync(ipList);//优先搜索收藏夹设备
+            SearchDevicesButtonIcon.Visibility = Visibility.Visible;
+            SearchDevicesButtonProgressRing.Visibility = Visibility.Collapsed;
+            KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+            SearchDevicesButtonIcon.Visibility = Visibility.Visible;
+        }
+
         async Task SearchDevicesAsync()
         {
+            DeviceManager.KnownDevices.Clear();
+            
+
+            await SearchFavoriteDevicesAsync();
+
             SearchDevicesButtonIcon.Visibility = Visibility.Collapsed;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Visible;
             await DeviceManager.SearchKnownDevicesAsync();
@@ -298,6 +385,17 @@ namespace UniversalSend.Views
             KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
             SearchDevicesButtonIcon.Visibility = Visibility.Visible;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Collapsed;
+        }
+
+        private async void FavoriteButton_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogManager.ShowContentDialogAsync(new FavoritesControl());
+        }
+
+        private async void KnownDeviceItemFavoriteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Device device = ((Button)sender).DataContext as Device;
+            await ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(device));
         }
     }
 }

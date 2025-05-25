@@ -108,7 +108,7 @@ namespace UniversalSend.Models
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"POST请求失败: {ex.Message}");
-                return "403 Forbidden";
+                return "";
             }
         }
 

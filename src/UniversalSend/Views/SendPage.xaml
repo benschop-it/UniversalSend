@@ -9,14 +9,15 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
 
-    <Grid Padding="24,24,24,0">
+    <Grid Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock  Grid.Row="0" Text="选择" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+        <ProgressBar Name="ProcessProgressBar" VerticalAlignment="Top" Margin="-24,-24,-24,0" Visibility="Collapsed" IsIndeterminate="True"/>
+        <TextBlock  Grid.Row="0" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
         <ScrollViewer  Grid.Row="1" Height="100" Name="SelectSendItemButtons">
             <StackPanel Orientation="Horizontal" Name="SelectSendItemButtonsStackPanel">
                 
@@ -24,7 +25,7 @@
         </ScrollViewer>
         <StackPanel Grid.Row="0" Grid.RowSpan="2" Name="SendQueueStackPanel" Visibility="Collapsed">
             <Grid>
-                <TextBlock Text="选择" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="选择" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                 <Button HorizontalAlignment="Right" Name="CancelButton" Click="CancelButton_Click">
                     <FontIcon Glyph="&#xE894;" />
                 </Button>
@@ -37,12 +38,12 @@
                 </StackPanel>
             </ScrollViewer>
             <StackPanel Orientation="Horizontal">
-                <Button Content="编辑" Foreground="{ThemeResource SystemBaseLowColor}" ToolTipService.ToolTip="功能开发中……"/>
-                <Button Content="添加">
+                <Button Content="编辑" x:Uid="SendPage_EditSendTasksButton" Foreground="{ThemeResource SystemBaseLowColor}" ToolTipService.ToolTip="功能开发中……"/>
+                <Button Content="添加" x:Uid="SendPage_AddSendTaskButton">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <TextBlock Text="添加文件" HorizontalAlignment="Stretch" HorizontalTextAlignment="Center"/>
+                                <TextBlock Text="添加文件" x:Uid="SendPage_AddSendTaskTextBlock" HorizontalAlignment="Stretch" TextAlignment="Center"/>
                                 <VariableSizedWrapGrid Orientation="Horizontal" Name="AddFlyoutVariableSizedWrapGrid">
                                     
                                 </VariableSizedWrapGrid>
@@ -58,7 +59,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Text="附近的设备" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,12,0"/>
+            <TextBlock Text="附近的设备" x:Uid="SendPage_NearbyDevices_TextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,12,0"/>
             <Button Name="SearchDevicesButton" Click="SearchDevicesButton_Click" ToolTipService.ToolTip="扫描设备">
                 <Grid>
                     <FontIcon Glyph="&#xE72C;" Name="SearchDevicesButtonIcon"/>
@@ -68,8 +69,8 @@
             <Button Name="ManualSendButton" Click="ManualSendButton_Click" ToolTipService.ToolTip="手动发送">
                 <FontIcon Glyph="&#xE93E;"/>
             </Button>
-            <Button  ToolTipService.ToolTip="收藏夹（功能开发中……）">
-                <FontIcon Glyph="&#xEB51;" Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}"/>
+            <Button Name="FavoriteButton" ToolTipService.ToolTip="收藏夹" Click="FavoriteButton_Click">
+                <FontIcon Glyph="&#xEB51;"/>
             </Button>
             <Button ToolTipService.ToolTip="发送模式（功能开发中……）">
                 <FontIcon Glyph="&#xE713;" Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}"/>
@@ -80,6 +81,7 @@
                 <Style TargetType="ListViewItem">
                     <Setter Property="Background" Value="{ThemeResource SystemBaseLowColor}"/>
                     <Setter Property="Margin" Value="4"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
@@ -104,6 +106,9 @@
                             </StackPanel>
                             <TextBlock Text="{Binding DeviceModel}"/>
                         </StackPanel>
+                        <Button Grid.Column="2" Grid.RowSpan="2" Background="Transparent" x:Name="KnownDeviceItemFavoriteButton" Click="KnownDeviceItemFavoriteButton_Click">
+                            <FontIcon Glyph="&#xEB51;" />
+                        </Button>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

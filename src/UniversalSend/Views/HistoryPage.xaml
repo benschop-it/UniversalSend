@@ -18,15 +18,21 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Name="GoBackButton" Click="GoBackButton_Click" Background="Transparent">
+            <Button Name="GoBackButton" Click="GoBackButton_Click" Background="Transparent" Height="54" Width="54">
                 <FontIcon Glyph="&#xE72B;" />
             </Button>
-            <TextBlock Text="接收历史" VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+            <TextBlock Text="接收历史" Margin="8,-4,0,0" VerticalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Name="LaunchFolderButton" Content="打开文件夹" Click="LaunchFolderButton_Click"/>
-            <Button Name="ClearHistoryButton" Content="清空历史记录" Click="ClearHistoryButton_Click"/>
-        </StackPanel>
+        <CommandBar Grid.Row="1">
+            <CommandBar.Content>
+                <CommandBar DefaultLabelPosition="Right">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton Name="LaunchFolderButton" Icon="OpenLocal" Label="打开文件夹" Click="LaunchFolderButton_Click"/>
+                        <AppBarButton Name="ClearHistoryButton" Icon="Delete" Label="清空历史记录" Click="ClearHistoryButton_Click"/>
+                    </CommandBar.PrimaryCommands>
+                </CommandBar>
+            </CommandBar.Content>
+        </CommandBar>
         <ListView Grid.Row="2" Name="MainListView" IsItemClickEnabled="True" ItemClick="MainListView_ItemClick" RightTapped="MainListView_RightTapped">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:History">

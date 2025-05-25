@@ -24,8 +24,9 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -127,8 +128,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContentDialogControls\CreateNewFolderControl.xaml.cs">
+      <DependentUpon>CreateNewFolderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ContentDialogControls\CreateTextSendTaskControl.xaml.cs">
       <DependentUpon>CreateTextSendTaskControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContentDialogControls\EditFavoriteItemControl.xaml.cs">
+      <DependentUpon>EditFavoriteItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContentDialogControls\FavoritesControl.xaml.cs">
+      <DependentUpon>FavoritesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContentDialogControls\PickReceiveFolderControl.xaml.cs">
+      <DependentUpon>PickReceiveFolderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ContentDialogControls\ManualSendControl.xaml.cs">
       <DependentUpon>ManualSendControl.xaml</DependentUpon>
@@ -139,11 +152,17 @@
     <Compile Include="Controls\DeviceItemControl.xaml.cs">
       <DependentUpon>DeviceItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FavoritesControl.xaml.cs">
+      <DependentUpon>FavoritesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\QuickSaveOptionsControl.xaml.cs">
       <DependentUpon>QuickSaveOptionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SendPage\SendItemButtonControl.xaml.cs">
       <DependentUpon>SendItemButtonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingControls\AboutControl.xaml.cs">
+      <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SettingControls\ComboSettingsControl.xaml.cs">
       <DependentUpon>ComboSettingsControl.xaml</DependentUpon>
@@ -168,14 +187,21 @@
     </Compile>
     <Compile Include="Models\ColorHelper.cs" />
     <Compile Include="Models\ContentDialogManager.cs" />
+    <Compile Include="Models\LocalizeManager.cs" />
     <Compile Include="Models\MessageDialogManager.cs" />
     <Compile Include="Models\NavigateHelper.cs" />
-    <Compile Include="Models\NetworkHelper.cs" />
-    <Compile Include="Models\SystemHelper.cs" />
     <Compile Include="Models\Toast.cs" />
+    <Compile Include="Models\UIManager.cs" />
+    <Compile Include="Models\ViewStorageItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ConfirmReceiptPage.xaml.cs">
+      <DependentUpon>ConfirmReceiptPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DevPage.xaml.cs">
       <DependentUpon>DevPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExternalPickerPage.xaml.cs">
+      <DependentUpon>ExternalPickerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FileReceivingPage.xaml.cs">
       <DependentUpon>FileReceivingPage.xaml</DependentUpon>
@@ -254,10 +280,12 @@
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\UniversalSend.png" />
+    <Content Include="Assets\UniversalSend_Dark.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -271,7 +299,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ContentDialogControls\CreateNewFolderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ContentDialogControls\CreateTextSendTaskControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentDialogControls\EditFavoriteItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentDialogControls\FavoritesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentDialogControls\PickReceiveFolderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,11 +331,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\FavoritesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\QuickSaveOptionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SendPage\SendItemButtonControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingControls\AboutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -323,7 +375,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\ConfirmReceiptPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DevPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExternalPickerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -396,6 +456,9 @@
       <Project>{54010D9B-40F6-455C-A1F7-2F295A128FA0}</Project>
       <Name>UniversalSend.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\zh-CN\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

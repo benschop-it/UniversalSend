@@ -89,7 +89,8 @@ namespace UniversalSend.Services
             
 
             string jsonStr = StringHelper.ByteArrayToString(mutableHttpServerRequest.Content);
-            JObject a = (JObject)JsonConvert.DeserializeObject(jsonStr);
+            //JObject a = (JObject)JsonConvert.DeserializeObject(jsonStr);
+            
             RegisterRequestData registerRequestData = JsonConvert.DeserializeObject<RegisterRequestData>(jsonStr);
             if (registerRequestData == null)
                 return null;

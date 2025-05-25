@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UniversalSend.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -22,6 +23,27 @@ namespace UniversalSend.Controls
         public QuickSaveOptionsControl()
         {
             this.InitializeComponent();
+        }
+
+        private void OffButton_Click(object sender, RoutedEventArgs e)
+        {
+            FavoritesButton.IsChecked = OnButton.IsChecked = false;
+            OffButton.IsChecked = true;
+            ReceiveManager.QuickSave = ReceiveManager.QuickSaveMode.Off;
+        }
+
+        private void OnButton_Click(object sender, RoutedEventArgs e)
+        {
+            FavoritesButton.IsChecked = OffButton.IsChecked = false;
+            OnButton.IsChecked = true;
+            ReceiveManager.QuickSave = ReceiveManager.QuickSaveMode.On;
+        }
+
+        private void FavoritesButton_Click(object sender, RoutedEventArgs e)
+        {
+            OffButton.IsChecked = OnButton.IsChecked = false;
+            FavoritesButton.IsChecked = true;
+            ReceiveManager.QuickSave = ReceiveManager.QuickSaveMode.Favorites;
         }
     }
 }

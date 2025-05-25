@@ -8,6 +8,7 @@ using UniversalSend.Models;
 using UniversalSend.Services;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -52,7 +53,7 @@ namespace UniversalSend.Views
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if(!isInited)
             {
@@ -63,6 +64,10 @@ namespace UniversalSend.Views
                 ReceiveManager.SendRequestReceived += ReceiveManager_SendRequestReceived;
                 SendManager.SendPrepared += SendManager_SendPrepared;
                 NavigateHelper.NavigateToHistoryPageEvent += NavigateHelper_NavigateToHistoryPageEvent;
+            }
+            while (await StorageHelper.GetReceiveStoageFolderAsync() == null)
+            {
+                await ContentDialogManager.ShowPickReceiveFolderDialogAsync();
             }
         }
 
@@ -86,7 +91,14 @@ namespace UniversalSend.Views
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                Frame.Navigate(typeof(FileReceivingPage));
+                if(/*ReceiveManager.QuickSave == ReceiveManager.QuickSaveMode.Off*/false)
+                {
+                    Frame.Navigate(typeof(ConfirmReceiptPage));
+                }
+                else
+                {
+                    Frame.Navigate(typeof(FileReceivingPage));
+                }
             }); 
         }
 

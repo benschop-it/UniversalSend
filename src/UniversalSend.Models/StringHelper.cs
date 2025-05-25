@@ -62,6 +62,18 @@ namespace UniversalSend.Models
             return parameterDictionary;
         }
 
+        public static bool IsValidFileName(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName) || fileName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0 )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public static string ByteArrayToString(byte[] bytes)
         {
             string result = Encoding.UTF8.GetString(bytes);
@@ -104,7 +116,7 @@ namespace UniversalSend.Models
 
             if (unitIndex > 3)
                 unitIndex = 3;
-            return Units[unitIndex];
+            return value.ToString("0.00") + Units[unitIndex];
         }
     }
 
@@ -120,7 +132,7 @@ namespace UniversalSend.Models
                 {
                     deviceAlias = history.Device.Alias;
                 }
-                return $"{history.DateTime.ToString()} - {history.File.Size}{StringHelper.GetByteUnit(history.File.Size)} - {deviceAlias}";
+                return $"{history.DateTime.ToString()} - {StringHelper.GetByteUnit(history.File.Size)} - {deviceAlias}";
             }
             return value.ToString();
         }

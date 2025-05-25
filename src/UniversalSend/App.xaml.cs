@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UniversalSend.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.DataTransfer.ShareTarget;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Pickers.Provider;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +18,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Diagnostics;
+using System.Xml.Linq;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
+using Windows.Storage;
+using UniversalSend.Models.Tasks;
 
 namespace UniversalSend
 {
@@ -95,6 +105,64 @@ namespace UniversalSend
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+
+        protected override void OnFileOpenPickerActivated(FileOpenPickerActivatedEventArgs args)
+        {
+            FileOpenPickerUI UI = args.FileOpenPickerUI;
+            Frame f = Window.Current.Content as Frame;
+            if (f == null)
+            {
+                f = new Frame();
+                Window.Current.Content = f;
+            }
+
+            f.Navigate(typeof(ExternalPickerPage), UI);
+
+            Window.Current.Activate();
+        }
+
+        protected override void OnFileSavePickerActivated(FileSavePickerActivatedEventArgs args)
+        {
+            FileSavePickerUI UI = args.FileSavePickerUI;
+            Frame f = Window.Current.Content as Frame;
+            if (f == null)
+            {
+                f = new Frame();
+                Window.Current.Content = f;
+            }
+
+            f.Navigate(typeof(ExternalPickerPage), UI);
+
+            Window.Current.Activate();
+        }
+
+        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+        {
+            // Code to handle activation goes here. 
+            
+
+            var appState = args.PreviousExecutionState;
+
+            var rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null)
+            {
+                rootFrame = new Frame();
+                Window.Current.Content = rootFrame;
+            }
+
+            rootFrame.Navigate(typeof(MainPage), args.ShareOperation);
+
+            //if (appState == ApplicationExecutionState.Running || appState == ApplicationExecutionState.Suspended || appState == ApplicationExecutionState.Terminated)
+            //{
+            //    rootFrame.Navigate(typeof(SendPage), args.ShareOperation);
+            //}
+            //else
+            //{
+            //    rootFrame.Navigate(typeof(MainPage), args.ShareOperation);
+            //}
+            Window.Current.Activate();
         }
     }
 }

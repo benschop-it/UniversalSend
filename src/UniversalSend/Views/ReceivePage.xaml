@@ -10,14 +10,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
 
-    <Grid>
+    <Grid Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="24">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Background" Value="Transparent"/>
@@ -38,12 +38,18 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
-        <Image Source="/Assets/UniversalSend.png" MaxHeight="200" MaxWidth="200" Margin="0,48,0,0"/>
-        <TextBlock Margin="24,0,24,8" Grid.Row="1" HorizontalTextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}"/>
-        <TextBlock Margin="24,0,24,0" Grid.Row="2" HorizontalTextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}"/>
-        <controls:QuickSaveOptionsControl Grid.Row="3" x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="功能开发中……" IsEnabled="False"/>
-        <Border Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource SystemAltLowColor}" Padding="8">
-            <TextBlock  Text="功能开发中……" />
-        </Border>
+        <Image Name="IconImage" MaxHeight="200" MaxWidth="200" Margin="0,48,0,0"/>
+        <TextBlock Margin="24,0,24,8" Grid.Row="1" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}"/>
+        <TextBlock Margin="24,0,24,0" Grid.Row="2" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}"/>
+
+        <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="快速保存" HorizontalAlignment="Center" Margin="8"/>
+            <Grid>
+                <controls:QuickSaveOptionsControl x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="功能开发中……" IsEnabled="False"/>
+                <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="{ThemeResource SystemAltLowColor}" Padding="8">
+                    <TextBlock  Text="功能开发中……" />
+                </Border>
+            </Grid>
+        </StackPanel>
     </Grid>
 </Page>
