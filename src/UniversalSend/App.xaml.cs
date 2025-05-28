@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using Windows.Storage;
 using UniversalSend.Models.Tasks;
+using Windows.UI.Core;
 
 namespace UniversalSend
 {
@@ -47,9 +48,11 @@ namespace UniversalSend
         /// 将在启动应用程序以打开特定文件等情况下使用。
         /// </summary>
         /// <param name="e">有关启动请求和过程的详细信息。</param>
+        /// 
+        Frame rootFrame;
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
@@ -59,6 +62,8 @@ namespace UniversalSend
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += RootFrame_Navigated;
+                SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -80,6 +85,29 @@ namespace UniversalSend
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+            }
+        }
+
+        private void RootFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            if (rootFrame != null && rootFrame.CanGoBack && rootFrame.Content is HistoryPage || rootFrame.Content is ExplorerPage)
+            {
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            }
+            else
+            {
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+            }
+        }
+
+        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            
+
+            if (rootFrame != null && rootFrame.CanGoBack && rootFrame.Content is HistoryPage || rootFrame.Content is ExplorerPage)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
             }
         }
 
@@ -118,7 +146,7 @@ namespace UniversalSend
                 Window.Current.Content = f;
             }
 
-            f.Navigate(typeof(ExternalPickerPage), UI);
+            f.Navigate(typeof(ExplorerPage), UI);
 
             Window.Current.Activate();
         }
@@ -133,7 +161,7 @@ namespace UniversalSend
                 Window.Current.Content = f;
             }
 
-            f.Navigate(typeof(ExternalPickerPage), UI);
+            f.Navigate(typeof(ExplorerPage), UI);
 
             Window.Current.Activate();
         }

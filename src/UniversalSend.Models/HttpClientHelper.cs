@@ -19,7 +19,7 @@ namespace UniversalSend.Models
         static HttpClientHelper()
         {
             // 设置默认超时时间
-            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            //_httpClient.Timeout = TimeSpan.FromSeconds(30);
             // 设置默认请求头
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

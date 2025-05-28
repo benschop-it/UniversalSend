@@ -121,22 +121,29 @@ namespace UniversalSend.Models
 
         public static async Task<StorageFolder> GetReceiveStoageFolderAsync()
         {
-            string folderToken = Settings.GetSettingContentAsString(Settings.Receive_SaveToFolder);
-            if(!String.IsNullOrEmpty(folderToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(folderToken))
+            if(SystemHelper.GetDeviceFormFactorType() == SystemHelper.DeviceFormFactorType.Xbox)
             {
-                try
-                {
-                    StorageFolder storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(folderToken);
-                    return storageFolder;
-                }
-                catch
-                {
-                    return null;
-                }
+                return ApplicationData.Current.LocalFolder;
             }
             else
             {
-                return null;
+                string folderToken = Settings.GetSettingContentAsString(Settings.Receive_SaveToFolder);
+                if (!String.IsNullOrEmpty(folderToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(folderToken))
+                {
+                    try
+                    {
+                        StorageFolder storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(folderToken);
+                        return storageFolder;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
             
         }

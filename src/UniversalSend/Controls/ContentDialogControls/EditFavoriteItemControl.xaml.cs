@@ -53,7 +53,7 @@ namespace UniversalSend.Controls.ContentDialogControls
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialogManager.HideContentDialog();
+            ProgramData.ContentDialogManager.HideContentDialog();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -92,13 +92,13 @@ namespace UniversalSend.Controls.ContentDialogControls
                 Favorite.Port = Convert.ToInt64(PortTextBox.Text);
                 FavoriteManager.SaveFavoritesData();
             }
-            ContentDialogManager.HideContentDialog();
+            ProgramData.ContentDialogManager.HideContentDialog();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             FavoriteManager.Favorites.Remove(Favorite);
-            ContentDialogManager.HideContentDialog();
+            ProgramData.ContentDialogManager.HideContentDialog();
         }
     }
 }

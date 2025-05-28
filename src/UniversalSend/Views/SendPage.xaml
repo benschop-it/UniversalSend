@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:data="using:UniversalSend.Models.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    >
 
     <Grid Name="RootGrid">
         <Grid.RowDefinitions>

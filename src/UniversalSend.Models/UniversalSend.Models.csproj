@@ -120,6 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ContentDialogManager.cs" />
     <Compile Include="Data\Device.cs" />
     <Compile Include="Data\UniversalSendFile.cs" />
     <Compile Include="EnumHelper.cs" />

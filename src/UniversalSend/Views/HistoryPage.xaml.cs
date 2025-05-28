@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -29,14 +30,20 @@ namespace UniversalSend.Views
     /// </summary>
     public sealed partial class HistoryPage : Page
     {
+
+        bool UseInternalExplorer { get; set; }
+
         public HistoryPage()
         {
             this.InitializeComponent();
+            UseInternalExplorer = Convert.ToBoolean(Settings.GetSettingContentAsString(Settings.Lab_UseInternalExplorer));
             initAsync();
         }
 
         async Task initAsync()
         {
+            
+            
             try
             {
                 StorageFolder storageFolder = await StorageHelper.GetReceiveStoageFolderAsync();
@@ -67,9 +74,16 @@ namespace UniversalSend.Views
 
         private async void LaunchFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var t = new FolderLauncherOptions();
-            StorageFolder folder = await StorageHelper.GetReceiveStoageFolderAsync();
-            await Launcher.LaunchFolderAsync(folder, t);
+            if(UseInternalExplorer)
+            {
+                Frame.Navigate(typeof(ExplorerPage), null, new DrillInNavigationTransitionInfo());
+            }
+            else
+            {
+                var t = new FolderLauncherOptions();
+                StorageFolder folder = await StorageHelper.GetReceiveStoageFolderAsync();
+                await Launcher.LaunchFolderAsync(folder, t);
+            }
         }
 
         private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
@@ -114,7 +128,6 @@ namespace UniversalSend.Views
         private void MainListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             RightTabedHistoryItem = (e.OriginalSource as FrameworkElement).DataContext as History;
-            
             if(String.IsNullOrEmpty(RightTabedHistoryItem.FutureAccessListToken))
             {
                 MenuFlyout_OpenFile.Visibility = Visibility.Collapsed;
@@ -168,6 +181,14 @@ namespace UniversalSend.Views
             {
                 ListViewMenuFlyout.Hide();
                 return;
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (UseInternalExplorer)
+            {
+                MenuFlyout_OpenFilePath.IsEnabled = false;
             }
         }
     }

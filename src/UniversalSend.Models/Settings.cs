@@ -30,6 +30,10 @@ namespace UniversalSend.Models
 
         public const string Favorite_Favorites = "Favorite_Favorites";//设备收藏夹
 
+        public const string Lab_UseInternalExplorer = "Lab_UseInternalExplorer";//使用内部文件管理器
+
+        public const string ExplorerPage_ViewMode = "ExplorerPage_ViewMode";
+
         public static ApplicationDataContainer UserSettings;
 
         public static void InitUserSettings()
@@ -75,6 +79,10 @@ namespace UniversalSend.Models
             SetInitSetting(Network_Port, 53317);
             //广播地址
             SetInitSetting(Network_MulticastAddress, "224.0.0.167");
+            //实验_使用内部文件管理器
+            SetInitSetting(Lab_UseInternalExplorer,"False");
+            //
+            //SetInitSetting(ExplorerPage_ViewMode,);
         }
 
         public static bool SetSetting(string key,object value)

@@ -49,10 +49,11 @@ namespace UniversalSend.Views
 
         private async void SendManager_SendCreated(object sender, EventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                UpdateView();
-            });
+            await Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher.RunAsync(
+                Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    UpdateView();
+                });
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -119,6 +120,7 @@ namespace UniversalSend.Views
             }
             Inited = true; 
             UpdateView();
+            Debug.WriteLine("SendPageLoaded");
         }
 
         void InitButton()
@@ -232,7 +234,7 @@ namespace UniversalSend.Views
             CreateTextSendTaskControl control = new CreateTextSendTaskControl();
             control.CancelButton.Click += (sender, e) =>
             {
-                ContentDialogManager.HideContentDialog();
+                ProgramData.ContentDialogManager.HideContentDialog();
             };
             control.ConfirmButton.Click += (sender, e) =>
             {
@@ -240,9 +242,9 @@ namespace UniversalSend.Views
                 {
                     AddItemToSendQueue(SendTaskManager.CreateSendTask(control.MainTextBox.Text));
                 }
-                ContentDialogManager.HideContentDialog();
+                ProgramData.ContentDialogManager.HideContentDialog();
             };
-            await ContentDialogManager.ShowContentDialogAsync(control);
+            await ProgramData.ContentDialogManager.ShowContentDialogAsync(control);
         }
 
         private async void FolderButton_Click(object sender, RoutedEventArgs e)
@@ -314,7 +316,7 @@ namespace UniversalSend.Views
                         if (device != null)
                         {
                             SendManager.SendPreparedEvent(device);
-                            ContentDialogManager.HideContentDialog();
+                            ProgramData.ContentDialogManager.HideContentDialog();
                         }
                         manualSendControl.ErrorMessageTextBlock.Text = $"错误：获取{manualSendControl.IPAddressTextBox}:53317主机信息失败";
                     }
@@ -332,7 +334,7 @@ namespace UniversalSend.Views
                         if (device != null)
                         {
                             SendManager.SendPreparedEvent(device);
-                            ContentDialogManager.HideContentDialog();
+                            ProgramData.ContentDialogManager.HideContentDialog();
                         }
                         manualSendControl.ErrorMessageTextBlock.Text = $"错误：没有找到与标签对应的主机";
                     }
@@ -344,9 +346,9 @@ namespace UniversalSend.Views
 
             manualSendControl.CancelButton.Click += (sender, e) =>
             {
-                ContentDialogManager.HideContentDialog();
+                ProgramData.ContentDialogManager.HideContentDialog();
             };
-            await ContentDialogManager.ShowContentDialogAsync(manualSendControl);
+            await ProgramData.ContentDialogManager.ShowContentDialogAsync(manualSendControl);
         }
 
         private async void SearchDevicesButton_Click(object sender, RoutedEventArgs e)
@@ -389,13 +391,13 @@ namespace UniversalSend.Views
 
         private async void FavoriteButton_Click(object sender, RoutedEventArgs e)
         {
-            await ContentDialogManager.ShowContentDialogAsync(new FavoritesControl());
+            await ProgramData.ContentDialogManager.ShowContentDialogAsync(new FavoritesControl());
         }
 
         private async void KnownDeviceItemFavoriteButton_Click(object sender, RoutedEventArgs e)
         {
             Device device = ((Button)sender).DataContext as Device;
-            await ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(device));
+            await ProgramData.ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(device));
         }
     }
 }

@@ -29,12 +29,22 @@ namespace UniversalSend.Views
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ExternalPickerPage : Page
+    public sealed partial class ExplorerPage : Page
     {
-        public ExternalPickerPage()
+
+
+        public ExplorerPage()
         {
             this.InitializeComponent();
+            string ViewMode = Settings.GetSettingContentAsString(Settings.ExplorerPage_ViewMode);
+            if (ViewMode == "List")
+                CurrentViewMode = ExplorerPage.ViewMode.List;
+            else
+                CurrentViewMode = ExplorerPage.ViewMode.Grid;
+            UpdateViewMode();
         }
+
+        ContentDialogManager ContentDialogManager { get; set; } = new ContentDialogManager();
 
         FileOpenPickerUI fileOpenPickerUI;
 
@@ -47,8 +57,8 @@ namespace UniversalSend.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             Settings.InitUserSettings();
-
-            if(e.Parameter is FileOpenPickerUI)
+            UpdateViewMode();
+            if (e.Parameter is FileOpenPickerUI)
             {
                 // 获取参数
                 fileOpenPickerUI = e.Parameter as FileOpenPickerUI;
@@ -74,12 +84,13 @@ namespace UniversalSend.Views
         {
             LoadingProgressBar.Visibility = Visibility.Visible;
             lvFiles.IsEnabled = false;
+            UpdateFolderPathTextBlock();
             List<IStorageItem> items = (await folder.GetItemsAsync()).ToList();
             BackButton.IsEnabled = folderStack.Count > 0 ? true : false;
 
             viewItems = new List<ViewStorageItem>();
             EmptyFolderTip.Visibility = Visibility.Collapsed;
-            if (AllowedFileTypes.Contains("*"))
+            if (AllowedFileTypes == null || AllowedFileTypes.Contains("*"))
                 foreach (var item in items)
                 {
                     viewItems.Add(new ViewStorageItem(item));
@@ -102,6 +113,38 @@ namespace UniversalSend.Views
             lvFiles.ItemsSource = viewItems;
             lvFiles.IsEnabled = true;
             LoadingProgressBar.Visibility = Visibility.Collapsed;
+        }
+
+        void UpdateViewMode()
+        {
+            if (CurrentViewMode == ViewMode.List)
+            {
+                lvFiles.ItemTemplate = ListViewModeItemTemplate;
+                lvFiles.ItemContainerStyle = ListViewModeListViewItemStyle;
+                lvFiles.ItemsPanel = ListViewModeItemsPanelTemplate;
+                CurrentViewMode = ViewMode.Grid;
+                ViewModeButtonIcon.Glyph = "\uF0E2";
+                ViewModeButton.Label = "网格视图";
+            }
+            else
+            {
+                lvFiles.ItemTemplate = GridViewModeItemTemplate;
+                lvFiles.ItemContainerStyle = GridViewModeListViewItemStyle;
+                lvFiles.ItemsPanel = GridViewModeItemsPanelTemplate;
+                CurrentViewMode = ViewMode.List;
+                ViewModeButtonIcon.Glyph = "\uEA37";
+                ViewModeButton.Label = "列表视图";
+            }
+        }
+
+        void UpdateFolderPathTextBlock()
+        {
+            string str = "根目录";
+            foreach(var item in folderStack)
+            {
+                str += $"/{item.Name}";
+            }
+            FolderPathTextBlock.Text = str;
         }
 
         private async void FileSavePickerUI_TargetFileRequested(FileSavePickerUI sender, TargetFileRequestedEventArgs args)
@@ -284,61 +327,43 @@ namespace UniversalSend.Views
                 folderStack.Add(folder);
                 await UpdateViewAsync(folder);
             }
+            else if(item.Item is StorageFile && fileOpenPickerUI == null && fileSavePickerUI == null)
+            {
+                await Launcher.LaunchFileAsync(((ViewStorageItem)e.ClickedItem).Item as StorageFile);
+            }
         }
 
         private async void BackButton_Click(object sender, RoutedEventArgs e)
         {
             folderStack.Remove(folderStack.Last());
+            
+            await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
+            
+        }
+
+        public async Task<StorageFolder> GetFolderOfCurrentViewAsync()
+        {
             if (folderStack.Count <= 1)
             {
-                await UpdateViewAsync(await StorageHelper.GetReceiveStoageFolderAsync());
-                return;
+                return await StorageHelper.GetReceiveStoageFolderAsync();
             }
             StorageFolder folder = folderStack[folderStack.Count - 2];
-            await UpdateViewAsync(folder);
-            
+            return folder;
         }
 
         private async void HomeButton_Click(object sender, RoutedEventArgs e)
         {
+            folderStack.Clear();
             await UpdateViewAsync(await StorageHelper.GetReceiveStoageFolderAsync());
         }
 
-        //private async void CreateFolderButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    CreateNewFolderControl control = new CreateNewFolderControl();
-        //    control.CancelButton.Click += (a, b) =>
-        //    {
-        //        ContentDialogManager.HideContentDialog();
-        //    };
-        //    control.OKButton.Click += async (a, b) =>
-        //    {
-        //        if(StringHelper.IsValidFileName(control.NameTextBox.Text))
-        //        {
-        //            StorageFolder folder = null;
-        //            if (folderStack.Count != 0)
-        //                folder = folderStack.Last();
-        //            else
-        //                folder = await StorageHelper.GetReceiveStoageFolderAsync();
-
-        //            await folder.CreateFolderAsync(control.NameTextBox.Text);
-        //            ContentDialogManager.HideContentDialog();
-        //            await UpdateViewAsync(folder);
-        //        }
-        //        else
-        //        {
-        //            control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
-        //        }
-                    
-        //    };
-        //    await ContentDialogManager.ShowContentDialogAsync(control);
-        //}
-
-        private void Flyout_Opened(object sender, object e)
+        private async void CreateFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            CreateFolderFlyoutGrid.Children.Clear();
-            
             CreateNewFolderControl control = new CreateNewFolderControl();
+            control.CancelButton.Click += (a, b) =>
+            {
+                ContentDialogManager.HideContentDialog();
+            };
             control.OKButton.Click += async (a, b) =>
             {
                 if (StringHelper.IsValidFileName(control.NameTextBox.Text))
@@ -350,7 +375,7 @@ namespace UniversalSend.Views
                         folder = await StorageHelper.GetReceiveStoageFolderAsync();
 
                     await folder.CreateFolderAsync(control.NameTextBox.Text);
-                    CreateFolderFlyout.Hide();
+                    ContentDialogManager.HideContentDialog();
                     await UpdateViewAsync(folder);
                 }
                 else
@@ -359,9 +384,37 @@ namespace UniversalSend.Views
                 }
 
             };
-            CreateFolderFlyoutGrid.Children.Add(control);
-            
+            await ContentDialogManager.ShowContentDialogAsync(control);
         }
+
+        //private void Flyout_Opened(object sender, object e)
+        //{
+        //    CreateFolderFlyoutGrid.Children.Clear();
+            
+        //    CreateNewFolderControl control = new CreateNewFolderControl();
+        //    control.OKButton.Click += async (a, b) =>
+        //    {
+        //        if (StringHelper.IsValidFileName(control.NameTextBox.Text))
+        //        {
+        //            StorageFolder folder = null;
+        //            if (folderStack.Count != 0)
+        //                folder = folderStack.Last();
+        //            else
+        //                folder = await StorageHelper.GetReceiveStoageFolderAsync();
+
+        //            await folder.CreateFolderAsync(control.NameTextBox.Text);
+        //            CreateFolderFlyout.Hide();
+        //            await UpdateViewAsync(folder);
+        //        }
+        //        else
+        //        {
+        //            control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
+        //        }
+
+        //    };
+        //    CreateFolderFlyoutGrid.Children.Add(control);
+            
+        //}
 
         IStorageItem RightTabedItem = null;
 
@@ -434,6 +487,145 @@ namespace UniversalSend.Views
             {
                 ListViewFlyout_OpenFilePath.Text = "打开文件夹位置";
             }
+
+            if (ClipboardItem == null)
+            {
+                ListViewFlyout_Paste.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ListViewFlyout_Paste.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void ListViewFlyout_Cut_Click(object sender, RoutedEventArgs e)
+        {
+            CutMode = true;
+            ClipboardItem = RightTabedItem;
+        }
+
+        IStorageItem ClipboardItem { get; set; }
+
+        bool CutMode = false;
+
+        private void ListViewFlyout_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            CutMode = false;
+            ClipboardItem = RightTabedItem;
+        }
+
+        private async void ListViewFlyout_Paste_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder currentFolder = await GetFolderOfCurrentViewAsync();
+            if (RightTabedItem is StorageFile)
+            {
+                StorageFile file = (StorageFile)RightTabedItem;
+                if (CutMode)
+                {
+                    await file.MoveAsync(currentFolder);
+                }
+                else
+                {
+                    await file.CopyAsync(currentFolder);
+                }
+                await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
+            }
+            else
+            {
+                ContentDialog contentDialog = new ContentDialog();
+                contentDialog.CloseButtonText = "关闭";
+                contentDialog.Title = $"不支持的操作";
+                contentDialog.Content = "文件夹暂不支持剪切与复制操作";
+                await contentDialog.ShowAsync();
+            }
+        }
+
+        private async void ListViewFlyout_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog contentDialog = new ContentDialog();
+            contentDialog.Title = $"确定要删除项目“{RightTabedItem.Name}”吗？";
+            contentDialog.PrimaryButtonText = "否";
+            contentDialog.SecondaryButtonText = "是";
+            var result = await contentDialog.ShowAsync();
+            if (result == ContentDialogResult.Secondary)
+            {
+                if (RightTabedItem is StorageFile)
+                {
+                    await ((StorageFile)RightTabedItem).DeleteAsync();
+                }
+                else if (RightTabedItem is StorageFolder)
+                {
+                    await ((StorageFolder)RightTabedItem).DeleteAsync();
+                }
+                await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
+            }
+                
+        }
+
+        private async void ListViewFlyout_Rename_Click(object sender, RoutedEventArgs e)
+        {
+            RenameStorageItemControl control = new RenameStorageItemControl();
+            control.NameTextBox.Text = RightTabedItem.Name;
+            control.CancelButton.Click += (a, b) =>
+            {
+                ContentDialogManager.HideContentDialog();
+            };
+            control.OKButton.Click += async (a, b) =>
+            {
+                if (StringHelper.IsValidFileName(control.NameTextBox.Text))
+                {
+                    if(RightTabedItem is StorageFile)
+                    {
+                        StorageFile storageFile = (StorageFile)RightTabedItem;
+                        await storageFile.RenameAsync(control.NameTextBox.Text);
+                    }
+                    else if(RightTabedItem is StorageFolder)
+                    {
+                        StorageFolder storageFolder = (StorageFolder)RightTabedItem;
+                        await storageFolder.RenameAsync(control.NameTextBox.Text);
+                    }
+                    await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
+                    ContentDialogManager.HideContentDialog();
+                }
+                else
+                {
+                    control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
+                }
+
+            };
+            await ContentDialogManager.ShowContentDialogAsync(control);
+            await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
+        }
+
+        private async void ListViewFlyout_Properties_Click(object sender, RoutedEventArgs e)
+        {
+            StorageItemPropertiesControl control = new StorageItemPropertiesControl(RightTabedItem);
+            control.CancelButton.Click += (a, b) =>
+            {
+                ContentDialogManager.HideContentDialog();
+            };
+            await ContentDialogManager.ShowContentDialogAsync(control);
+        }
+
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
+        }
+
+        enum ViewMode
+        {
+            List,
+            Grid
+        }
+
+        ViewMode CurrentViewMode = ViewMode.Grid;
+
+        private void ViewModeButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateViewMode();
+            Debug.WriteLine(CurrentViewMode.ToString());
+            Settings.SetSetting(Settings.ExplorerPage_ViewMode, CurrentViewMode.ToString());
+
         }
     }
 }

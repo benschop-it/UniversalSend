@@ -94,18 +94,14 @@ namespace UniversalSend.Models.Data
 
         public static async Task<Device> FindDeviceByHashTagAsync(string HashTag)
         {
-            /*To-Do:完善通过标签获取的功能*/
             List<string> localIPList = NetworkHelper.GetIPv4AddrList();
             Device device = null;
             for (int i=0;i<localIPList.Count;i++)
             {
                 localIPList[i] = localIPList[i].Substring(0, localIPList[i].LastIndexOf(".")+1);
-                for(int j = 1; j < 255; j++)
-                {
-                    device = await FindDeviceByIPAsync(localIPList[i]+j);
-                    if (device != null)
+                device = await FindDeviceByIPAsync(localIPList[i] + HashTag);
+                if (device != null)
                         return device;
-                }
             }
             return null;
         }

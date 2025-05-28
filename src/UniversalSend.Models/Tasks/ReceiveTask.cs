@@ -20,6 +20,8 @@ namespace UniversalSend.Models.Tasks
         {
             [Description("等待")]
             Wating,
+            [Description("正在传输")]
+            Receiving,
             [Description("已取消")]
             Canceled,
             [Description("错误")]

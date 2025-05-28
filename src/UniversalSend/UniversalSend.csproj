@@ -50,6 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -73,6 +74,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
@@ -97,6 +99,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -120,6 +123,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -146,6 +150,12 @@
     <Compile Include="Controls\ContentDialogControls\ManualSendControl.xaml.cs">
       <DependentUpon>ManualSendControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContentDialogControls\RenameStorageItemControl.xaml.cs">
+      <DependentUpon>RenameStorageItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContentDialogControls\StorageItemPropertiesControl.xaml.cs">
+      <DependentUpon>StorageItemPropertiesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DeviceInfoControl.xaml.cs">
       <DependentUpon>DeviceInfoControl.xaml</DependentUpon>
     </Compile>
@@ -154,6 +164,9 @@
     </Compile>
     <Compile Include="Controls\FavoritesControl.xaml.cs">
       <DependentUpon>FavoritesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ItemControls\StorageItemPropertyItemControl.xaml.cs">
+      <DependentUpon>StorageItemPropertyItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\QuickSaveOptionsControl.xaml.cs">
       <DependentUpon>QuickSaveOptionsControl.xaml</DependentUpon>
@@ -179,6 +192,9 @@
     <Compile Include="Controls\SettingControls\TextSettingControl.xaml.cs">
       <DependentUpon>TextSettingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SettingControls\ToggleSwitchSettingsControl.xaml.cs">
+      <DependentUpon>ToggleSwitchSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SettingsItemControl.xaml.cs">
       <DependentUpon>SettingsItemControl.xaml</DependentUpon>
     </Compile>
@@ -186,7 +202,6 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ColorHelper.cs" />
-    <Compile Include="Models\ContentDialogManager.cs" />
     <Compile Include="Models\LocalizeManager.cs" />
     <Compile Include="Models\MessageDialogManager.cs" />
     <Compile Include="Models\NavigateHelper.cs" />
@@ -200,8 +215,8 @@
     <Compile Include="Views\DevPage.xaml.cs">
       <DependentUpon>DevPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ExternalPickerPage.xaml.cs">
-      <DependentUpon>ExternalPickerPage.xaml</DependentUpon>
+    <Compile Include="Views\ExplorerPage.xaml.cs">
+      <DependentUpon>ExplorerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FileReceivingPage.xaml.cs">
       <DependentUpon>FileReceivingPage.xaml</DependentUpon>
@@ -280,6 +295,8 @@
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\UniversalSend.png" />
+    <Content Include="Assets\UniversalSendNew.png" />
+    <Content Include="Assets\UniversalSendNew_Dark.png" />
     <Content Include="Assets\UniversalSend_Dark.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
@@ -323,6 +340,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ContentDialogControls\RenameStorageItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentDialogControls\StorageItemPropertiesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DeviceInfoControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -332,6 +357,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\FavoritesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ItemControls\StorageItemPropertyItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,6 +396,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SettingControls\ToggleSwitchSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SettingsItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -383,7 +416,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExternalPickerPage.xaml">
+    <Page Include="Views\ExplorerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

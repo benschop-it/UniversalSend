@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using UniversalSend.Controls.ContentDialogControls;
 using UniversalSend.Models;
 using UniversalSend.Services;
 using Windows.Foundation;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -62,7 +64,7 @@ namespace UniversalSend.Views
             }
             while (await StorageHelper.GetReceiveStoageFolderAsync() == null)
             {
-                await ContentDialogManager.ShowPickReceiveFolderDialogAsync();
+                await ProgramData.ContentDialogManager.ShowContentDialogAsync(new PickReceiveFolderControl());
             }
         }
 
@@ -70,7 +72,7 @@ namespace UniversalSend.Views
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                Frame.Navigate(typeof(HistoryPage));
+                Frame.Navigate(typeof(HistoryPage), null, new DrillInNavigationTransitionInfo());
             });
         }
 

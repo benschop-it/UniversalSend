@@ -11,6 +11,7 @@ namespace UniversalSend.Models
 {
     public class ProgramData
     {
+        public static ContentDialogManager ContentDialogManager { get; set; } = new ContentDialogManager();
         public static object ServiceServer { get; set; }
         public static Device LocalDevice { get; set; } = new Device 
         {/*{Environment.MachineName}*/

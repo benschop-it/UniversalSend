@@ -46,7 +46,7 @@ namespace UniversalSend.Controls.ContentDialogControls
             {
                 string folderToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
                 Settings.SetSetting(Settings.Receive_SaveToFolder, folderToken);
-                ContentDialogManager.HideContentDialog();
+                ProgramData.ContentDialogManager.HideContentDialog();
             }
         }
     }

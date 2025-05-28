@@ -34,7 +34,6 @@ namespace UniversalSend.Services
             
             if(task != null)
             {
-                Debug.WriteLine($"接收到文件，写入byte[]数据成功");
                 ReceiveManager.SendDataReceivedEvent(task);
                 Debug.WriteLine("正在写入数据至文件");
                 var headerList = mutableHttpServerRequest.Headers.ToList();

@@ -25,7 +25,10 @@
                 <StackPanel Name="NetworkSettingsStackPanel">
                     
                 </StackPanel>
-                <TextBlock Text="其他" Style="{ThemeResource SubtitleTextBlockStyle}" Visibility="Collapsed"/>
+                <TextBlock Text="实验" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <StackPanel Name="LabSettingsStackPanel">
+                    
+                </StackPanel>
                 <Button Margin="0,4,0,8" Content="开发者选项" Name="NavigateToDevPageButton" Visibility="Collapsed" Click="NavigateToDevPageButton_Click"/>
                 <TextBlock Text="关于" Style="{ThemeResource SubtitleTextBlockStyle}"/>
 

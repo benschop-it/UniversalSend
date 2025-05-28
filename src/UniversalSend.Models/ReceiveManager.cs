@@ -61,6 +61,7 @@ namespace UniversalSend.Models
 
         public static void CancelReceivedEvent()
         {
+            ReceiveTaskManager.ReceivingTasks.Clear();
             CancelReceived?.Invoke(null,EventArgs.Empty);
         }
     }

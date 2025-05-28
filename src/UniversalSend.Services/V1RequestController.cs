@@ -84,17 +84,17 @@ namespace UniversalSend.Services
             //    }
             //}
             //else
-            {
-                return Task.FromResult<IPostResponse>(new PostResponse(
-                    PostResponse.ResponseStatus.OK,
-                    "",
-                    responseData
-                    )).AsAsyncOperation();
-            }
-                //string responseDataString = JsonConvert.SerializeObject(responseData);
-                //responseDataString = responseDataString.Replace("\\","");
-                //Debug.WriteLine($"responseData:{responseDataString}");
-                
+            //{
+            return Task.FromResult<IPostResponse>(new PostResponse(
+                PostResponse.ResponseStatus.OK,
+                "",
+                responseData
+                )).AsAsyncOperation();
+            //}
+            //string responseDataString = JsonConvert.SerializeObject(responseData);
+            //responseDataString = responseDataString.Replace("\\","");
+            //Debug.WriteLine($"responseData:{responseDataString}");
+
         }
 
         [UriFormat("v1/send?fileId={fileId}&token={token}")]
@@ -102,6 +102,9 @@ namespace UniversalSend.Services
         {
             Debug.WriteLine($"POST send Called\nfileId = {fileId},token = {token},dataLength = B");/*{requestData.Length}*/
             //SaveFileData(fileId, data);
+            //ReceiveTask task = ReceiveTaskManager.ReceivingTasks.Find(x=>x.file.Id.Equals(fileId));
+            //if(task != null)
+            //    task.TaskState = ReceiveTask.ReceiveTaskStates.Receiving;
             return Task.FromResult<IPostResponse>(new PostResponse(
                 PostResponse.ResponseStatus.OK,
                 ""

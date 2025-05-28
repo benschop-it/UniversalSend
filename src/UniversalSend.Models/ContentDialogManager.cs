@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UniversalSend.Controls.ContentDialogControls;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Models
 {
     public class ContentDialogManager
     {
-        static ContentDialog ContentDialog { get; set; } = new ContentDialog();
 
-        static bool Hided { get; set; } = true;
-        public static async Task ShowContentDialogAsync(object Content)
+        ContentDialog ContentDialog { get; set; } = new ContentDialog();
+
+        bool Hided { get; set; } = true;
+        public async Task ShowContentDialogAsync(object Content)
         {
             ContentDialog.Hide();
             ContentDialog = new ContentDialog();
@@ -21,7 +21,7 @@ namespace UniversalSend.Models
             await ContentDialog.ShowAsync();
         }
 
-        public static async Task<ContentDialogResult> ShowContentDialogAsync(string Title, string Content, string PrimaryButtonText, string SecondaryButtonText, string CloseButtonText)
+        public async Task<ContentDialogResult> ShowContentDialogAsync(string Title, string Content, string PrimaryButtonText, string SecondaryButtonText, string CloseButtonText)
         {
             ContentDialog.Hide();
             ContentDialog = new ContentDialog();
@@ -40,14 +40,14 @@ namespace UniversalSend.Models
             return await ContentDialog.ShowAsync();
         }
 
-        public static void HideContentDialog()
+        public void HideContentDialog()
         {
             ContentDialog.Hide();
         }
 
-        public static async Task ShowPickReceiveFolderDialogAsync()
-        {
-            await ShowContentDialogAsync(new PickReceiveFolderControl());
-        }
+        //public async Task ShowPickReceiveFolderDialogAsync()
+        //{
+        //    await ShowContentDialogAsync(new PickReceiveFolderControl());
+        //}
     }
 }

@@ -40,11 +40,11 @@ namespace UniversalSend.Views
             if (App.Current.RequestedTheme == ApplicationTheme.Light)
             {
                 //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync();
-                IconImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/UniversalSend_Dark.png"));
+                IconImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/UniversalSendNew_Dark.png"));
             }
             else
             {
-                IconImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/UniversalSend.png"));
+                IconImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/UniversalSendNew.png"));
             }
         }
 

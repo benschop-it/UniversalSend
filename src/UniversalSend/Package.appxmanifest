@@ -9,7 +9,7 @@
   <Identity
     Name="PigeonMing.UniversalSend"
     Publisher="CN=40BCA14A-EEC5-4086-9CC1-FB1A9BFCC6D0"
-    Version="1.0.0.0" />
+    Version="1.0.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="1f271639-57da-4d20-90bd-85d05bd921fd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

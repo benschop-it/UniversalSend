@@ -44,8 +44,10 @@
         <StackPanel Grid.Row="2" Margin="24" Padding="8">
             <TextBlock Name="ProgressBarLabel" Text="总进度"/>
             <ProgressBar Name="MainProgressBar" Margin="0,4,0,0"/>
+            <!--<TextBlock Name="FilesCountTextBlock"/>
+            <TextBlock Name="FilesSizeTextBlock"/>-->
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,4,0,0">
-                <Button Name="DetailButton" Margin="0,0,8,0">
+                <Button Name="DetailButton" Margin="0,0,8,0" Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon  Glyph="&#xF167;" Margin="0,4,6,0"/>
                         <TextBlock VerticalAlignment="Center" Text="详细信息"/>

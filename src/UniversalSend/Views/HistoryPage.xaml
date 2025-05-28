@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:models="using:UniversalSend.Models"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
     <Page.Resources>
         <models:HistoryStringConverter x:Key="HistoryStringConverter"/>
     </Page.Resources>
@@ -17,11 +18,11 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Button Name="GoBackButton" Click="GoBackButton_Click" Background="Transparent" Height="54" Width="54">
+        <StackPanel Orientation="Horizontal" Height="54">
+            <!--<Button Name="GoBackButton" Click="GoBackButton_Click" Background="Transparent" Height="54" Width="54">
                 <FontIcon Glyph="&#xE72B;" />
-            </Button>
-            <TextBlock Text="接收历史" Margin="8,-4,0,0" VerticalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
+            </Button>-->
+            <TextBlock Text="接收历史" Margin="12,0,0,0" VerticalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
         </StackPanel>
         <CommandBar Grid.Row="1">
             <CommandBar.Content>
@@ -44,7 +45,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="20"/>
                             <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="1" Text="{Binding File.FileName}"/>
                         <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Converter={StaticResource HistoryStringConverter}}"/>
@@ -54,7 +55,7 @@
             <ListView.ContextFlyout>
                 <MenuFlyout x:Name="ListViewMenuFlyout" Opened="ListViewMenuFlyout_Opened">
                     <MenuFlyoutItem Text="打开文件" Name="MenuFlyout_OpenFile" Click="MenuFlyout_OpenFile_Click"/>
-                    <MenuFlyoutItem Text="打开文件位置" Name="MenuFlyout_OpenFilePath" Click="MenuFlyout_OpenFilePath_Click"/>
+                    <MenuFlyoutItem Text="打开文件位置" x:Name="MenuFlyout_OpenFilePath" Click="MenuFlyout_OpenFilePath_Click"/>
                     <MenuFlyoutItem Text="信息" Visibility="Collapsed" Name="MenuFlyout_Info" Click="MenuFlyout_Info_Click"/>
                     <MenuFlyoutItem Text="从记录中删除" Name="MenuFlyout_Delete" Click="MenuFlyout_Delete_Click"/>
                 </MenuFlyout>

@@ -41,6 +41,7 @@ namespace UniversalSend.Views
             InitNetworkControls();
             InitReceiveControls();
             InitAboutControls();
+            InitLabControls();
         }
 
         void InitReceiveControls()
@@ -65,6 +66,11 @@ namespace UniversalSend.Views
             NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceModel")/*"设备型号"*/, new TextSettingControl(Settings.Network_DeviceModel)));
             NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_Port")/*"端口"*/, new NumberSettingControl(Settings.Network_Port)));//替换为NumberBox
             NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_MulticastAddress")/*"多线程广播"*/, new TextSettingControl(Settings.Network_MulticastAddress)));
+        }
+
+        void InitLabControls()
+        {
+            LabSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Lab_UseInternalExplorer")/*使用内部文件管理器*/,new ToggleSwitchSettingsControl(Settings.Lab_UseInternalExplorer)));
         }
 
         void InitAboutControls()

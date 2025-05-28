@@ -153,6 +153,9 @@
   <data name="SendPage_SelectTextBlock.Text" xml:space="preserve">
     <value>选择</value>
   </data>
+  <data name="SettingsPage_Lab_UseInternalExplorer" xml:space="preserve">
+    <value>使用内建文件管理器</value>
+  </data>
   <data name="SettingsPage_Network_DeviceType_Desktop" xml:space="preserve">
     <value>电脑</value>
   </data>
