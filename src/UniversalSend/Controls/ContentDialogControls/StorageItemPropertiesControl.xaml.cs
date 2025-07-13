@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.ContentDialogControls
 {
@@ -27,36 +27,36 @@ namespace UniversalSend.Controls.ContentDialogControls
     {
         IStorageItem StorageItem { get; set; }
         ViewStorageItem ViewStorageItem { get; set; }
+
         public StorageItemPropertiesControl(IStorageItem storageItem)
         {
             this.InitializeComponent();
             StorageItem = storageItem;
             ViewStorageItem = new ViewStorageItem(storageItem);
-            //ViewStorageItem.PropertyChanged += ViewStorageItem_PropertyChanged;
+            // ViewStorageItem.PropertyChanged += ViewStorageItem_PropertyChanged;
         }
 
-        //private async void ViewStorageItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        //{
-        //    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-        //    {
-                
-        //    });
-        //}
+        // private async void ViewStorageItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        // {
+        //     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+        //     {
+        //     });
+        // }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            _= UpdateViewAsync();
+            _ = UpdateViewAsync();
         }
 
         async Task UpdateViewAsync()
         {
             NameTextBlock.Text = StorageItem.Name;
             BasicProperties properties = await StorageItem.GetBasicPropertiesAsync();
-            
-            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("位置", StorageItem.Path.Substring(0, StorageItem.Path.LastIndexOf("\\"))));
-            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("大小", StringHelper.GetByteUnit((long)properties.Size)));
-            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("创建时间", properties.ItemDate.ToString()));
-            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("修改时间", properties.DateModified.ToString()));
+
+            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("Location", StorageItem.Path.Substring(0, StorageItem.Path.LastIndexOf("\\"))));
+            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("Size", StringHelper.GetByteUnit((long)properties.Size)));
+            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("Created", properties.ItemDate.ToString()));
+            PropertiesStackPanel.Children.Add(new StorageItemPropertyItemControl("Modified", properties.DateModified.ToString()));
         }
     }
 }

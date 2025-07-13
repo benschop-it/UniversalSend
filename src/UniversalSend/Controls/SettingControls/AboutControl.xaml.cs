@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.SettingControls
 {
@@ -45,21 +45,21 @@ namespace UniversalSend.Controls.SettingControls
             var response = await http.GetAsync("https://pigeon-ming.github.io/Versions/universalsend.txt");
             var result = await response.Content.ReadAsStringAsync();
             string appVersion = Package.Current.Id.Version.Build.ToString();
+
             if (String.IsNullOrEmpty(result) || response.IsSuccessStatusCode == false)
             {
-                About_UpdateMessage.Text = "检查更新失败，请检查网络后再试！";
+                About_UpdateMessage.Text = "Failed to check for updates. Please check your network and try again!";
             }
-            //Debug.WriteLine(result.Substring(result.LastIndexOf(".") + 1, result.Length - result.LastIndexOf(".") - 1));
-            if (Convert.ToInt32(appVersion) < Convert.ToInt32(result.Substring(result.LastIndexOf(".") + 1, result.Length - result.LastIndexOf(".") - 1)))
-            {
 
-                About_UpdateMessage.Text = "有可用更新，请前往项目仓库下载最新版本";
+            if (Convert.ToInt32(appVersion) < Convert.ToInt32(result.Substring(result.LastIndexOf(".") + 1)))
+            {
+                About_UpdateMessage.Text = "An update is available. Please visit the project repository to download the latest version.";
             }
             else
             {
-                About_UpdateMessage.Text = "您使用的是最新版本";
-
+                About_UpdateMessage.Text = "You are using the latest version.";
             }
+
             CheckForUpdateProgressBar.Visibility = Visibility.Collapsed;
         }
     }

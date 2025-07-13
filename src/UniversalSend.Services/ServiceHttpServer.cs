@@ -22,11 +22,11 @@ namespace UniversalSend.Services
         public async Task<bool> StartHttpServerAsync(int port)
         {
             RestRouteHandler restRouteHandler = new RestRouteHandler();
-            restRouteHandler.RegisterController<V1RequestController>(); // 注册控制器
-            //restRouteHandler.RegisterController<V2RequestController>(); // 注册控制器
+            restRouteHandler.RegisterController<V1RequestController>(); // Register controller
+            //restRouteHandler.RegisterController<V2RequestController>(); // Register controller
             httpServerConfiguration = new HttpServerConfiguration();
             httpServerConfiguration.ListenOnPort(port).RegisterRoute("api/localsend/", restRouteHandler).EnableCors();
-            
+
             httpServer = new HttpServer(httpServerConfiguration);
             try
             {
@@ -36,19 +36,17 @@ namespace UniversalSend.Services
             {
                 return false;
             }
-            //httpServer._listener.ConnectionReceived += _listener_ConnectionReceived;
-            // 输出服务器地址
 
+            // Output server address
 
-            //外挂功能
-            //文件传输
-            if(OperationController.UriOperations.ContainsKey("/api/localsend/v1/send?fileId={}&token={}") == false)
-                OperationController.UriOperations.Add("/api/localsend/v1/send?fileId={}&token={}",OperationFunctions.SendRequestFuncAsync);
-            if (OperationController.UriOperations.ContainsKey("/api/localsend/v1/register") == false)
-                OperationController.UriOperations.Add("/api/localsend/v1/register",OperationFunctions.RegisterRequestFunc);
+            // Plugin functionality
+            // File transfer
+            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/send?fileId={}&token={}"))
+                OperationController.UriOperations.Add("/api/localsend/v1/send?fileId={}&token={}", OperationFunctions.SendRequestFuncAsync);
+            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/register"))
+                OperationController.UriOperations.Add("/api/localsend/v1/register", OperationFunctions.RegisterRequestFunc);
 
-
-            Debug.WriteLine($"HTTP 服务器已在{port}端口上启动");
+            Debug.WriteLine($"HTTP server started on port {port}");
             return isRunning = true;
         }
 
@@ -56,7 +54,7 @@ namespace UniversalSend.Services
         {
             httpServer.StopServer();
             isRunning = false;
-            Debug.WriteLine($"HTTP 服务器已停止");
+            Debug.WriteLine($"HTTP server has stopped");
         }
 
         //private void _listener_ConnectionReceived(Windows.Networking.Sockets.StreamSocketListener sender, Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args)

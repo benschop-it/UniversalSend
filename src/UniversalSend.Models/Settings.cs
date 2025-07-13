@@ -13,7 +13,6 @@ namespace UniversalSend.Models
 {
     public class Settings
     {
-        
         public const string Network_DeviceName = "Network_DeviceName";
 
         public const string Network_DeviceType = "Network_DeviceType";
@@ -26,11 +25,11 @@ namespace UniversalSend.Models
 
         public const string Receive_SaveToFolder = "Receive_SaveToFolder";
 
-        public const string Receive_Histories  = "Receive_Histories";
+        public const string Receive_Histories = "Receive_Histories";
 
-        public const string Favorite_Favorites = "Favorite_Favorites";//设备收藏夹
+        public const string Favorite_Favorites = "Favorite_Favorites"; // Device favorites
 
-        public const string Lab_UseInternalExplorer = "Lab_UseInternalExplorer";//使用内部文件管理器
+        public const string Lab_UseInternalExplorer = "Lab_UseInternalExplorer"; // Use internal file manager
 
         public const string ExplorerPage_ViewMode = "ExplorerPage_ViewMode";
 
@@ -44,13 +43,13 @@ namespace UniversalSend.Models
 
         private static void InitSettings()
         {
-            //设备名称
+            // Device name
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
-            SetInitSetting(Network_DeviceName,$"{deviceInfo.SystemProductName} (UWP)");
+            SetInitSetting(Network_DeviceName, $"{deviceInfo.SystemProductName} (UWP)");
 
-            //设备类型
+            // Device type
             SystemHelper.DeviceFormFactorType deviceType = SystemHelper.GetDeviceFormFactorType();
-            switch(deviceType)
+            switch (deviceType)
             {
                 case DeviceFormFactorType.Phone:
                     SetInitSetting(Network_DeviceType, $"mobile");
@@ -70,22 +69,26 @@ namespace UniversalSend.Models
                     SetInitSetting(Network_DeviceType, $"web");
                     break;
             }
-            //设备型号
-            if(!string.IsNullOrEmpty(deviceInfo.SystemSku))
-                SetInitSetting(Network_DeviceModel,deviceInfo.SystemSku);
+
+            // Device model
+            if (!string.IsNullOrEmpty(deviceInfo.SystemSku))
+                SetInitSetting(Network_DeviceModel, deviceInfo.SystemSku);
             else
                 SetInitSetting(Network_DeviceModel, deviceInfo.SystemProductName);
-            //端口
+
+            // Port
             SetInitSetting(Network_Port, 53317);
-            //广播地址
+
+            // Multicast address
             SetInitSetting(Network_MulticastAddress, "224.0.0.167");
-            //实验_使用内部文件管理器
-            SetInitSetting(Lab_UseInternalExplorer,"False");
-            //
-            //SetInitSetting(ExplorerPage_ViewMode,);
+
+            // Lab - Use internal file manager
+            SetInitSetting(Lab_UseInternalExplorer, "False");
+
+            // (ExplorerPage_ViewMode setting can be added here)
         }
 
-        public static bool SetSetting(string key,object value)
+        public static bool SetSetting(string key, object value)
         {
             UserSettings.Values[key] = value;
             return true;
@@ -95,7 +98,7 @@ namespace UniversalSend.Models
         {
             if (UserSettings.Values.ContainsKey(key))
                 return false;
-            UserSettings.Values.Add(key,value);
+            UserSettings.Values.Add(key, value);
             return true;
         }
 

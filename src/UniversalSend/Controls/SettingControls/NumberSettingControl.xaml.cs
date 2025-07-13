@@ -15,13 +15,14 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.SettingControls
 {
     public sealed partial class NumberSettingControl : UserControl
     {
         public string SettingKey { get; set; }
+
         public NumberSettingControl(string key)
         {
             this.InitializeComponent();
@@ -31,6 +32,7 @@ namespace UniversalSend.Controls.SettingControls
         private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             MainTextBox.BorderBrush = DefaultTextBox.BorderBrush;
+
             if (!string.IsNullOrEmpty(SettingKey) && MainTextBox.Text.All(char.IsDigit))
                 Settings.SetSetting(SettingKey, Convert.ToInt32(MainTextBox.Text));
             else
@@ -41,16 +43,17 @@ namespace UniversalSend.Controls.SettingControls
         {
             if (string.IsNullOrEmpty(SettingKey))
                 return;
+
             string settingValue = Settings.GetSettingContentAsString(SettingKey);
 
             if (string.IsNullOrEmpty(settingValue))
             {
-                MainTextBox.Text = "不可用";
+                MainTextBox.Text = "Unavailable";
                 MainTextBox.IsEnabled = false;
                 return;
             }
-            MainTextBox.Text = settingValue;
 
+            MainTextBox.Text = settingValue;
         }
     }
 }

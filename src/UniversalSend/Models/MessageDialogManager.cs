@@ -5,19 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
 
-namespace UniversalSend.Models
-{
-    public class MessageDialogManager
-    {
-        public static async Task<IUICommand> EmptySendTaskAsync()
-        {
-            var messageDialog = new MessageDialog("请至少选择一个文件","未选择文件");
+namespace UniversalSend.Models {
+    public class MessageDialogManager {
+        public static async Task<IUICommand> EmptySendTaskAsync() {
+            var messageDialog = new MessageDialog("Please select at least one file", "No File Selected");
             return await messageDialog.ShowAsync();
         }
 
-        public static async Task<IUICommand> FileIsNotExistAsync()
-        {
-            var messageDialog = new MessageDialog("文件可能被移动、改名或删除", "找不到该文件");
+        public static async Task<IUICommand> FileIsNotExistAsync() {
+            var messageDialog = new MessageDialog("The file may have been moved, renamed, or deleted", "File Not Found");
             return await messageDialog.ShowAsync();
         }
     }

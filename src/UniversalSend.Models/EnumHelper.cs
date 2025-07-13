@@ -19,12 +19,12 @@ namespace UniversalSend.Models
 
                 if (memberInfo != null && memberInfo.Length > 0)
                 {
-                    // 尝试获取 Description 特性
+                    // Try to get the Description attribute
                     var attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                     if (attrs != null && attrs.Count() > 0)
                     {
-                        // 返回 Description 特性的值
+                        // Return the value of the Description attribute
                         return ((DescriptionAttribute)attrs.ToList()[0]).Description;
                     }
                 }

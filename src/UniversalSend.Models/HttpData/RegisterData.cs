@@ -18,12 +18,14 @@ namespace UniversalSend.Models.HttpData
         public string protocol { get; set; }
         public bool download { get; set; }
         public bool announce { get; set; }
-
     }
 
     public class RegisterDataManager
     {
-        public static RegisterData GetRegisterDataFromDevice(Device device)//从设备类中获取RegisterData，常用于获取本地设备注册信息
+        /// <summary>
+        /// Gets RegisterData from a Device instance, commonly used to retrieve local device registration information
+        /// </summary>
+        public static RegisterData GetRegisterDataFromDevice(Device device)
         {
             RegisterData registerData = new RegisterData();
             registerData.alias = device.Alias;

@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.SettingControls
 {
@@ -33,9 +33,9 @@ namespace UniversalSend.Controls.SettingControls
         {
             StorageFolder folder = await StorageHelper.GetReceiveStoageFolderAsync();
             if (folder != null)
-                PathTextBlock.Text = "路径：" + folder.Path;
+                PathTextBlock.Text = "Path: " + folder.Path;
             else
-                PathTextBlock.Text = "请重新选择文件夹！";
+                PathTextBlock.Text = "Please reselect a folder!";
         }
 
         private async void MainButton_Click(object sender, RoutedEventArgs e)
@@ -55,7 +55,7 @@ namespace UniversalSend.Controls.SettingControls
             {
                 string folderToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
                 Settings.SetSetting(Settings.Receive_SaveToFolder, folderToken);
-                PathTextBlock.Text = "路径：" + folder.Path;
+                PathTextBlock.Text = "Path: " + folder.Path;
             }
         }
     }

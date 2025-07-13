@@ -16,6 +16,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -24,15 +25,15 @@
             <Image Height="48" Width="48" Margin="0,0,24,0" Name="IconImage" Source="{x:Bind ViewStorageItem.Icon,Mode=OneWay}"/>
             <TextBlock VerticalAlignment="Center" Grid.Column="1" Name="NameTextBlock"/>
         </Grid>
+
         <ScrollViewer Grid.Row="1" Margin="4,8,0,0" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Name="PropertiesStackPanel" Margin="0,0,0,0">
-                
-            </StackPanel>
+            <StackPanel Name="PropertiesStackPanel" Margin="0,0,0,0"/>
         </ScrollViewer>
+
         <Grid Grid.Row="2">
             <StackPanel Orientation="Horizontal" Margin="0,8,0,0" HorizontalAlignment="Right">
-                <Button Content="关闭" Name="CancelButton" x:FieldModifier="public" Margin="0,0,4,0"/>
-                <!--<Button Content="确定" Name="OkButton" x:FieldModifier="public"/>-->
+                <Button Content="Close" Name="CancelButton" x:FieldModifier="public" Margin="0,0,4,0"/>
+                <!--<Button Content="OK" Name="OkButton" x:FieldModifier="public"/>-->
             </StackPanel>
         </Grid>
     </Grid>

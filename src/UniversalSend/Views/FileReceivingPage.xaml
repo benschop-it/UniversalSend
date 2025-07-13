@@ -19,7 +19,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Name="PageHeader" Margin="24" Text="正在接收文件……"/>
+        <TextBlock Name="PageHeader" Margin="24" Text="Receiving files..."/>
         <ListView Margin="24,0,24,0" Name="FileReceivingListView" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="tasks:ReceiveTask">
@@ -42,7 +42,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel Grid.Row="2" Margin="24" Padding="8">
-            <TextBlock Name="ProgressBarLabel" Text="总进度"/>
+            <TextBlock Name="ProgressBarLabel" Text="Total progress"/>
             <ProgressBar Name="MainProgressBar" Margin="0,4,0,0"/>
             <!--<TextBlock Name="FilesCountTextBlock"/>
             <TextBlock Name="FilesSizeTextBlock"/>-->
@@ -50,19 +50,19 @@
                 <Button Name="DetailButton" Margin="0,0,8,0" Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon  Glyph="&#xF167;" Margin="0,4,6,0"/>
-                        <TextBlock VerticalAlignment="Center" Text="详细信息"/>
+                        <TextBlock VerticalAlignment="Center" Text="Details"/>
                     </StackPanel>
                 </Button>
                 <Button Name="CancelButton" Click="CancelButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon  Glyph="&#xE711;" Margin="0,4,6,0"/>
-                        <TextBlock VerticalAlignment="Center" Text="取消"/>
+                        <TextBlock VerticalAlignment="Center" Text="Cancel"/>
                     </StackPanel>
                 </Button>
                 <Button Name="FinishButton" Visibility="Collapsed" Click="FinishButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon  Glyph="&#xE8FB;" Margin="0,4,6,0"/>
-                        <TextBlock VerticalAlignment="Center" Text="完成"/>
+                        <TextBlock VerticalAlignment="Center" Text="Finish"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

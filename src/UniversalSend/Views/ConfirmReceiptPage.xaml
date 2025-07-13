@@ -17,28 +17,32 @@
             <RowDefinition Height="auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+
         <FontIcon/>
+
         <TextBlock Grid.Row="1" Text="{x:Bind SendRequestData.info.alias}"/>
+
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock Text="{x:Bind SendRequestData.info.deviceModel}"/>
         </StackPanel>
+
         <TextBlock Grid.Row="3">
-            <Run Text="想要发送给你"/>
+            <Run Text="wants to send you "/>
             <Run Text="{x:Bind SendRequestData.files.Count}"/>
-            <Run Text="个文件"/>
+            <Run Text=" file(s)"/>
         </TextBlock>
-        
+
         <StackPanel Grid.Row="5" Orientation="Horizontal">
             <Button Name="CancelButton" Click="CancelButton_Click">
                 <StackPanel>
                     <FontIcon Glyph="&#xE711;" />
-                    <TextBlock Text="拒绝"/>
+                    <TextBlock Text="Reject"/>
                 </StackPanel>
             </Button>
             <Button Name="AcceptButton" Click="AcceptButton_Click">
                 <StackPanel>
                     <FontIcon Glyph="&#xE8FB;" />
-                    <TextBlock Text="接受"/>
+                    <TextBlock Text="Accept"/>
                 </StackPanel>
             </Button>
         </StackPanel>

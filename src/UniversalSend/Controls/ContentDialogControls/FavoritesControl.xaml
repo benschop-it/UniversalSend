@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Controls.ContentDialogControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:UniversalSend.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:UniversalSend.Models"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -16,7 +17,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="收藏夹"/>
+
+        <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="Favorites"/>
+
         <ListView Grid.Row="1" Name="FavoritesListView" IsItemClickEnabled="True" Margin="0,8,0,0" ItemClick="FavoritesListView_ItemClick">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Favorite">
@@ -43,13 +46,15 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+
         <StackPanel Grid.Row="2">
             <ProgressBar IsIndeterminate="True" Name="FindDeviceProgressBar" Visibility="Collapsed"/>
             <TextBlock Name="MessageTextBlock" Visibility="Collapsed"/>
         </StackPanel>
+
         <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,8,0,0">
-            <Button Content="关闭" Name="CancelButton" Click="CancelButton_Click" Margin="0,0,4,0"/>
-            <Button Content="添加" Name="AddButton" Click="AddButton_Click"/>
+            <Button Content="Close" Name="CancelButton" Click="CancelButton_Click" Margin="0,0,4,0"/>
+            <Button Content="Add" Name="AddButton" Click="AddButton_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

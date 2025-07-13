@@ -10,11 +10,14 @@ namespace UniversalSend.Models
 {
     public class ReceiveManager
     {
-        public static event EventHandler SendRequestReceived;//接收到Send-Request事件
+        // Event triggered upon receiving a Send-Request
+        public static event EventHandler SendRequestReceived;
 
-        public static event EventHandler SendDataReceived;//接收到Send事件
+        // Event triggered upon receiving actual Send data
+        public static event EventHandler SendDataReceived;
 
-        public static event EventHandler CancelReceived;//接收到Cancel事件
+        // Event triggered upon receiving a Cancel event
+        public static event EventHandler CancelReceived;
 
         public enum QuickSaveMode
         {
@@ -50,19 +53,18 @@ namespace UniversalSend.Models
 
         public static void SendRequestEvent(SendRequestData sendRequestData)
         {
-            SendRequestReceived?.Invoke(sendRequestData,EventArgs.Empty);
+            SendRequestReceived?.Invoke(sendRequestData, EventArgs.Empty);
         }
-
 
         public static void SendDataReceivedEvent(ReceiveTask receiveTask)
         {
-            SendDataReceived?.Invoke(receiveTask,EventArgs.Empty);
+            SendDataReceived?.Invoke(receiveTask, EventArgs.Empty);
         }
 
         public static void CancelReceivedEvent()
         {
             ReceiveTaskManager.ReceivingTasks.Clear();
-            CancelReceived?.Invoke(null,EventArgs.Empty);
+            CancelReceived?.Invoke(null, EventArgs.Empty);
         }
     }
 }

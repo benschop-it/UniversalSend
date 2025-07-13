@@ -22,14 +22,14 @@
             <!--<Button Name="GoBackButton" Click="GoBackButton_Click" Background="Transparent" Height="54" Width="54">
                 <FontIcon Glyph="&#xE72B;" />
             </Button>-->
-            <TextBlock Text="接收历史" Margin="12,0,0,0" VerticalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Receive History" Margin="12,0,0,0" VerticalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
         </StackPanel>
         <CommandBar Grid.Row="1">
             <CommandBar.Content>
                 <CommandBar DefaultLabelPosition="Right">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Name="LaunchFolderButton" Icon="OpenLocal" Label="打开文件夹" Click="LaunchFolderButton_Click"/>
-                        <AppBarButton Name="ClearHistoryButton" Icon="Delete" Label="清空历史记录" Click="ClearHistoryButton_Click"/>
+                        <AppBarButton Name="LaunchFolderButton" Icon="OpenLocal" Label="Open Folder" Click="LaunchFolderButton_Click"/>
+                        <AppBarButton Name="ClearHistoryButton" Icon="Delete" Label="Clear History" Click="ClearHistoryButton_Click"/>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
             </CommandBar.Content>
@@ -54,10 +54,10 @@
             </ListView.ItemTemplate>
             <ListView.ContextFlyout>
                 <MenuFlyout x:Name="ListViewMenuFlyout" Opened="ListViewMenuFlyout_Opened">
-                    <MenuFlyoutItem Text="打开文件" Name="MenuFlyout_OpenFile" Click="MenuFlyout_OpenFile_Click"/>
-                    <MenuFlyoutItem Text="打开文件位置" x:Name="MenuFlyout_OpenFilePath" Click="MenuFlyout_OpenFilePath_Click"/>
-                    <MenuFlyoutItem Text="信息" Visibility="Collapsed" Name="MenuFlyout_Info" Click="MenuFlyout_Info_Click"/>
-                    <MenuFlyoutItem Text="从记录中删除" Name="MenuFlyout_Delete" Click="MenuFlyout_Delete_Click"/>
+                    <MenuFlyoutItem Text="Open File" Name="MenuFlyout_OpenFile" Click="MenuFlyout_OpenFile_Click"/>
+                    <MenuFlyoutItem Text="Open File Location" x:Name="MenuFlyout_OpenFilePath" Click="MenuFlyout_OpenFilePath_Click"/>
+                    <MenuFlyoutItem Text="Info" Visibility="Collapsed" Name="MenuFlyout_Info" Click="MenuFlyout_Info_Click"/>
+                    <MenuFlyoutItem Text="Remove from History" Name="MenuFlyout_Delete" Click="MenuFlyout_Delete_Click"/>
                 </MenuFlyout>
             </ListView.ContextFlyout>
         </ListView>

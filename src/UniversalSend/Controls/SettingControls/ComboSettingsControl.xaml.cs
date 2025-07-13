@@ -14,17 +14,20 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.SettingControls
 {
     public sealed partial class ComboSettingsControl : UserControl
     {
         string Key { get; set; }
-        Dictionary<int,string> SelectionDisplayName { get; set; }//显示名称，与枚举中的常数对应
+
+        // Display name, corresponding to constants in the enum
+        Dictionary<int, string> SelectionDisplayName { get; set; }
 
         Type EnumType { get; set; }
-        public ComboSettingsControl(string key,Type enumType, Dictionary<int, string> selectionDisplayName)
+
+        public ComboSettingsControl(string key, Type enumType, Dictionary<int, string> selectionDisplayName)
         {
             this.InitializeComponent();
             this.Key = key;
@@ -37,6 +40,7 @@ namespace UniversalSend.Controls.SettingControls
             string[] names = Enum.GetNames(EnumType);
             Array valueArray = Enum.GetValues(EnumType);
             List<SelectionItem> items = new List<SelectionItem>();
+
             for (int i = 0; i < names.Length; i++)
             {
                 string displayName;
@@ -45,17 +49,18 @@ namespace UniversalSend.Controls.SettingControls
                     items.Add(new SelectionItem(num, displayName, names[i]));
                 else
                     items.Add(new SelectionItem(num, names[i], names[i]));
-
             }
+
             MainComboBox.ItemsSource = items;
+
             string setting = Settings.GetSettingContentAsString(Key);
             if (!string.IsNullOrEmpty(setting))
             {
-                MainComboBox.SelectedIndex = items.FindIndex(x=>x.Name == setting);
+                MainComboBox.SelectedIndex = items.FindIndex(x => x.Name == setting);
             }
             else
             {
-                MainComboBox.PlaceholderText = "不可用";
+                MainComboBox.PlaceholderText = "Unavailable";
                 MainComboBox.IsEnabled = false;
             }
         }
@@ -79,6 +84,4 @@ namespace UniversalSend.Controls.SettingControls
             public string Name { get; set; }
         }
     }
-
-    
 }

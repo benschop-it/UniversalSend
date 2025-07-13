@@ -25,23 +25,21 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-//using static System.Net.WebRequestMethods;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Restup.WebServer;
 using UniversalSend.Services;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Models.Data;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the Blank Page item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used independently or navigated to within a Frame.
     /// </summary>
     public sealed partial class DevPage : Page
     {
-        
         public DevPage()
         {
             this.InitializeComponent();
@@ -75,26 +73,28 @@ namespace UniversalSend.Views
 
         private void OpenDownloadFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            //Download
+            // TODO: Implement opening of the system Downloads folder
         }
 
         private async void SendSendRequestButton_Click(object sender, RoutedEventArgs e)
         {
-            await SendSendRequsetAsync();
+            await SendSendRequestAsync();
         }
 
-        async Task SendSendRequsetAsync()
+        async Task SendSendRequestAsync()
         {
             List<StorageFile> files = new List<StorageFile>();
             files.Add(await ApplicationData.Current.LocalFolder.GetFileAsync("test.txt"));
             await SendTaskManager.CreateSendTasks(files);
-            //To-Do:需要一个存储已知设备的列表
+
+            // TODO: Replace with actual known device list
             Device device = new Device
             {
                 Alias = "Mi12s",
                 IP = "192.168.55.150",
                 Port = 53317,
             };
+
             await SendTaskManager.SendSendRequestAsync(device);
             await SendTaskManager.SendSendTasksAsync(device);
         }

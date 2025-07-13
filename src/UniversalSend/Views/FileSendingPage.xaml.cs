@@ -18,12 +18,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 Describes the "Blank Page" item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// Can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class FileSendingPage : Page
     {
@@ -33,7 +33,6 @@ namespace UniversalSend.Views
         {
             this.InitializeComponent();
             SendManager.SendStateChanged += SendManager_SendStateChanged;
-            
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -43,7 +42,6 @@ namespace UniversalSend.Views
             UpdateUI();
             MainProgressBar.Maximum = SendTaskManager.SendTasks.Count;
             await StartTaskAsync();
-
         }
 
         async Task StartTaskAsync()
@@ -51,9 +49,9 @@ namespace UniversalSend.Views
             LocalDeviceGrid.Children.Add(new DeviceItemControl(ProgramData.LocalDevice));
             ReceiveDeviceGrid.Children.Add(new DeviceItemControl(Device));
             bool sendSendRequestSuccess = await SendTaskManager.SendSendRequestAsync(Device);
-            if(sendSendRequestSuccess == false)
+            if (sendSendRequestSuccess == false)
             {
-                PrepareLabel.Text = "接收方拒绝了传输请求。";
+                PrepareLabel.Text = "The receiver declined the transfer request.";
                 return;
             }
             PrepareControls.Visibility = Visibility.Collapsed;
@@ -78,10 +76,9 @@ namespace UniversalSend.Views
             FileSendingListView.ItemsSource = SendTaskManager.SendTasks;
             if (SendedItemsCount == SendTaskManager.SendTasks.Count)
             {
-                ProgressBarLabel.Text = "已完成";
+                ProgressBarLabel.Text = "Completed";
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;
-
             }
             MainProgressBar.Value = SendedItemsCount;
         }

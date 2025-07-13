@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.ContentDialogControls
 {
@@ -51,14 +51,17 @@ namespace UniversalSend.Controls.ContentDialogControls
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
+
             FindDeviceProgressBar.Visibility = Visibility.Visible;
             Device device = await DeviceManager.FindDeviceByIPAsync(item.IPAddr);
             FindDeviceProgressBar.Visibility = Visibility.Collapsed;
+
             if (device == null)
             {
                 MessageTextBlock.Visibility = Visibility.Visible;
-                MessageTextBlock.Text = $"未能找到设备：{item.DeviceName}({item.IPAddr})";
-            }else
+                MessageTextBlock.Text = $"Device not found: {item.DeviceName} ({item.IPAddr})";
+            }
+            else
             {
                 SendManager.SendPreparedEvent(device);
                 ProgramData.ContentDialogManager.HideContentDialog();

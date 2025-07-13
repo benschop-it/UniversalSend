@@ -19,9 +19,9 @@
                     <Setter Property="BorderThickness" Value="1"/>
                 </Style>
             </StackPanel.Resources>
-            <ToggleButton x:FieldModifier="public" Content="关" Name="OffButton" Click="OffButton_Click"/>
-            <ToggleButton x:FieldModifier="public" Content="收藏夹" BorderThickness="0,1,0,1" Name="FavoritesButton" Click="FavoritesButton_Click"/>
-            <ToggleButton x:FieldModifier="public" Content="开" Name="OnButton" Click="OnButton_Click"/>
+            <ToggleButton x:FieldModifier="public" Content="Off" Name="OffButton" Click="OffButton_Click"/>
+            <ToggleButton x:FieldModifier="public" Content="Favorites" BorderThickness="0,1,0,1" Name="FavoritesButton" Click="FavoritesButton_Click"/>
+            <ToggleButton x:FieldModifier="public" Content="On" Name="OnButton" Click="OnButton_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

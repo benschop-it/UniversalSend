@@ -4,7 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:UniversalSend.Models" xmlns:tasks="using:UniversalSend.Models.Tasks"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:UniversalSend.Models"
+    xmlns:tasks="using:UniversalSend.Models.Tasks"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -28,8 +30,8 @@
             <Grid Grid.Row="2" Name="ReceiveDeviceGrid" HorizontalAlignment="Center" Margin="8">
                 
             </Grid>
-            <TextBlock HorizontalAlignment="Center" Name="PrepareLabel" Grid.Row="4" Text="等待响应中……"/>
-            <Button HorizontalAlignment="Center" Grid.Row="5" Content="取消" Click="CancelButton_Click" Margin="8,8,8,24"/>
+            <TextBlock HorizontalAlignment="Center" Name="PrepareLabel" Grid.Row="4" Text="Waiting for response..."/>
+            <Button HorizontalAlignment="Center" Grid.Row="5" Content="Cancel" Click="CancelButton_Click" Margin="8,8,8,24"/>
         </Grid>
         <Grid Name="SendingControls" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -37,7 +39,7 @@
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Name="PageHeader" Margin="24" Text="正在发送文件……"/>
+            <TextBlock Name="PageHeader" Margin="24" Text="Sending files..."/>
             <ListView Margin="24,0,24,0" Name="FileSendingListView" Grid.Row="1">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="tasks:SendTask">
@@ -60,25 +62,25 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackPanel Grid.Row="2" Margin="24" Padding="8">
-                <TextBlock Name="ProgressBarLabel" Text="总进度"/>
+                <TextBlock Name="ProgressBarLabel" Text="Total progress"/>
                 <ProgressBar Name="MainProgressBar" Margin="0,4,0,0"/>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,4,0,0">
                     <Button Name="DetailButton" Margin="0,0,8,0" Visibility="Collapsed">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon  Glyph="&#xF167;" Margin="0,4,6,0"/>
-                            <TextBlock VerticalAlignment="Center" Text="详细信息"/>
+                            <TextBlock VerticalAlignment="Center" Text="Details"/>
                         </StackPanel>
                     </Button>
                     <Button Name="CancelButton" Click="CancelButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon  Glyph="&#xE711;" Margin="0,4,6,0"/>
-                            <TextBlock VerticalAlignment="Center" Text="取消"/>
+                            <TextBlock VerticalAlignment="Center" Text="Cancel"/>
                         </StackPanel>
                     </Button>
                     <Button Name="FinishButton" Visibility="Collapsed" Click="FinishButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon  Glyph="&#xE8FB;" Margin="0,4,6,0"/>
-                            <TextBlock VerticalAlignment="Center" Text="完成"/>
+                            <TextBlock VerticalAlignment="Center" Text="Done"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>

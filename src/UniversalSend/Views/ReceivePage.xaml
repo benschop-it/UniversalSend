@@ -43,11 +43,11 @@
         <TextBlock Margin="24,0,24,0" Grid.Row="2" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}"/>
 
         <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="快速保存" HorizontalAlignment="Center" Margin="8"/>
+            <TextBlock Text="Quick Save" HorizontalAlignment="Center" Margin="8"/>
             <Grid>
-                <controls:QuickSaveOptionsControl x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="功能开发中……" IsEnabled="False"/>
+                <controls:QuickSaveOptionsControl x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="Feature under development…" IsEnabled="False"/>
                 <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="{ThemeResource SystemAltLowColor}" Padding="8">
-                    <TextBlock  Text="功能开发中……" />
+                    <TextBlock  Text="Feature under development…" />
                 </Border>
             </Grid>
         </StackPanel>

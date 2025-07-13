@@ -21,12 +21,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the “Blank Page” item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// Can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class HistoryPage : Page
     {
@@ -42,8 +42,6 @@ namespace UniversalSend.Views
 
         async Task initAsync()
         {
-            
-            
             try
             {
                 StorageFolder storageFolder = await StorageHelper.GetReceiveStoageFolderAsync();
@@ -151,7 +149,7 @@ namespace UniversalSend.Views
 
         private void MenuFlyout_Info_Click(object sender, RoutedEventArgs e)
         {
-            /*To-Do:历史记录详细信息弹窗*/
+            /*To-Do: History details popup*/
         }
 
         private async void MenuFlyout_OpenFilePath_Click(object sender, RoutedEventArgs e)

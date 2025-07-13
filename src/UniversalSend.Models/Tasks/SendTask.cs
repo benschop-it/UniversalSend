@@ -24,19 +24,17 @@ namespace UniversalSend.Models.Tasks
 
         public StorageFile StorageFile { get; set; }
 
-
-
         public enum ReceiveTaskStates
         {
-            [Description("等待")]
+            [Description("Waiting")]
             Wating,
-            [Description("正在传输")]
+            [Description("Transferring")]
             Sending,
-            [Description("已取消")]
+            [Description("Canceled")]
             Canceled,
-            [Description("错误")]
+            [Description("Error")]
             Error,
-            [Description("完成")]
+            [Description("Completed")]
             Done
         }
 
@@ -46,68 +44,61 @@ namespace UniversalSend.Models.Tasks
     public class SendTaskManager
     {
         public static List<SendTask> SendTasks { get; private set; } = new List<SendTask>();
-        
-        public static SendTask CreateSendTaskFromFileRequestDataAndStorageFile(FileRequestData fileRequestData,StorageFile storageFile)
+
+        public static SendTask CreateSendTaskFromFileRequestDataAndStorageFile(FileRequestData fileRequestData, StorageFile storageFile)
         {
             SendTask sendTask = new SendTask();
-            UniversalSendFile universalSendFile = UniversalSendFileManager.GetUniversalSendFileFromFileRequestData(fileRequestData);//universalSendFile的Token等待接收方返回结果后补充
+            UniversalSendFile universalSendFile = UniversalSendFileManager.GetUniversalSendFileFromFileRequestData(fileRequestData); // Token will be added after receiver responds
             sendTask.File = universalSendFile;
             sendTask.StorageFile = storageFile;
             return sendTask;
         }
 
-        public static async Task CreateSendTasks(List<StorageFile>files)
+        public static async Task CreateSendTasks(List<StorageFile> files)
         {
             SendTasks.Clear();
-            //SendRequestData sendRequestData = await SendRequestDataManager.CreateSendRequestDataAsync(files);
-            foreach(var file in files)
+            foreach (var file in files)
             {
                 FileRequestData fileRequestData = await FileRequestDataManager.CreateFromStorageFileAsync(file);
                 SendTasks.Add(CreateSendTaskFromFileRequestDataAndStorageFile(fileRequestData, file));
             }
             SendManager.SendCreatedEvent();
-            
         }
 
         public static async Task<SendTask> CreateSendTask(StorageFile file)
         {
-
-            //SendRequestData sendRequestData = await SendRequestDataManager.CreateSendRequestDataAsync(files);
             FileRequestData fileRequestData = await FileRequestDataManager.CreateFromStorageFileAsync(file);
             SendManager.SendCreatedEvent();
             return CreateSendTaskFromFileRequestDataAndStorageFile(fileRequestData, file);
-
-
         }
 
-        public static SendTask CreateSendTask(String text)
+        public static SendTask CreateSendTask(string text)
         {
-
             SendTask sendTask = new SendTask();
             sendTask.File = UniversalSendFileManager.CreateUniversalSendFileFromText(text);
             SendManager.SendCreatedEvent();
-
             return sendTask;
-
-
         }
 
-        public static async Task<bool> SendSendRequestAsync(Device destinationDevice)//发送请求
+        public static async Task<bool> SendSendRequestAsync(Device destinationDevice) // Send request
         {
             SendRequestData sendRequestData = new SendRequestData();
             sendRequestData.files = new Dictionary<string, FileRequestData>();
             sendRequestData.info = InfoDataManager.GetInfoDataFromDevice(ProgramData.LocalDevice);
-            foreach(var task in SendTasks)
+            foreach (var task in SendTasks)
             {
-                sendRequestData.files.Add(task.File.Id,FileRequestDataManager.CreateFromUniversalSendFile(task.File));
+                sendRequestData.files.Add(task.File.Id, FileRequestDataManager.CreateFromUniversalSendFile(task.File));
             }
-            Debug.WriteLine($"发送发送请求：\nURL地址{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request");
+            Debug.WriteLine($"Sending send request:\nURL: {destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request");
             Debug.WriteLine(JsonConvert.SerializeObject(sendRequestData));
-            string responseStr = await HttpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request",JsonConvert.SerializeObject(sendRequestData));
-            Debug.WriteLine($"接收方返回：{responseStr}");
+            string responseStr = await HttpClientHelper.PostJsonAsync(
+                $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request",
+                JsonConvert.SerializeObject(sendRequestData)
+            );
+            Debug.WriteLine($"Receiver responded: {responseStr}");
             try
             {
-                FileResponseData fileResponseData = JsonConvert.DeserializeObject<FileResponseData>(responseStr);//To-Do:改为<FileResponseData>
+                FileResponseData fileResponseData = JsonConvert.DeserializeObject<FileResponseData>(responseStr);
                 if (fileResponseData == null)
                 {
                     SendTasks.Clear();
@@ -124,45 +115,49 @@ namespace UniversalSend.Models.Tasks
                 }
                 return true;
             }
-            catch(JsonException)
+            catch (JsonException)
             {
                 return false;
             }
-            
         }
 
         public static async Task SendSendTasksAsync(Device destinationDevice)
         {
             // /api/localsend/v1/send?fileId=some file id&token=some token
             SendManager.SendStartedEvent();
-            foreach(var task in SendTasks)
+            foreach (var task in SendTasks)
             {
-                Debug.WriteLine($"准备发送文件：{task.File.FileName}");
+                Debug.WriteLine($"Preparing to send file: {task.File.FileName}");
 
-                if (String.IsNullOrEmpty(task.File.TransferToken))
+                if (string.IsNullOrEmpty(task.File.TransferToken))
                 {
                     task.TaskState = SendTask.ReceiveTaskStates.Error;
                     SendManager.SendStateChangedEvent();
                     continue;
                 }
-                Debug.WriteLine($"正在发送文件：{task.File.FileName}");
-                if(task.File.FileType == "text")
+
+                Debug.WriteLine($"Sending file: {task.File.FileName}");
+                task.TaskState = SendTask.ReceiveTaskStates.Sending;
+
+                if (task.File.FileType == "text")
                 {
-                    task.TaskState = SendTask.ReceiveTaskStates.Sending;
-                    await HttpClientHelper.PostStringAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}", new StringContent(task.File.Text));
-                    task.TaskState = SendTask.ReceiveTaskStates.Done;
-                    SendManager.SendStateChangedEvent();
+                    await HttpClientHelper.PostStringAsync(
+                        $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}",
+                        new StringContent(task.File.Text)
+                    );
                 }
                 else
                 {
-                    task.TaskState = SendTask.ReceiveTaskStates.Sending;
                     byte[] bytes = await StorageHelper.ReadBytesFromFileAsync(task.StorageFile);
-                    await HttpClientHelper.PostBinaryAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}", bytes);
-                    task.TaskState = SendTask.ReceiveTaskStates.Done;
-                    SendManager.SendStateChangedEvent();
+                    await HttpClientHelper.PostBinaryAsync(
+                        $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}",
+                        bytes
+                    );
                 }
-            }
 
+                task.TaskState = SendTask.ReceiveTaskStates.Done;
+                SendManager.SendStateChangedEvent();
+            }
         }
     }
 }

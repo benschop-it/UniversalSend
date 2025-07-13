@@ -1,27 +1,28 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// 有关程序集的一般信息由以下
-// 控制。更改这些特性值可修改
-// 与程序集关联的信息。
+// General assembly information is controlled through the following
+// attributes. Modify these attribute values to change the information
+// associated with the assembly.
 [assembly: AssemblyTitle("UniversalSend")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UniversalSend")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCopyright("Copyright © 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// 程序集的版本信息由下列四个值组成: 
+// The assembly version information consists of the following four values:
 //
-//      主版本
-//      次版本
-//      生成号
-//      修订号
+//      Major Version
+//      Minor Version
+//      Build Number
+//      Revision
 //
-
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: ComVisible(false)]
+[assembly: NeutralResourcesLanguage("en-US")]

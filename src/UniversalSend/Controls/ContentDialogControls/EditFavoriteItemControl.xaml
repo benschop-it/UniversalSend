@@ -11,16 +11,16 @@
 
     <StackPanel>
         <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Name="TitleTextBlock"/>
-        <TextBlock Text="设备名称"/>
+        <TextBlock Text="Device Name"/>
         <TextBox Name="DeviceNameTextBox"/>
-        <TextBlock Text="IP地址"/>
+        <TextBlock Text="IP Address"/>
         <TextBox Name="IPAddrTextBox"/>
-        <TextBlock Text="端口号"/>
+        <TextBlock Text="Port"/>
         <TextBox Name="PortTextBox"/>
-        <Button Content="删除" Name="DeleteButton" Margin="0,4,0,0" Background="Transparent" Foreground="Red" Click="DeleteButton_Click"/>
+        <Button Content="Delete" Name="DeleteButton" Margin="0,4,0,0" Background="Transparent" Foreground="Red" Click="DeleteButton_Click"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right"  Margin="0,8,0,0">
-            <Button Content="取消" Name="CancelButton" Click="CancelButton_Click" Margin="0,0,4,0"/>
-            <Button Content="保存" Name="SaveButton" Click="SaveButton_Click"/>
+            <Button Content="Cancel" Name="CancelButton" Click="CancelButton_Click" Margin="0,0,4,0"/>
+            <Button Content="Save" Name="SaveButton" Click="SaveButton_Click"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

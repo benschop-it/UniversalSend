@@ -36,7 +36,7 @@ namespace UniversalSend.Models
             return baseUrl + "?" + newQuery;
         }
 
-        public static Dictionary<string,string> GetURLQueryParameters(string url)
+        public static Dictionary<string, string> GetURLQueryParameters(string url)
         {
             Dictionary<string, string> parameterDictionary = new Dictionary<string, string>();
             int queryIndex = url.IndexOf('?');
@@ -64,7 +64,7 @@ namespace UniversalSend.Models
 
         public static bool IsValidFileName(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName) || fileName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0 )
+            if (string.IsNullOrEmpty(fileName) || fileName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
             {
                 return false;
             }
@@ -93,7 +93,7 @@ namespace UniversalSend.Models
             }
         }
 
-        private static readonly string[] Units = { "B", "KB", "MB", "GB"};
+        private static readonly string[] Units = { "B", "KB", "MB", "GB" };
         private static readonly double[] UnitSizes = {
             1,
             1024,
@@ -106,13 +106,12 @@ namespace UniversalSend.Models
             int unitIndex = 0;
             double value = byteNum;
 
-            // 确定最适合的单位
+            // Determine the most suitable unit
             while (value >= 1024 && unitIndex < Units.Length - 1)
             {
                 value /= 1024;
                 unitIndex++;
             }
-
 
             if (unitIndex > 3)
                 unitIndex = 3;
@@ -120,15 +119,15 @@ namespace UniversalSend.Models
         }
     }
 
-    public class HistoryStringConverter:IValueConverter
+    public class HistoryStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is History)
             {
                 History history = (History)value;
-                string deviceAlias = "未知设备";
-                if(history.Device!=null)
+                string deviceAlias = "Unknown Device";
+                if (history.Device != null)
                 {
                     deviceAlias = history.Device.Alias;
                 }

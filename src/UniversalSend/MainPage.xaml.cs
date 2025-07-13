@@ -23,12 +23,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 describes the "Blank Page" item template
 
 namespace UniversalSend
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -72,7 +72,7 @@ namespace UniversalSend
             string deviceFamilyVersion = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
             ulong build = (version & 0x00000000FFFF0000L) >> 16;
-            Debug.WriteLine($"系统版本Build号：{build}");
+            Debug.WriteLine($"System version build number: {build}");
             if (build >= 16299)
             {
                 Frame.Navigate(typeof(RootPage));
@@ -123,7 +123,7 @@ namespace UniversalSend
                 byte[] buffer = new byte[randomAccessStreamWithContentType.Size];
                 await randomAccessStreamWithContentType.ReadAsync(buffer.AsBuffer(), (uint)randomAccessStreamWithContentType.Size, InputStreamOptions.None);
                 StorageFile storageFile = await StorageHelper.CreateTempFile(Guid.NewGuid().ToString() + randomAccessStreamWithContentType.ContentType);
-                await StorageHelper.WriteBytesToFileAsync(storageFile,buffer);
+                await StorageHelper.WriteBytesToFileAsync(storageFile, buffer);
                 sendTasks.Add(await SendTaskManager.CreateSendTask(storageFile));
             }
             else if (shareOperation.Data.Contains(StandardDataFormats.Html))
@@ -141,16 +141,13 @@ namespace UniversalSend
             else if (shareOperation.Data.Contains(StandardDataFormats.StorageItems))
             {
                 List<IStorageItem> items = (await shareOperation.Data.GetStorageItemsAsync()).ToList();
-                Debug.WriteLine($"ShareActivated-StorageItems:items个数：{items.Count}");
+                Debug.WriteLine($"ShareActivated-StorageItems: number of items: {items.Count}");
                 foreach (var item in items)
                 {
                     if (item is StorageFile)
                         sendTasks.Add(await SendTaskManager.CreateSendTask(item as StorageFile));
                 }
-            }//else if(shareOperation.Data.Contains(StandardDataFormats.Uri))
-            //{
-
-            //}
+            }
             else if (shareOperation.Data.Contains(StandardDataFormats.WebLink))
             {
                 Uri uri = await shareOperation.Data.GetWebLinkAsync();

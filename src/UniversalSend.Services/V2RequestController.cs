@@ -20,20 +20,20 @@ namespace UniversalSend.Services
         //[UriFormat("v2/hello")]
         //public GetResponse GetHello()
         //{
-        //    Debug.WriteLine("GET /hello called"); // 调试输出
+        //    Debug.WriteLine("GET /hello called"); // Debug output
         //    return new GetResponse(
         //        GetResponse.ResponseStatus.OK,
         //        new DataReceived() { ID = 1, PropName = "Hello from UWP REST Server!" });
         //}
 
-        //// 处理 POST /api/data  
+        //// Handle POST /api/data  
         //[UriFormat("v2/data")]
         //public IPostResponse PostData([FromContent] dynamic data)
         //{
-        //    string receivedData = data?.input; // 从请求体中获取数据  
+        //    string receivedData = data?.input; // Get data from request body  
         //    return new PostResponse(
         //        PostResponse.ResponseStatus.Created,
-        //        receivedData); // 修复：直接传递字符串，而不是匿名类型  
+        //        receivedData); // Fix: pass string directly instead of anonymous type  
         //}
 
 
@@ -42,12 +42,12 @@ namespace UniversalSend.Services
         [UriFormat("v2/register")]
         public PostResponse PostRegister([FromContent] RegisterData data)
         {
-            Debug.WriteLine("POST /register called"); // 调试输出
-            if(data != null)
+            Debug.WriteLine("POST /register called"); // Debug output
+            if (data != null)
                 Debug.WriteLine(JsonConvert.SerializeObject(data));
             return new PostResponse(
                 PostResponse.ResponseStatus.Created,
-                "",JsonConvert.SerializeObject(RegisterDataManager.GetRegisterDataFromDevice(ProgramData.LocalDevice)/*ProgramData.LocalDeviceRegisterData*/)); // 修复：直接传递字符串，而不是匿名类型  
+                "", JsonConvert.SerializeObject(RegisterDataManager.GetRegisterDataFromDevice(ProgramData.LocalDevice)/*ProgramData.LocalDeviceRegisterData*/)); // Fix: pass string directly instead of anonymous type  
         }
 
         //[UriFormat("v2/prepare-upload?fileId={fileId}&token={token}")]

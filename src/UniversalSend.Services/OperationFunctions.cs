@@ -19,77 +19,61 @@ namespace UniversalSend.Services
 {
     public class OperationFunctions
     {
-        //处理远程设备发送文件
+        // Handles incoming file from remote device
         public static async Task<object> SendRequestFuncAsync(MutableHttpServerRequest mutableHttpServerRequest)
         {
-            Dictionary<string,string> queryParameters = StringHelper.GetURLQueryParameters(mutableHttpServerRequest.Uri.ToString());
-            Debug.WriteLine($"接收到文件 queryParameters个数：{queryParameters.Count}");
-            string fileId,token;
+            Dictionary<string, string> queryParameters = StringHelper.GetURLQueryParameters(mutableHttpServerRequest.Uri.ToString());
+            Debug.WriteLine($"Received file. Number of query parameters: {queryParameters.Count}");
+            string fileId, token;
             if (!queryParameters.TryGetValue("fileId", out fileId) || !queryParameters.TryGetValue("token", out token))
             {
                 ReceiveManager.SendDataReceivedEvent(null);
                 return null;
             }
-            ReceiveTask task = ReceiveTaskManager.WriteFileContentToReceivingTask(fileId,token,mutableHttpServerRequest.Content);
-            
-            if(task != null)
+
+            ReceiveTask task = ReceiveTaskManager.WriteFileContentToReceivingTask(fileId, token, mutableHttpServerRequest.Content);
+
+            if (task != null)
             {
                 ReceiveManager.SendDataReceivedEvent(task);
-                Debug.WriteLine("正在写入数据至文件");
+                Debug.WriteLine("Writing data to file");
                 var headerList = mutableHttpServerRequest.Headers.ToList();
                 var item = headerList.Find(x => x.Name.Equals("host"));
                 if (item == null)
                     return null;
                 string host = item.Value;
                 string ip = host.Substring(0, host.LastIndexOf(":"));
-                await WriteFileAsync(task,ip);
+                await WriteFileAsync(task, ip);
             }
             else
             {
                 ReceiveManager.SendDataReceivedEvent(null);
             }
-            //    //byte[] fileContent = mutableHttpServerRequest.Content;
 
-            //    //mutableHttpServerRequest
-            //foreach (var item in mutableHttpServerRequest.Headers)
-            //{
-            //    Debug.WriteLine($"{item.Name}:{item.Value}");
-            //}
-            //mutableHttpServerRequest
-            //ReceiveTaskManager.ReceivingTasks.Find(x=>x.file);
-            
-                return null;
+            return null;
         }
 
-        private static async Task WriteFileAsync(ReceiveTask task,string ip)
+        private static async Task WriteFileAsync(ReceiveTask task, string ip)
         {
             StorageFile file = await ReceiveTaskManager.WriteReceiveTaskToFileAsync(task);
-            HistoryManager.AddHistoriesList(new History(task.file, StorageApplicationPermissions.FutureAccessList.Add(file),DeviceManager.CreateDeviceFromInfoData(task.sender)));
+            HistoryManager.AddHistoriesList(new History(task.file, StorageApplicationPermissions.FutureAccessList.Add(file), DeviceManager.CreateDeviceFromInfoData(task.sender)));
         }
 
-        //接收远程设备注册
+        // Handles registration request from remote device
         public static object RegisterRequestFunc(MutableHttpServerRequest mutableHttpServerRequest)
         {
-            //Debug.WriteLine("------RegisterRequest------");
-            //foreach(var item in mutableHttpServerRequest.Headers)
-            //{
-            //    Debug.WriteLine($"{item.Name}:{item.Value}");
-            //}
-            //Debug.WriteLine("------RegisterRequestEnd------");
-
             var headerList = mutableHttpServerRequest.Headers.ToList();
-            var item = headerList.Find(x=>x.Name.Equals("host"));
+            var item = headerList.Find(x => x.Name.Equals("host"));
             if (item == null)
                 return null;
+
             string host = item.Value;
             string ip = host.Substring(0, host.LastIndexOf(":"));
-            string portStr = host.Substring(host.LastIndexOf(":") +1);
+            string portStr = host.Substring(host.LastIndexOf(":") + 1);
             int port = Convert.ToInt32(portStr);
-            
 
             string jsonStr = StringHelper.ByteArrayToString(mutableHttpServerRequest.Content);
-            //JObject a = (JObject)JsonConvert.DeserializeObject(jsonStr);
-            
+
             RegisterRequestData registerRequestData = JsonConvert.DeserializeObject<RegisterRequestData>(jsonStr);
             if (registerRequestData == null)
                 return null;
@@ -103,6 +87,7 @@ namespace UniversalSend.Services
             device.Fingerprint = registerRequestData.fingerprint;
             device.IP = ip;
             device.Port = port;
+
             Register.NewDeviceRegisterV1Event(device);
             return null;
         }

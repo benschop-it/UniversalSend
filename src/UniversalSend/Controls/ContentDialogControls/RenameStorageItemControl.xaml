@@ -15,11 +15,11 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="重命名"/>
+        <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="Rename"/>
         <TextBox Grid.Row="1" Name="NameTextBox" x:FieldModifier="public" VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
-            <Button Name="CancelButton" Content="取消" x:FieldModifier="public" Margin="0,0,4,0"/>
-            <Button Name="OKButton" Content="确认" x:FieldModifier="public"/>
+            <Button Name="CancelButton" Content="Cancel" x:FieldModifier="public" Margin="0,0,4,0"/>
+            <Button Name="OKButton" Content="OK" x:FieldModifier="public"/>
         </StackPanel>
     </Grid>
 </UserControl>

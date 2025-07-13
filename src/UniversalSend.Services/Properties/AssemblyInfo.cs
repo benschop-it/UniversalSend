@@ -2,9 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// 有关程序集的一般信息由以下
-// 控制。更改这些特性值可修改
-// 与程序集关联的信息。
+// General information about the assembly is controlled through the following
+// attributes. Change these attribute values to modify the information
+// associated with the assembly.
 [assembly: AssemblyTitle("UniversalSend.Services")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
@@ -14,13 +14,13 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// 程序集的版本信息由下列四个值组成: 
+// Version information for the assembly consists of the following four values:
 //
-//      主版本
-//      次版本
-//      生成号
-//      修订号
-
+//      Major Version
+//      Minor Version
+//      Build Number
+//      Revision
+//
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: ComVisible(false)]

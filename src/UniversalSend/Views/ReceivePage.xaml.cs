@@ -18,12 +18,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the "Blank Page" item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ReceivePage : Page
     {
@@ -31,15 +31,13 @@ namespace UniversalSend.Views
         {
             this.InitializeComponent();
             RootGrid.Margin = UIManager.RootElementMargin;
-            
-            
         }
 
         void SetIcon()
         {
             if (App.Current.RequestedTheme == ApplicationTheme.Light)
             {
-                //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync();
+                // StorageFile file = await StorageFile.GetFileFromApplicationUriAsync();
                 IconImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/UniversalSendNew_Dark.png"));
             }
             else
@@ -54,11 +52,11 @@ namespace UniversalSend.Views
             AliasTextBlock.Text = Settings.GetSettingContentAsString(Settings.Network_DeviceName);
             HashtagTextBlock.Text = "";
 
-            List<string>IpAddrList = NetworkHelper.GetIPv4AddrList();
-            foreach(string ip in IpAddrList)
+            List<string> IpAddrList = NetworkHelper.GetIPv4AddrList();
+            foreach (string ip in IpAddrList)
             {
-                //Debug.WriteLine(ip);
-                HashtagTextBlock.Text += $"#{ip.Substring(ip.LastIndexOf(".")+1)} ";
+                // Debug.WriteLine(ip);
+                HashtagTextBlock.Text += $"#{ip.Substring(ip.LastIndexOf(".") + 1)} ";
             }
         }
 

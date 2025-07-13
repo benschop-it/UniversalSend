@@ -17,25 +17,21 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// For more information on the "Blank Page" item template, see https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ConfirmReceiptPage : Page
     {
         SendRequestData SendRequestData { get; set; }
 
-        
-
         public ConfirmReceiptPage()
         {
             this.InitializeComponent();
         }
-
-        
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {

@@ -4,10 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:storage="using:Windows.Storage" xmlns:models="using:UniversalSend.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:storage="using:Windows.Storage"
+    xmlns:models="using:UniversalSend.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     <Page.Resources>
+        <!-- Grid View Mode Template -->
         <DataTemplate x:Name="GridViewModeItemTemplate" x:DataType="models:ViewStorageItem">
             <Grid Height="180" MaxWidth="150">
                 <Grid.RowDefinitions>
@@ -15,16 +19,20 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Image Margin="4" Width="128" Height="128" Source="{x:Bind Icon}" x:Phase="1"/>
-
-                <TextBlock Grid.Row="1" Margin="3" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip"  Text="{x:Bind Name}" x:Phase="0"/>
+                <TextBlock Grid.Row="1" Margin="3" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                           TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip" Text="{x:Bind Name}" x:Phase="0"/>
             </Grid>
         </DataTemplate>
+
         <Style x:Name="GridViewModeListViewItemStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
+
         <ItemsPanelTemplate x:Name="GridViewModeItemsPanelTemplate">
-            <ItemsWrapGrid Orientation="Horizontal" />
+            <ItemsWrapGrid Orientation="Horizontal"/>
         </ItemsPanelTemplate>
+
+        <!-- List View Mode Template -->
         <DataTemplate x:Name="ListViewModeItemTemplate" x:DataType="models:ViewStorageItem">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -32,120 +40,121 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Image Margin="4" Width="48" Height="48" Source="{x:Bind Icon}" x:Phase="1"/>
-                <TextBlock Grid.Column="1" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip"  Text="{x:Bind Name}" x:Phase="0"/>
+                <TextBlock Grid.Column="1" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left"
+                           TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip" Text="{x:Bind Name}" x:Phase="0"/>
             </Grid>
         </DataTemplate>
+
         <Style x:Name="ListViewModeListViewItemStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         </Style>
+
         <ItemsPanelTemplate x:Name="ListViewModeItemsPanelTemplate">
             <ItemsStackPanel Orientation="Vertical"/>
         </ItemsPanelTemplate>
     </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
+        <!-- Top Command Bar Area -->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <ProgressBar Grid.Row="0" Name="LoadingProgressBar" Visibility="Collapsed" Canvas.ZIndex="2" IsIndeterminate="True" VerticalAlignment="Top"/>
+
+            <ProgressBar Grid.Row="0" Name="LoadingProgressBar" Visibility="Collapsed"
+                         Canvas.ZIndex="2" IsIndeterminate="True" VerticalAlignment="Top"/>
+
             <Grid Grid.Row="1" Background="{Binding ElementName=MainCommandBar,Path=Background}">
                 <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left" Name="MainCommandBar">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Name="BackButton" Icon="Back" Label="后退" Click="BackButton_Click"/>
-                        <AppBarButton Name="RefreshButton" Icon="Refresh" Label="刷新" Click="RefreshButton_Click"/>
-                        <AppBarButton Name="HomeButton" Icon="Home" Label="回到根目录" Click="HomeButton_Click"/>
-                        <AppBarButton Name="CreateFolderButton" Icon="NewFolder" Label="新建文件夹" Click="CreateFolderButton_Click">
-                            <!--<AppBarButton.Flyout>
-                                    <Flyout x:Name="CreateFolderFlyout" Opened="Flyout_Opened">
-                                        <Grid Name="CreateFolderFlyoutGrid" MinHeight="100" MinWidth="300">
-                                            
-                                        </Grid>
-                                    </Flyout>
-                                </AppBarButton.Flyout>-->
-                        </AppBarButton>
-                        <AppBarButton Name="ViewModeButton" Label="网格视图" Click="ViewModeButton_Click">
+                        <AppBarButton Name="BackButton" Icon="Back" Label="Back" Click="BackButton_Click"/>
+                        <AppBarButton Name="RefreshButton" Icon="Refresh" Label="Refresh" Click="RefreshButton_Click"/>
+                        <AppBarButton Name="HomeButton" Icon="Home" Label="Go to Root" Click="HomeButton_Click"/>
+                        <AppBarButton Name="CreateFolderButton" Icon="NewFolder" Label="New Folder" Click="CreateFolderButton_Click"/>
+                        <AppBarButton Name="ViewModeButton" Label="Grid View" Click="ViewModeButton_Click">
                             <AppBarButton.Icon>
-                                <FontIcon Name="ViewModeButtonIcon" Glyph="&#xF0E2;" />
+                                <FontIcon Name="ViewModeButtonIcon" Glyph="&#xF0E2;"/>
                             </AppBarButton.Icon>
                         </AppBarButton>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
             </Grid>
-            <ScrollViewer Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" Height="32" Padding="8,0,8,0">
+
+            <ScrollViewer Background="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+                          HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled"
+                          HorizontalScrollBarVisibility="Auto" Height="32" Padding="8,0,8,0">
                 <TextBlock VerticalAlignment="Center" Name="FolderPathTextBlock"/>
             </ScrollViewer>
         </Grid>
-        
+
+        <!-- File Listing Area -->
         <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1">
-            <TextBlock Text="此文件夹为空。" Visibility="Collapsed" Name="EmptyFolderTip" HorizontalAlignment="Center" Margin="8"/>
-            <ListView Name="lvFiles" SelectionMode="Extended" SelectionChanged="OnSelectionChanged" IsMultiSelectCheckBoxEnabled="True" ItemClick="lvFiles_ItemClick" IsItemClickEnabled="True" RightTapped="lvFiles_RightTapped">
+            <TextBlock Text="This folder is empty." Visibility="Collapsed"
+                       Name="EmptyFolderTip" HorizontalAlignment="Center" Margin="8"/>
+            <ListView Name="lvFiles" SelectionMode="Extended" SelectionChanged="OnSelectionChanged"
+                      IsMultiSelectCheckBoxEnabled="True" ItemClick="lvFiles_ItemClick" IsItemClickEnabled="True"
+                      RightTapped="lvFiles_RightTapped">
+
+                <!-- Context Menu -->
                 <ListView.ContextFlyout>
                     <MenuFlyout x:Name="ListViewFlyout" Opened="ListViewFlyout_Opened">
-                        <MenuFlyoutItem Text="打开" Name="ListViewFlyout_Open" Click="ListViewFlyout_Open_Click">
+                        <MenuFlyoutItem Text="Open" Name="ListViewFlyout_Open" Click="ListViewFlyout_Open_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8AD;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="剪切" Name="ListViewFlyout_Cut" Click="ListViewFlyout_Cut_Click">
+                        <MenuFlyoutItem Text="Cut" Name="ListViewFlyout_Cut" Click="ListViewFlyout_Cut_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8C6;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="复制" Name="ListViewFlyout_Copy" Click="ListViewFlyout_Copy_Click">
+                        <MenuFlyoutItem Text="Copy" Name="ListViewFlyout_Copy" Click="ListViewFlyout_Copy_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8C8;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="粘贴" Name="ListViewFlyout_Paste" Click="ListViewFlyout_Paste_Click">
+                        <MenuFlyoutItem Text="Paste" Name="ListViewFlyout_Paste" Click="ListViewFlyout_Paste_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE77F;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Name="ListViewFlyout_OpenFilePath" Click="ListViewFlyout_OpenFilePath_Click">
+                        <MenuFlyoutItem Text="Open File Location" Name="ListViewFlyout_OpenFilePath" Click="ListViewFlyout_OpenFilePath_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xED25;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="复制完整路径" Name="ListViewFlyout_CopyFilePath" Click="ListViewFlyout_CopyFilePath_Click">
+                        <MenuFlyoutItem Text="Copy Full Path" Name="ListViewFlyout_CopyFilePath" Click="ListViewFlyout_CopyFilePath_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE62F;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="彻底删除" Name="ListViewFlyout_Delete" Click="ListViewFlyout_Delete_Click">
+                        <MenuFlyoutItem Text="Delete Permanently" Name="ListViewFlyout_Delete" Click="ListViewFlyout_Delete_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE74D;"/>
+                                <FontIcon Glyph="&#xE74D;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="重命名" Name="ListViewFlyout_Rename" Click="ListViewFlyout_Rename_Click">
+                        <MenuFlyoutItem Text="Rename" Name="ListViewFlyout_Rename" Click="ListViewFlyout_Rename_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8AC;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="属性" Name="ListViewFlyout_Properties" Click="ListViewFlyout_Properties_Click">
+                        <MenuFlyoutItem Text="Properties" Name="ListViewFlyout_Properties" Click="ListViewFlyout_Properties_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE946;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </ListView.ContextFlyout>
-                <!--<ListView.ItemContainerStyle>
-                    
-                </ListView.ItemContainerStyle>-->
-                <!--<ItemsControl.ItemTemplate>
-                    
-                </ItemsControl.ItemTemplate>-->
-                <!--<ItemsControl.ItemsPanel>
-                    
-                </ItemsControl.ItemsPanel>-->
             </ListView>
         </Grid>
     </Grid>

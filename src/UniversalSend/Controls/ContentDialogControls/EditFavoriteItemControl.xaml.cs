@@ -16,19 +16,20 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UniversalSend.Controls.ContentDialogControls
 {
     public sealed partial class EditFavoriteItemControl : UserControl
     {
-        public Favorite Favorite { get;set; }
+        public Favorite Favorite { get; set; }
+
         public EditFavoriteItemControl(Favorite favorite)
         {
             this.InitializeComponent();
             Favorite = favorite;
 
-            TitleTextBlock.Text = "编辑";
+            TitleTextBlock.Text = "Edit";
             DeviceNameTextBox.Text = Favorite.DeviceName;
             IPAddrTextBox.Text = Favorite.IPAddr;
             PortTextBox.Text = Favorite.Port.ToString();
@@ -37,14 +38,14 @@ namespace UniversalSend.Controls.ContentDialogControls
         public EditFavoriteItemControl()
         {
             this.InitializeComponent();
-            TitleTextBlock.Text = "添加到收藏夹";
+            TitleTextBlock.Text = "Add to Favorites";
             DeleteButton.Visibility = Visibility.Collapsed;
         }
 
         public EditFavoriteItemControl(Device device)
         {
             this.InitializeComponent();
-            TitleTextBlock.Text = "添加到收藏夹";
+            TitleTextBlock.Text = "Add to Favorites";
             DeleteButton.Visibility = Visibility.Collapsed;
             DeviceNameTextBox.Text = device.Alias;
             IPAddrTextBox.Text = device.IP;
@@ -59,29 +60,30 @@ namespace UniversalSend.Controls.ContentDialogControls
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Red);
-            /*To-Do:校验并保存*/
-            if(String.IsNullOrEmpty(DeviceNameTextBox.Text))
+            /* To-Do: Validate and Save */
+            if (String.IsNullOrEmpty(DeviceNameTextBox.Text))
             {
                 DeviceNameTextBox.BorderBrush = solidColorBrush;
                 return;
             }
-            if(String.IsNullOrEmpty(IPAddrTextBox.Text) || !StringHelper.IsIpaddr(IPAddrTextBox.Text))
+            if (String.IsNullOrEmpty(IPAddrTextBox.Text) || !StringHelper.IsIpaddr(IPAddrTextBox.Text))
             {
                 IPAddrTextBox.BorderBrush = solidColorBrush;
                 return;
             }
-            if(String.IsNullOrEmpty(PortTextBox.Text) && !PortTextBox.Text.All(char.IsDigit))
+            if (String.IsNullOrEmpty(PortTextBox.Text) && !PortTextBox.Text.All(char.IsDigit))
             {
                 PortTextBox.BorderBrush = solidColorBrush;
                 return;
-            }else if(String.IsNullOrEmpty(PortTextBox.Text))
+            }
+            else if (String.IsNullOrEmpty(PortTextBox.Text))
             {
                 PortTextBox.Text = "53317";
             }
 
             if (Favorite == null)
             {
-                Favorite = new Favorite(DeviceNameTextBox.Text,IPAddrTextBox.Text,Convert.ToInt64(PortTextBox.Text));
+                Favorite = new Favorite(DeviceNameTextBox.Text, IPAddrTextBox.Text, Convert.ToInt64(PortTextBox.Text));
                 FavoriteManager.Favorites.Add(Favorite);
                 FavoriteManager.SaveFavoritesData();
             }
@@ -92,6 +94,7 @@ namespace UniversalSend.Controls.ContentDialogControls
                 Favorite.Port = Convert.ToInt64(PortTextBox.Text);
                 FavoriteManager.SaveFavoritesData();
             }
+
             ProgramData.ContentDialogManager.HideContentDialog();
         }
 

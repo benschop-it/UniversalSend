@@ -20,12 +20,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the "Blank Page" item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
@@ -46,37 +46,34 @@ namespace UniversalSend.Views
 
         void InitReceiveControls()
         {
-            ReceiveSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Receive_SaveToFolder_Header")/*"保存目录"*/, new SaveLocationSettingControl()));
+            ReceiveSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Receive_SaveToFolder_Header")/*"Save directory"*/, new SaveLocationSettingControl()));
         }
 
         void InitNetworkControls()
         {
             Dictionary<int, string> selectionDisplayName = new Dictionary<int, string>();
-            selectionDisplayName.Add((int)DeviceManager.DeviceType.mobile, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Mobile") /*"手机/平板"*/);
-            selectionDisplayName.Add((int)DeviceManager.DeviceType.desktop, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Desktop")/*"电脑"*/);
-            selectionDisplayName.Add((int)DeviceManager.DeviceType.web, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Web")/*"网页"*/);
-            selectionDisplayName.Add((int)DeviceManager.DeviceType.headless, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Headless")/*"终端"*/);
-            selectionDisplayName.Add((int)DeviceManager.DeviceType.server, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Server")/*"服务器"*/);
+            selectionDisplayName.Add((int)DeviceManager.DeviceType.mobile, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Mobile") /*"Phone/Tablet"*/);
+            selectionDisplayName.Add((int)DeviceManager.DeviceType.desktop, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Desktop")/*"PC"*/);
+            selectionDisplayName.Add((int)DeviceManager.DeviceType.web, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Web")/*"Web"*/);
+            selectionDisplayName.Add((int)DeviceManager.DeviceType.headless, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Headless")/*"Terminal"*/);
+            selectionDisplayName.Add((int)DeviceManager.DeviceType.server, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Server")/*"Server"*/);
 
-            
-
-            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_Server")/*"服务器"*/, new ServerManageControl()));
-            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceName")/*"别名"*/, new TextSettingControl(Settings.Network_DeviceName)));
-            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceType")/*"设备类型"*/, new ComboSettingsControl(Settings.Network_DeviceType,typeof(DeviceManager.DeviceType),selectionDisplayName)));//替换为下拉框
-            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceModel")/*"设备型号"*/, new TextSettingControl(Settings.Network_DeviceModel)));
-            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_Port")/*"端口"*/, new NumberSettingControl(Settings.Network_Port)));//替换为NumberBox
-            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_MulticastAddress")/*"多线程广播"*/, new TextSettingControl(Settings.Network_MulticastAddress)));
+            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_Server")/*"Server"*/, new ServerManageControl()));
+            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceName")/*"Alias"*/, new TextSettingControl(Settings.Network_DeviceName)));
+            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceType")/*"Device Type"*/, new ComboSettingsControl(Settings.Network_DeviceType, typeof(DeviceManager.DeviceType), selectionDisplayName))); // replaced with ComboBox
+            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_DeviceModel")/*"Device Model"*/, new TextSettingControl(Settings.Network_DeviceModel)));
+            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_Port")/*"Port"*/, new NumberSettingControl(Settings.Network_Port))); // replaced with NumberBox
+            NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_MulticastAddress")/*"Multicast Broadcast"*/, new TextSettingControl(Settings.Network_MulticastAddress)));
         }
 
         void InitLabControls()
         {
-            LabSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Lab_UseInternalExplorer")/*使用内部文件管理器*/,new ToggleSwitchSettingsControl(Settings.Lab_UseInternalExplorer)));
+            LabSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Lab_UseInternalExplorer")/*Use internal file explorer*/, new ToggleSwitchSettingsControl(Settings.Lab_UseInternalExplorer)));
         }
 
         void InitAboutControls()
         {
-            
-
+            // Placeholder for about section controls
         }
 
         private void NavigateToDevPageButton_Click(object sender, RoutedEventArgs e)
@@ -88,7 +85,5 @@ namespace UniversalSend.Views
         {
             InitControls();
         }
-
-        
     }
 }

@@ -18,15 +18,15 @@ namespace UniversalSend.Models.Tasks
 
         public enum ReceiveTaskStates 
         {
-            [Description("等待")]
+            [Description("Waiting")]
             Wating,
-            [Description("正在传输")]
+            [Description("Transferring")]
             Receiving,
-            [Description("已取消")]
+            [Description("Canceled")]
             Canceled,
-            [Description("错误")]
+            [Description("Error")]
             Error,
-            [Description("完成")]
+            [Description("Completed")]
             Done
         }
 
@@ -35,25 +35,22 @@ namespace UniversalSend.Models.Tasks
         public ReceiveTaskStates TaskState { get; set; } = ReceiveTaskStates.Wating;
     }
 
-    
-
     public class ReceiveTaskManager
     {
         public static List<ReceiveTask> ReceivingTasks { get; private set; } = new List<ReceiveTask>();
 
-        public static void CreateReceivingTaskFromUniversalSendFile(UniversalSendFile universalSendFile,InfoData info)
+        public static void CreateReceivingTaskFromUniversalSendFile(UniversalSendFile universalSendFile, InfoData info)
         {
-            ReceiveTask receiveTask = new ReceiveTask { file = universalSendFile,sender = info};
+            ReceiveTask receiveTask = new ReceiveTask { file = universalSendFile, sender = info };
             ReceivingTasks.Add(receiveTask);
-            
         }
 
-        public static ReceiveTask WriteFileContentToReceivingTask(string fileId,string token, byte[] fileContent)
+        public static ReceiveTask WriteFileContentToReceivingTask(string fileId, string token, byte[] fileContent)
         {
-            ReceiveTask task = ReceivingTasks.Find(x=>x.file.Id == fileId);
+            ReceiveTask task = ReceivingTasks.Find(x => x.file.Id == fileId);
             if (task == null || task.file.TransferToken != token)
             {
-                //task.TaskState = ReceiveTask.ReceiveTaskStates.Error;
+                // task.TaskState = ReceiveTask.ReceiveTaskStates.Error;
                 return null;
             }
             task.fileContent = fileContent;
@@ -64,7 +61,7 @@ namespace UniversalSend.Models.Tasks
         public static async Task<StorageFile> WriteReceiveTaskToFileAsync(ReceiveTask receiveTask)
         {
             StorageFile storageFile;
-            //StorageFile storageFile = await StorageHelper.CreateFileInAppLocalFolderAsync(receiveTask.file.FileName);
+            // StorageFile storageFile = await StorageHelper.CreateFileInAppLocalFolderAsync(receiveTask.file.FileName);
             StorageFolder folder = await StorageHelper.GetReceiveStoageFolderAsync();
             if (folder == null)
             {

@@ -15,12 +15,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the "Blank Page" item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class FileReceivingPage : Page
     {
@@ -50,14 +50,13 @@ namespace UniversalSend.Views
 
         private async void ReceiveManager_CancelReceived(object sender, EventArgs e)
         {
-            /*To-Do:取消操作*/
+            /*To-Do: Cancel operation */
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                PageHeader.Text = "传输已取消";
-                ProgressBarLabel.Text = "已取消";
+                PageHeader.Text = "Transfer canceled";
+                ProgressBarLabel.Text = "Canceled";
                 MainProgressBar.ShowError = true;
             });
-            
         }
 
         int ReceivedItemsCount = 0;
@@ -69,7 +68,6 @@ namespace UniversalSend.Views
             {
                 UpdateUI();
             });
-            
         }
 
         public void UpdateUI()
@@ -78,10 +76,9 @@ namespace UniversalSend.Views
             FileReceivingListView.ItemsSource = ReceiveTaskManager.ReceivingTasks;
             if (ReceivedItemsCount == ReceiveTaskManager.ReceivingTasks.Count)
             {
-                ProgressBarLabel.Text = "已完成";
+                ProgressBarLabel.Text = "Completed";
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;
-                
             }
             MainProgressBar.Value = ReceivedItemsCount;
         }
@@ -93,7 +90,7 @@ namespace UniversalSend.Views
 
         private void FinishButton_Click(object sender, RoutedEventArgs e)
         {
-            //To-Do:加入历史记录
+            //To-Do: Add to history
             ReceiveTaskManager.ReceivingTasks.Clear();
             Frame.GoBack();
         }

@@ -14,7 +14,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="在开始使用UniversalSend前，&#x000A;请点击下面按钮选择一个文件夹用于保存接收的文件" TextWrapping="Wrap"/>
-        <Button HorizontalAlignment="Center" Grid.Row="1" Content="选择文件夹" Name="OpenPickerButton" Click="OpenPickerButton_Click"/>
+        <TextBlock Text="Before using UniversalSend,&#x000A;please click the button below to choose a folder to save received files." TextWrapping="Wrap"/>
+        <Button HorizontalAlignment="Center" Grid.Row="1" Content="Choose Folder" Name="OpenPickerButton" Click="OpenPickerButton_Click"/>
     </Grid>
 </UserControl>

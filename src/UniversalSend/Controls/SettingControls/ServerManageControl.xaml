@@ -14,10 +14,14 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button Name="RestartButton" Click="RestartButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+        <Button Name="RestartButton" Click="RestartButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                ToolTipService.ToolTip="Restart Server">
             <FontIcon Glyph="&#xE72C;" Name="RestartButtonIcon"/>
         </Button>
-        <Button Grid.Column="1" Name="StopButton" Click="StopButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+        <Button Grid.Column="1" Name="StopButton" Click="StopButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                ToolTipService.ToolTip="Stop Server">
             <FontIcon Glyph="&#xE71A;" />
         </Button>
     </Grid>

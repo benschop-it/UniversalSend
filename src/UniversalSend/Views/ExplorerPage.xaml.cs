@@ -22,17 +22,15 @@ using Windows.UI;
 using Windows.System;
 using Windows.ApplicationModel.DataTransfer;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the "Blank Page" item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// Can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ExplorerPage : Page
     {
-
-
         public ExplorerPage()
         {
             this.InitializeComponent();
@@ -60,13 +58,10 @@ namespace UniversalSend.Views
             UpdateViewMode();
             if (e.Parameter is FileOpenPickerUI)
             {
-                // 获取参数
+                // Get parameter
                 fileOpenPickerUI = e.Parameter as FileOpenPickerUI;
-                // 获取本地文件列表
+                // Get local file list
                 AllowedFileTypes = fileOpenPickerUI.AllowedFileTypes.ToList();
-
-
-
             }
             else if(e.Parameter is FileSavePickerUI)
             {
@@ -74,7 +69,6 @@ namespace UniversalSend.Views
                 AllowedFileTypes = fileSavePickerUI.AllowedFileTypes.ToList();
                 fileSavePickerUI.TargetFileRequested += FileSavePickerUI_TargetFileRequested;
             }
-            //List<IStorageItem> items = (await (await StorageHelper.GetReceiveStoageFolderAsync()).GetItemsAsync()).ToList();
             await UpdateViewAsync(await StorageHelper.GetReceiveStoageFolderAsync());
         }
 
@@ -124,7 +118,7 @@ namespace UniversalSend.Views
                 lvFiles.ItemsPanel = ListViewModeItemsPanelTemplate;
                 CurrentViewMode = ViewMode.Grid;
                 ViewModeButtonIcon.Glyph = "\uF0E2";
-                ViewModeButton.Label = "网格视图";
+                ViewModeButton.Label = "Grid View";
             }
             else
             {
@@ -133,13 +127,13 @@ namespace UniversalSend.Views
                 lvFiles.ItemsPanel = GridViewModeItemsPanelTemplate;
                 CurrentViewMode = ViewMode.List;
                 ViewModeButtonIcon.Glyph = "\uEA37";
-                ViewModeButton.Label = "列表视图";
+                ViewModeButton.Label = "List View";
             }
         }
 
         void UpdateFolderPathTextBlock()
         {
-            string str = "根目录";
+            string str = "Root";
             foreach(var item in folderStack)
             {
                 str += $"/{item.Name}";
@@ -158,20 +152,20 @@ namespace UniversalSend.Views
 
             try
             {
-                // 在指定的地址新建一个没有任何内容的空白文件
+                // Create an empty file at the specified location
                 StorageFile file = await folder.CreateFileAsync(sender.FileName, CreationCollisionOption.GenerateUniqueName);
 
-                // 设置 TargetFile，“自定义文件保存选取器”的调用端会收到此对象
+                // Set TargetFile, the caller of the "custom file save picker" will receive this object
                 args.Request.TargetFile = file;
             }
             catch (Exception ex)
             {
-                // 输出异常信息
+                // Output exception information
                 Debug.WriteLine(ex.ToString());
             }
             finally
             {
-                // 完成异步操作
+                // Complete the asynchronous operation
                 deferral.Complete();
             }
         }
@@ -180,7 +174,7 @@ namespace UniversalSend.Views
         {
             if(fileOpenPickerUI != null)
             {
-                // 移除列表
+                // Remove list
                 if (e.RemovedItems.Count > 0)
                 {
                     if (fileOpenPickerUI.SelectionMode == FileSelectionMode.Multiple)
@@ -188,7 +182,7 @@ namespace UniversalSend.Views
                         for (int i = 0; i < e.RemovedItems.Count; i++)
                         {
                             ViewStorageItem item = e.RemovedItems[i] as ViewStorageItem;
-                            // 移除前先判断是否存在目标项
+                            // Check if item exists before removing
                             if (fileOpenPickerUI.ContainsFile(item.Name))
                             {
                                 fileOpenPickerUI.RemoveFile(item.Name);
@@ -205,10 +199,10 @@ namespace UniversalSend.Views
                     }
                 }
 
-                // 添加列表
+                // Add to list
                 if (e.AddedItems.Count > 0)
                 {
-                    // 如果是多选
+                    // If multi-select
                     if (fileOpenPickerUI.SelectionMode == FileSelectionMode.Multiple)
                     {
                         for (int i = 0; i < e.AddedItems.Count; i++)
@@ -224,11 +218,11 @@ namespace UniversalSend.Views
                             }
                             else if (item.Item is StorageFolder)
                             {
-                                /*To-Do:进入子文件夹*/
+                                /*To-Do: Enter subfolder*/
                             }
                         }
                     }
-                    else //如果是单选
+                    else // If single select
                     {
                         ViewStorageItem item = e.AddedItems[0] as ViewStorageItem;
                         if (item.Item is StorageFile)
@@ -241,80 +235,10 @@ namespace UniversalSend.Views
                         }
                         else if (item.Item is StorageFolder)
                         {
-                            /*To-Do:进入子文件夹*/
+                            /*To-Do: Enter subfolder*/
                         }
-
                     }
                 }
-            }else if(fileSavePickerUI != null)
-            {
-                
-                //// 移除列表
-                //if (e.RemovedItems.Count > 0)
-                //{
-                //    if (fileSavePickerUI. == FileSelectionMode.Multiple)
-                //    {
-                //        for (int i = 0; i < e.RemovedItems.Count; i++)
-                //        {
-                //            ViewStorageItem item = e.RemovedItems[i] as ViewStorageItem;
-                //            // 移除前先判断是否存在目标项
-                //            if (fileSavePickerUI.ContainsFile(item.Name))
-                //            {
-                //                fileSavePickerUI.RemoveFile(item.Name);
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        ViewStorageItem item = e.RemovedItems[0] as ViewStorageItem;
-                //        if (fileSavePickerUI.ContainsFile(item.Name))
-                //        {
-                //            fileSavePickerUI.RemoveFile(item.Name);
-                //        }
-                //    }
-                //}
-
-                //// 添加列表
-                //if (e.AddedItems.Count > 0)
-                //{
-                //    // 如果是多选
-                //    if (fileSavePickerUI.SelectionMode == FileSelectionMode.Multiple)
-                //    {
-                //        for (int i = 0; i < e.AddedItems.Count; i++)
-                //        {
-                //            ViewStorageItem item = e.AddedItems[i] as ViewStorageItem;
-                //            if (item.Item is StorageFile)
-                //            {
-                //                StorageFile file = (StorageFile)item.Item;
-                //                if (fileSavePickerUI.CanAddFile(file))
-                //                {
-                //                    fileSavePickerUI.AddFile(item.Name, file);
-                //                }
-                //            }
-                //            else if (item.Item is StorageFolder)
-                //            {
-                //                /*To-Do:进入子文件夹*/
-                //            }
-                //        }
-                //    }
-                //    else //如果是单选
-                //    {
-                //        ViewStorageItem item = e.AddedItems[0] as ViewStorageItem;
-                //        if (item.Item is StorageFile)
-                //        {
-                //            StorageFile file = (StorageFile)item.Item;
-                //            if (fileSavePickerUI.CanAddFile(file))
-                //            {
-                //                fileSavePickerUI.AddFile(item.Name, file);
-                //            }
-                //        }
-                //        else if (item.Item is StorageFolder)
-                //        {
-                //            /*To-Do:进入子文件夹*/
-                //        }
-
-                //    }
-                //}
             }
         }
 
@@ -336,9 +260,7 @@ namespace UniversalSend.Views
         private async void BackButton_Click(object sender, RoutedEventArgs e)
         {
             folderStack.Remove(folderStack.Last());
-            
             await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
-            
         }
 
         public async Task<StorageFolder> GetFolderOfCurrentViewAsync()
@@ -382,39 +304,9 @@ namespace UniversalSend.Views
                 {
                     control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
                 }
-
             };
             await ContentDialogManager.ShowContentDialogAsync(control);
         }
-
-        //private void Flyout_Opened(object sender, object e)
-        //{
-        //    CreateFolderFlyoutGrid.Children.Clear();
-            
-        //    CreateNewFolderControl control = new CreateNewFolderControl();
-        //    control.OKButton.Click += async (a, b) =>
-        //    {
-        //        if (StringHelper.IsValidFileName(control.NameTextBox.Text))
-        //        {
-        //            StorageFolder folder = null;
-        //            if (folderStack.Count != 0)
-        //                folder = folderStack.Last();
-        //            else
-        //                folder = await StorageHelper.GetReceiveStoageFolderAsync();
-
-        //            await folder.CreateFolderAsync(control.NameTextBox.Text);
-        //            CreateFolderFlyout.Hide();
-        //            await UpdateViewAsync(folder);
-        //        }
-        //        else
-        //        {
-        //            control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
-        //        }
-
-        //    };
-        //    CreateFolderFlyoutGrid.Children.Add(control);
-            
-        //}
 
         IStorageItem RightTabedItem = null;
 
@@ -439,7 +331,6 @@ namespace UniversalSend.Views
                 folderStack.Add(folder);
                 await UpdateViewAsync(folder);
             }
-            
         }
 
         private async void ListViewFlyout_OpenFilePath_Click(object sender, RoutedEventArgs e)
@@ -452,7 +343,6 @@ namespace UniversalSend.Views
             }
             else if (RightTabedItem is StorageFolder)
             {
-
                 await Launcher.LaunchFolderAsync((StorageFolder)RightTabedItem);
             }
         }
@@ -481,11 +371,11 @@ namespace UniversalSend.Views
             }
             if (RightTabedItem is StorageFile)
             {
-                ListViewFlyout_OpenFilePath.Text = "打开文件位置";
+                ListViewFlyout_OpenFilePath.Text = "Open File Location";
             }
             else if(RightTabedItem is StorageFolder)
             {
-                ListViewFlyout_OpenFilePath.Text = "打开文件夹位置";
+                ListViewFlyout_OpenFilePath.Text = "Open Folder Location";
             }
 
             if (ClipboardItem == null)
@@ -533,9 +423,9 @@ namespace UniversalSend.Views
             else
             {
                 ContentDialog contentDialog = new ContentDialog();
-                contentDialog.CloseButtonText = "关闭";
-                contentDialog.Title = $"不支持的操作";
-                contentDialog.Content = "文件夹暂不支持剪切与复制操作";
+                contentDialog.CloseButtonText = "Close";
+                contentDialog.Title = $"Unsupported Operation";
+                contentDialog.Content = "Cut and copy operations are not supported for folders";
                 await contentDialog.ShowAsync();
             }
         }
@@ -543,9 +433,9 @@ namespace UniversalSend.Views
         private async void ListViewFlyout_Delete_Click(object sender, RoutedEventArgs e)
         {
             ContentDialog contentDialog = new ContentDialog();
-            contentDialog.Title = $"确定要删除项目“{RightTabedItem.Name}”吗？";
-            contentDialog.PrimaryButtonText = "否";
-            contentDialog.SecondaryButtonText = "是";
+            contentDialog.Title = $"Are you sure you want to delete item \"{RightTabedItem.Name}\"?";
+            contentDialog.PrimaryButtonText = "No";
+            contentDialog.SecondaryButtonText = "Yes";
             var result = await contentDialog.ShowAsync();
             if (result == ContentDialogResult.Secondary)
             {
@@ -559,7 +449,6 @@ namespace UniversalSend.Views
                 }
                 await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
             }
-                
         }
 
         private async void ListViewFlyout_Rename_Click(object sender, RoutedEventArgs e)
@@ -591,7 +480,6 @@ namespace UniversalSend.Views
                 {
                     control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
                 }
-
             };
             await ContentDialogManager.ShowContentDialogAsync(control);
             await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
@@ -625,7 +513,6 @@ namespace UniversalSend.Views
             UpdateViewMode();
             Debug.WriteLine(CurrentViewMode.ToString());
             Settings.SetSetting(Settings.ExplorerPage_ViewMode, CurrentViewMode.ToString());
-
         }
     }
 }

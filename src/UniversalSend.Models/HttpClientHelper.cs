@@ -13,20 +13,20 @@ namespace UniversalSend.Models
 {
     public static class HttpClientHelper
     {
-        // 静态HttpClient实例，避免频繁创建
+        // Static HttpClient instance to avoid frequent creation
         private static readonly HttpClient _httpClient = new HttpClient();
 
         static HttpClientHelper()
         {
-            // 设置默认超时时间
+            // Set default timeout
             //_httpClient.Timeout = TimeSpan.FromSeconds(30);
-            // 设置默认请求头
+            // Set default request headers
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        #region GET请求
+        #region GET requests
         /// <summary>
-        /// 发送GET请求并返回字符串结果
+        /// Send a GET request and return string result
         /// </summary>
         public static async Task<string> GetStringAsync(string url, Dictionary<string, string> headers = null)
         {
@@ -39,14 +39,14 @@ namespace UniversalSend.Models
             }
             catch (Exception ex)
             {
-                // 处理异常，可根据需要自定义处理逻辑
-                System.Diagnostics.Debug.WriteLine($"GET请求失败: {ex.Message}");
+                // Handle exception, customize handling logic if needed
+                System.Diagnostics.Debug.WriteLine($"GET request failed: {ex.Message}");
                 throw;
             }
         }
 
         /// <summary>
-        /// 发送GET请求并返回JsonArray结果
+        /// Send a GET request and return JsonArray result
         /// </summary>
         public static async Task<JsonArray> GetJsonArrayAsync(string url, Dictionary<string, string> headers = null)
         {
@@ -59,7 +59,7 @@ namespace UniversalSend.Models
         }
 
         /// <summary>
-        /// 发送GET请求并返回JsonObject结果
+        /// Send a GET request and return JsonObject result
         /// </summary>
         public static async Task<JsonObject> GetJsonObjectAsync(string url, Dictionary<string, string> headers = null)
         {
@@ -72,7 +72,7 @@ namespace UniversalSend.Models
         }
 
         /// <summary>
-        /// 发送GET请求并返回流结果
+        /// Send a GET request and return stream result
         /// </summary>
         public static async Task<IRandomAccessStream> GetStreamAsync(string url, Dictionary<string, string> headers = null)
         {
@@ -86,15 +86,15 @@ namespace UniversalSend.Models
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"GET流请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"GET stream request failed: {ex.Message}");
                 throw;
             }
         }
         #endregion
 
-        #region POST请求
+        #region POST requests
         /// <summary>
-        /// 发送POST请求并返回字符串结果
+        /// Send a POST request and return string result
         /// </summary>
         public static async Task<string> PostStringAsync(string url, HttpContent content, Dictionary<string, string> headers = null)
         {
@@ -107,7 +107,7 @@ namespace UniversalSend.Models
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"POST请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"POST request failed: {ex.Message}");
                 return "";
             }
         }
@@ -120,7 +120,7 @@ namespace UniversalSend.Models
         }
 
         /// <summary>
-        /// 发送JSON POST请求并返回字符串结果
+        /// Send a JSON POST request and return string result
         /// </summary>
         public static async Task<string> PostJsonAsync(string url, string jsonContent, Dictionary<string, string> headers = null)
         {
@@ -129,7 +129,7 @@ namespace UniversalSend.Models
         }
 
         /// <summary>
-        /// 发送表单POST请求并返回字符串结果
+        /// Send a form POST request and return string result
         /// </summary>
         public static async Task<string> PostFormAsync(string url, Dictionary<string, string> formData, Dictionary<string, string> headers = null)
         {
@@ -138,9 +138,9 @@ namespace UniversalSend.Models
         }
         #endregion
 
-        #region PUT请求
+        #region PUT requests
         /// <summary>
-        /// 发送PUT请求并返回字符串结果
+        /// Send a PUT request and return string result
         /// </summary>
         public static async Task<string> PutStringAsync(string url, HttpContent content, Dictionary<string, string> headers = null)
         {
@@ -153,13 +153,13 @@ namespace UniversalSend.Models
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"PUT请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"PUT request failed: {ex.Message}");
                 throw;
             }
         }
 
         /// <summary>
-        /// 发送JSON PUT请求并返回字符串结果
+        /// Send a JSON PUT request and return string result
         /// </summary>
         public static async Task<string> PutJsonAsync(string url, string jsonContent, Dictionary<string, string> headers = null)
         {
@@ -168,9 +168,9 @@ namespace UniversalSend.Models
         }
         #endregion
 
-        #region DELETE请求
+        #region DELETE requests
         /// <summary>
-        /// 发送DELETE请求
+        /// Send a DELETE request
         /// </summary>
         public static async Task<bool> DeleteAsync(string url, Dictionary<string, string> headers = null)
         {
@@ -182,19 +182,19 @@ namespace UniversalSend.Models
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"DELETE请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"DELETE request failed: {ex.Message}");
                 throw;
             }
         }
         #endregion
 
-        #region 辅助方法
+        #region Helper methods
         /// <summary>
-        /// 应用自定义请求头
+        /// Apply custom headers
         /// </summary>
         private static void ApplyHeaders(Dictionary<string, string> headers)
         {
-            // 清除之前的自定义头
+            // Clear previous custom headers
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -208,7 +208,7 @@ namespace UniversalSend.Models
         }
 
         /// <summary>
-        /// 设置基础URL
+        /// Set base URL
         /// </summary>
         public static void SetBaseAddress(string baseAddress)
         {
@@ -216,7 +216,7 @@ namespace UniversalSend.Models
         }
 
         /// <summary>
-        /// 设置超时时间（秒）
+        /// Set timeout (in seconds)
         /// </summary>
         public static void SetTimeout(int seconds)
         {

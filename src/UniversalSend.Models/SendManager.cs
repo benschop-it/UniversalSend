@@ -9,21 +9,27 @@ namespace UniversalSend.Models
 {
     public class SendManager
     {
-        public static event EventHandler SendCreated; //发送任务已创建
+        // Send task created
+        public static event EventHandler SendCreated;
 
-        public static event EventHandler SendPrepared;//准备发送
+        // Ready to send
+        public static event EventHandler SendPrepared;
 
-        public static event EventHandler SendResuestSended;//发送请求已发送
+        // Send request has been sent
+        public static event EventHandler SendResuestSended;
 
-        public static event EventHandler SendStarted;//发送已开始
+        // Sending started
+        public static event EventHandler SendStarted;
 
-        public static event EventHandler SendStateChanged;//发送状态改变
+        // Send state changed
+        public static event EventHandler SendStateChanged;
 
-        public static event EventHandler SendCanceled;//发送任务已被取消
+        // Send task was canceled
+        public static event EventHandler SendCanceled;
 
         public static void SendCreatedEvent()
         {
-            SendCreated?.Invoke(null,EventArgs.Empty);
+            SendCreated?.Invoke(null, EventArgs.Empty);
         }
 
         public static void SendPreparedEvent(Device device)

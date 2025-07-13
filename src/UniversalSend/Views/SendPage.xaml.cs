@@ -24,12 +24,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+// https://go.microsoft.com/fwlink/?LinkId=234238 describes the "Blank Page" item template
 
 namespace UniversalSend.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// A blank page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class SendPage : Page
     {
@@ -69,27 +69,19 @@ namespace UniversalSend.Views
                     SendManager.SendPrepared += SendManager_SendPrepared;
                 }
             }
-            //if(e.Parameter is List<SendTask>)
-            //{
-            //    List<SendTask>sendTasks = ((List<SendTask>)e.Parameter);
-            //    SendTaskManager.SendTasks.AddRange(sendTasks);
-            //    SendManager.SendCreatedEvent();
-            //}
-
-
         }
 
         private async void SendManager_SendPrepared(object sender, EventArgs e)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                Frame.Navigate(typeof(FileSendingPage),sender);
+                Frame.Navigate(typeof(FileSendingPage), sender);
             });
         }
 
         private async void DeviceManager_KnownDevicesChanged(object sender, EventArgs e)
         {
-            Debug.WriteLine("刷新已知设备列表");
+            Debug.WriteLine("Refresh known device list");
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 Task.Delay(1000);
@@ -100,10 +92,9 @@ namespace UniversalSend.Views
 
         private async void Register_NewDeviceRegister(object sender, EventArgs e)
         {
-            Debug.WriteLine("刷新已知设备列表");
+            Debug.WriteLine("Refresh known device list");
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                
                 Task.Delay(1000);
                 KnownDeviceListView.ItemsSource = null;
                 KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
@@ -114,7 +105,7 @@ namespace UniversalSend.Views
         {
             KnownDeviceListView.ItemsSource = null;
             KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
-            if (Inited == false)
+            if (!Inited)
             {
                 InitButton();
             }
@@ -125,25 +116,25 @@ namespace UniversalSend.Views
 
         void InitButton()
         {
-            SendItemButtonControl MediaButton = new SendItemButtonControl("\uEB9F", "媒体");
-            SendItemButtonControl TextButton = new SendItemButtonControl("\uEA37", "文本");
+            SendItemButtonControl MediaButton = new SendItemButtonControl("\uEB9F", "Media");
+            SendItemButtonControl TextButton = new SendItemButtonControl("\uEA37", "Text");
             TextButton.RootButton.Click += TextButton_Click;
-            SendItemButtonControl ClipboardContentButton = new SendItemButtonControl("\uF0E3", "剪贴板");
-            SendItemButtonControl FileButton = new SendItemButtonControl("\uE7C3", "文件");
+            SendItemButtonControl ClipboardContentButton = new SendItemButtonControl("\uF0E3", "Clipboard");
+            SendItemButtonControl FileButton = new SendItemButtonControl("\uE7C3", "File");
             FileButton.RootButton.Click += FileButton_Click;
-            SendItemButtonControl FolderButton = new SendItemButtonControl("\uE8B7", "文件夹");
+            SendItemButtonControl FolderButton = new SendItemButtonControl("\uE8B7", "Folder");
             FolderButton.RootButton.Click += FolderButton_Click;
 
-            SendItemButtonControl AddMediaButton = new SendItemButtonControl("\uEB9F", "媒体");
-            SendItemButtonControl AddTextButton = new SendItemButtonControl("\uEA37", "文本");
+            SendItemButtonControl AddMediaButton = new SendItemButtonControl("\uEB9F", "Media");
+            SendItemButtonControl AddTextButton = new SendItemButtonControl("\uEA37", "Text");
             AddTextButton.RootButton.Click += TextButton_Click;
-            SendItemButtonControl AddClipboardContentButton = new SendItemButtonControl("\uF0E3", "剪贴板");
-            SendItemButtonControl AddFileButton = new SendItemButtonControl("\uE7C3", "文件");
+            SendItemButtonControl AddClipboardContentButton = new SendItemButtonControl("\uF0E3", "Clipboard");
+            SendItemButtonControl AddFileButton = new SendItemButtonControl("\uE7C3", "File");
             AddFileButton.RootButton.Click += FileButton_Click;
-            SendItemButtonControl AddFolderButton = new SendItemButtonControl("\uE8B7", "文件夹");
+            SendItemButtonControl AddFolderButton = new SendItemButtonControl("\uE8B7", "Folder");
             AddFolderButton.RootButton.Click += FolderButton_Click;
 
-            /*To-Do:制作媒体选择器*/
+            // To-Do: create media selector
             //SelectSendItemButtonsStackPanel.Children.Add(MediaButton);
             SelectSendItemButtonsStackPanel.Children.Add(TextButton);
             //SelectSendItemButtonsStackPanel.Children.Add(ClipboardContentButton);
@@ -157,8 +148,6 @@ namespace UniversalSend.Views
             AddFlyoutVariableSizedWrapGrid.Children.Add(AddFolderButton);
         }
 
-        
-
         void AddItemToSendQueue(SendTask task)
         {
             SendTaskManager.SendTasks.Add(task);
@@ -167,7 +156,7 @@ namespace UniversalSend.Views
 
         void UpdateView()
         {
-            if(SendTaskManager.SendTasks.Count!=0)
+            if(SendTaskManager.SendTasks.Count != 0)
             {
                 SelectSendItemButtons.Visibility = Visibility.Collapsed;
                 SendQueueStackPanel.Visibility = Visibility.Visible;
@@ -175,7 +164,7 @@ namespace UniversalSend.Views
                 SendQueueItemsStackpanel.Children.Clear();
                 foreach (var item in SendTaskManager.SendTasks)
                 {
-                    SendQueueItemsStackpanel.Children.Add(new Border { Background = new SolidColorBrush { Color = Colors.DarkGray},Height = 45,Width = 45,Margin = new Thickness(2,2,2,2)});
+                    SendQueueItemsStackpanel.Children.Add(new Border { Background = new SolidColorBrush { Color = Colors.DarkGray}, Height = 45, Width = 45, Margin = new Thickness(2) });
                     totalSize += item.File.Size;
                 }
                 FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{SendTaskManager.SendTasks.Count}";
@@ -206,22 +195,17 @@ namespace UniversalSend.Views
             var filesReadonlyList = await picker.PickMultipleFilesAsync();
             if (filesReadonlyList != null)
             {
-                List<StorageFile>files = filesReadonlyList.ToList();
+                List<StorageFile> files = filesReadonlyList.ToList();
                 foreach (var file in files)
                 {
                     if (file != null)
                     {
                         AddItemToSendQueue(await SendTaskManager.CreateSendTask(file));
                     }
-                    else
-                    {
-
-                    }
                 }
             }
             SelectSendItemButtons.IsEnabled = true;
             ProcessProgressBar.Visibility = Visibility.Collapsed;
-
         }
 
         public void TextButton_Click(object sender, RoutedEventArgs e)
@@ -238,7 +222,7 @@ namespace UniversalSend.Views
             };
             control.ConfirmButton.Click += (sender, e) =>
             {
-                if(!String.IsNullOrEmpty(control.MainTextBox.Text))
+                if (!string.IsNullOrEmpty(control.MainTextBox.Text))
                 {
                     AddItemToSendQueue(SendTaskManager.CreateSendTask(control.MainTextBox.Text));
                 }
@@ -261,22 +245,20 @@ namespace UniversalSend.Views
             picker.FileTypeFilter.Add("*");
 
             StorageFolder folder = await picker.PickSingleFolderAsync();
-            if(folder!=null)
+            if (folder != null)
             {
                 List<StorageFile> files = await StorageHelper.GetFilesInFolder(folder);
-                
-                foreach(StorageFile file in files)
+                foreach (StorageFile file in files)
                 {
                     AddItemToSendQueue(await SendTaskManager.CreateSendTask(file));
                 }
             }
             ProcessProgressBar.Visibility = Visibility.Collapsed;
-
         }
 
         private async void KnownDeviceListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if(SendTaskManager.SendTasks.Count == 0)
+            if (SendTaskManager.SendTasks.Count == 0)
             {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
@@ -318,13 +300,13 @@ namespace UniversalSend.Views
                             SendManager.SendPreparedEvent(device);
                             ProgramData.ContentDialogManager.HideContentDialog();
                         }
-                        manualSendControl.ErrorMessageTextBlock.Text = $"错误：获取{manualSendControl.IPAddressTextBox}:53317主机信息失败";
+                        manualSendControl.ErrorMessageTextBlock.Text = $"Error: failed to get host info for {manualSendControl.IPAddressTextBox.Text}:53317";
                     }
-                    manualSendControl.ErrorMessageTextBlock.Text = $"错误：请输入正确的IP地址";
+                    manualSendControl.ErrorMessageTextBlock.Text = $"Error: please enter a valid IP address";
                 }
                 else
                 {
-                    manualSendControl.ErrorMessageTextBlock.Text = $"正在寻找与标签对应的主机……";
+                    manualSendControl.ErrorMessageTextBlock.Text = $"Searching for host matching the hashtag...";
                     manualSendControl.LoadingProgressBar.Visibility = Visibility.Visible;
                     if (manualSendControl.HashTagTextBox.Text.All(char.IsDigit))
                     {
@@ -336,13 +318,12 @@ namespace UniversalSend.Views
                             SendManager.SendPreparedEvent(device);
                             ProgramData.ContentDialogManager.HideContentDialog();
                         }
-                        manualSendControl.ErrorMessageTextBlock.Text = $"错误：没有找到与标签对应的主机";
+                        manualSendControl.ErrorMessageTextBlock.Text = $"Error: no host found for this hashtag";
                     }
-                    manualSendControl.ErrorMessageTextBlock.Text = $"错误：没有找到与标签对应的主机";
+                    manualSendControl.ErrorMessageTextBlock.Text = $"Error: no host found for this hashtag";
                 }
                 manualSendControl.ConfirmButton.IsEnabled = true;
             };
-
 
             manualSendControl.CancelButton.Click += (sender, e) =>
             {
@@ -366,17 +347,15 @@ namespace UniversalSend.Views
             {
                 ipList.Add(favorite.IPAddr);
             }
-            await DeviceManager.SearchKnownDevicesAsync(ipList);//优先搜索收藏夹设备
+            await DeviceManager.SearchKnownDevicesAsync(ipList); // Priority search for favorites
             SearchDevicesButtonIcon.Visibility = Visibility.Visible;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Collapsed;
             KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
-            SearchDevicesButtonIcon.Visibility = Visibility.Visible;
         }
 
         async Task SearchDevicesAsync()
         {
             DeviceManager.KnownDevices.Clear();
-            
 
             await SearchFavoriteDevicesAsync();
 

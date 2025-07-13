@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:data="using:UniversalSend.Models.Data"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:data="using:UniversalSend.Models.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    Loaded="Page_Loaded"
-    >
+    Loaded="Page_Loaded">
 
     <Grid Name="RootGrid">
         <Grid.RowDefinitions>
@@ -18,62 +18,56 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ProgressBar Name="ProcessProgressBar" VerticalAlignment="Top" Margin="-24,-24,-24,0" Visibility="Collapsed" IsIndeterminate="True"/>
-        <TextBlock  Grid.Row="0" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-        <ScrollViewer  Grid.Row="1" Height="100" Name="SelectSendItemButtons">
-            <StackPanel Orientation="Horizontal" Name="SelectSendItemButtonsStackPanel">
-                
-            </StackPanel>
+        <TextBlock Grid.Row="0" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+        <ScrollViewer Grid.Row="1" Height="100" Name="SelectSendItemButtons">
+            <StackPanel Orientation="Horizontal" Name="SelectSendItemButtonsStackPanel"/>
         </ScrollViewer>
         <StackPanel Grid.Row="0" Grid.RowSpan="2" Name="SendQueueStackPanel" Visibility="Collapsed">
             <Grid>
-                <TextBlock Text="选择" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="Select" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                 <Button HorizontalAlignment="Right" Name="CancelButton" Click="CancelButton_Click">
                     <FontIcon Glyph="&#xE894;" />
                 </Button>
             </Grid>
-            <TextBlock Name="FileCountTextBlock" Text="文件"/>
-            <TextBlock Name="FileSizeTextBlock" Text="大小"/>
+            <TextBlock Name="FileCountTextBlock" Text="Files"/>
+            <TextBlock Name="FileSizeTextBlock" Text="Size"/>
             <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" Padding="0,0,0,8">
-                <StackPanel Orientation="Horizontal" Name="SendQueueItemsStackpanel">
-                    
-                </StackPanel>
+                <StackPanel Orientation="Horizontal" Name="SendQueueItemsStackpanel"/>
             </ScrollViewer>
             <StackPanel Orientation="Horizontal">
-                <Button Content="编辑" x:Uid="SendPage_EditSendTasksButton" Foreground="{ThemeResource SystemBaseLowColor}" ToolTipService.ToolTip="功能开发中……"/>
-                <Button Content="添加" x:Uid="SendPage_AddSendTaskButton">
+                <Button Content="Edit" x:Uid="SendPage_EditSendTasksButton" Foreground="{ThemeResource SystemBaseLowColor}" ToolTipService.ToolTip="Feature under development..."/>
+                <Button Content="Add" x:Uid="SendPage_AddSendTaskButton">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <TextBlock Text="添加文件" x:Uid="SendPage_AddSendTaskTextBlock" HorizontalAlignment="Stretch" TextAlignment="Center"/>
-                                <VariableSizedWrapGrid Orientation="Horizontal" Name="AddFlyoutVariableSizedWrapGrid">
-                                    
-                                </VariableSizedWrapGrid>
+                                <TextBlock Text="Add File" x:Uid="SendPage_AddSendTaskTextBlock" HorizontalAlignment="Stretch" TextAlignment="Center"/>
+                                <VariableSizedWrapGrid Orientation="Horizontal" Name="AddFlyoutVariableSizedWrapGrid"/>
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
             </StackPanel>
         </StackPanel>
-        <StackPanel  Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Background" Value="Transparent"/>
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Text="附近的设备" x:Uid="SendPage_NearbyDevices_TextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,12,0"/>
-            <Button Name="SearchDevicesButton" Click="SearchDevicesButton_Click" ToolTipService.ToolTip="扫描设备">
+            <TextBlock Text="Nearby Devices" x:Uid="SendPage_NearbyDevices_TextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,12,0"/>
+            <Button Name="SearchDevicesButton" Click="SearchDevicesButton_Click" ToolTipService.ToolTip="Scan devices">
                 <Grid>
                     <FontIcon Glyph="&#xE72C;" Name="SearchDevicesButtonIcon"/>
                     <ProgressRing Visibility="Collapsed" IsActive="True" Name="SearchDevicesButtonProgressRing"/>
                 </Grid>
             </Button>
-            <Button Name="ManualSendButton" Click="ManualSendButton_Click" ToolTipService.ToolTip="手动发送">
+            <Button Name="ManualSendButton" Click="ManualSendButton_Click" ToolTipService.ToolTip="Manual send">
                 <FontIcon Glyph="&#xE93E;"/>
             </Button>
-            <Button Name="FavoriteButton" ToolTipService.ToolTip="收藏夹" Click="FavoriteButton_Click">
+            <Button Name="FavoriteButton" ToolTipService.ToolTip="Favorites" Click="FavoriteButton_Click">
                 <FontIcon Glyph="&#xEB51;"/>
             </Button>
-            <Button ToolTipService.ToolTip="发送模式（功能开发中……）">
+            <Button ToolTipService.ToolTip="Send mode (Feature under development...)">
                 <FontIcon Glyph="&#xE713;" Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}"/>
             </Button>
         </StackPanel>
@@ -97,9 +91,7 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.RowSpan="2">
-                            
-                        </Grid>
+                        <Grid Grid.RowSpan="2"/>
                         <TextBlock Grid.Column="1" Text="{Binding Alias}"/>
                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
