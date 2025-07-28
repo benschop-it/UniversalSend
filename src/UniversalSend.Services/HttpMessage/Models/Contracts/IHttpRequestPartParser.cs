@@ -1,7 +1,6 @@
 ﻿using UniversalSend.Services.HttpMessage;
 
-namespace UniversalSend.Services.Models.Contracts
-{
+namespace UniversalSend.Services.HttpMessage.Models.Contracts {
     interface IHttpRequestPartParser
     {
         void HandleRequestPart(byte[] stream, MutableHttpServerRequest resultThisFar);

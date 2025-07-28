@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversalSend.Services.Http;
 using UniversalSend.Services.Models.Contracts;
 
-namespace UniversalSend.Services.Webserver.Http
-{
+namespace UniversalSend.Services.Http {
     public class HttpServerConfiguration
     {
         public int ServerPort { get; private set; } = 80;

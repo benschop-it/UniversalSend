@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UniversalSend.Services.HttpMessage;
 
-namespace UniversalSend.Services.ServerRequestParsers
-{
+namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     /// <summary>
     /// One bad request scenario we don't cover:
     ///  

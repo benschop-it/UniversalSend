@@ -4,12 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.Models.Contracts;
-using UniversalSend.Services.Plumbing;
+using UniversalSend.Services.HttpMessage.Models.Contracts;
+using UniversalSend.Services.HttpMessage.Plumbing;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Services.ServerRequestParsers
-{
+namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     internal class HttpRequestParser
     {
         private const uint BUFFER_SIZE = 8192;

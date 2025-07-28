@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
-namespace UniversalSend.Services.Webserver.Http
-{
+namespace UniversalSend.Services.Http {
     internal class CorsConfiguration : ICorsConfiguration
     {
         public List<string> AllowedOrigins { get; } = new List<string>();

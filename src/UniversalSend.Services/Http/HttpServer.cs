@@ -7,7 +7,6 @@ using Windows.Networking.Sockets;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using UniversalSend.Services.Webserver.Http;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Schemas;

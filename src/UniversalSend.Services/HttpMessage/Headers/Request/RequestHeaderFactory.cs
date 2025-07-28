@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
-using UniversalSend.Services.Plumbing;
+using UniversalSend.Services.HttpMessage.Plumbing;
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
     internal class RequestHeaderFactory

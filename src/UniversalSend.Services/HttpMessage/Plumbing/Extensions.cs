@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UniversalSend.Services.HttpMessage.Plumbing;
-using UniversalSend.Services.Models.Schemas;
+using UniversalSend.Services.HttpMessage.Models.Schemas;
 
-namespace UniversalSend.Services.Plumbing
-{
+namespace UniversalSend.Services.HttpMessage.Plumbing {
     internal static class Extensions
     {
         private static Regex _trimStart = new Regex(@"^\s+", RegexOptions.Compiled);
@@ -50,7 +48,7 @@ namespace UniversalSend.Services.Plumbing
                 }
                 else if (currentByte == Constants.CRByte)
                 {
-                    byte next = stream.Length > (i + 1) ? stream[i + 1] : (byte)0;
+                    byte next = stream.Length > i + 1 ? stream[i + 1] : (byte)0;
                     if (next == Constants.LFByte)
                     {
                         return new ExtractedWord()
@@ -70,7 +68,7 @@ namespace UniversalSend.Services.Plumbing
         internal static T[] ConcatArray<T>(this T[] array1, T[] array2)
         {
             int array1OriginalLength = array1.Length;
-            Array.Resize<T>(ref array1, array1OriginalLength + array2.Length);
+            Array.Resize(ref array1, array1OriginalLength + array2.Length);
             Array.Copy(array2, 0, array1, array1OriginalLength, array2.Length);
 
             return array1;

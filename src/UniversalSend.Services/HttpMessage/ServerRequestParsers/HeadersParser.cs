@@ -3,10 +3,8 @@ using System.Linq;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Request;
 using UniversalSend.Services.HttpMessage.Plumbing;
-using UniversalSend.Services.Plumbing;
 
-namespace UniversalSend.Services.ServerRequestParsers
-{
+namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     /// <summary>
     /// Some http header spec rules (http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2)
     /// - Each header field consists of a name followed by a colon (":") and the field value

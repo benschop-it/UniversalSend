@@ -5,8 +5,7 @@ using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 
-namespace UniversalSend.Services.Webserver.Http
-{
+namespace UniversalSend.Services.Http {
     internal class CorsMessageInspector : IHttpMessageInspector
     {
         private readonly IEnumerable<string> _allowedOrigins;

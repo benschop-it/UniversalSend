@@ -1,8 +1,7 @@
 ﻿using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.Plumbing;
+using UniversalSend.Services.HttpMessage.Plumbing;
 
-namespace UniversalSend.Services.ServerRequestParsers
-{
+namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     internal class ProtocolVersionParser : HttpRequestPartParser
     {
         public override void HandleRequestPart(byte[] stream, MutableHttpServerRequest resultThisFar)

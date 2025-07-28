@@ -1,5 +1,4 @@
-﻿namespace UniversalSend.Services.Models.Schemas
-{
+﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas {
     internal struct StreamReadResult
     {
         internal byte[] Data { get; }

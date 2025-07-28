@@ -1,8 +1,7 @@
 ﻿using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.Models.Contracts;
+using UniversalSend.Services.HttpMessage.Models.Contracts;
 
-namespace UniversalSend.Services.ServerRequestParsers
-{
+namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     internal abstract class HttpRequestPartParser : IHttpRequestPartParser
     {
         public bool IsFinished { get; protected set; }

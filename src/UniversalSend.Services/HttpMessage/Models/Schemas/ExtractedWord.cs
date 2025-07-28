@@ -1,5 +1,4 @@
-﻿namespace UniversalSend.Services.Models.Schemas
-{
+﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas {
     internal struct ExtractedWord
     {
         public string Word { get; set; }

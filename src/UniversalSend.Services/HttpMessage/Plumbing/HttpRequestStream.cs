@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using UniversalSend.Services.Models.Schemas;
+using UniversalSend.Services.HttpMessage.Models.Schemas;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Services.Plumbing
-{
+namespace UniversalSend.Services.HttpMessage.Plumbing {
     /// <summary>
     /// Wrapper around an <see cref="IInputStream"/> which supports a retry meganism
     /// if the stream is empty.

@@ -1,7 +1,6 @@
 using UniversalSend.Services.HttpMessage;
 
-namespace UniversalSend.Services.Webserver.Http
-{
+namespace UniversalSend.Services.Http {
     internal interface IHttpMessageInspector
     {
         BeforeHandleRequestResult BeforeHandleRequest(IHttpServerRequest request);

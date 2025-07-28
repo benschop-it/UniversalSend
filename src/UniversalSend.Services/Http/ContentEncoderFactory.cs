@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversalSend.Services.Http;
 
-namespace UniversalSend.Services.Webserver.Http
-{
+namespace UniversalSend.Services.Http {
     public class ContentEncoderFactory
     {
         internal IContentEncoder GetEncoder(IEnumerable<string> acceptEncodings)
