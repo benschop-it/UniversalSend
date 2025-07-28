@@ -250,6 +250,7 @@
     <Compile Include="Rest\UriParameter.cs" />
     <Compile Include="Rest\UriParser.cs" />
     <Compile Include="ServiceHttpServer.cs" />
+    <Compile Include="UdpDiscoveryService.cs" />
     <Compile Include="V1RequestController.cs" />
     <Compile Include="V2RequestController.cs" />
     <EmbeddedResource Include="Properties\UniversalSend.Services.rd.xml" />

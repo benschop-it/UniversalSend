@@ -260,7 +260,6 @@ namespace UniversalSend.Views {
             SearchDevicesButtonIcon.Visibility = Visibility.Collapsed;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Visible;
 
-            await DeviceManager.SearchKnownDevicesAsync();
             KnownDeviceListView.ItemsSource = null;
             KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
             SearchDevicesButtonIcon.Visibility = Visibility.Visible;

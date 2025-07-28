@@ -101,21 +101,8 @@ namespace UniversalSend.Models.Data {
         }
 
         public static async Task SearchKnownDevicesAsync(List<string> ipList) {
-            foreach (var ip in ipList)
+            foreach (var ip in ipList) {
                 await SearchKnownDeviceAsync(ip);
-        }
-
-        public static async Task SearchKnownDevicesAsync() {
-            List<string> localIPList = NetworkHelper.GetIPv4AddrList();
-
-            for (int i = 0; i < localIPList.Count; i++) {
-                localIPList[i] = localIPList[i].Substring(0, localIPList[i].LastIndexOf(".") + 1);
-                for (int j = 10; j < 11; j++) {
-                    await SearchKnownDeviceAsync(localIPList[i] + j);
-                }
-                for (int j = 133; j < 134; j++) {
-                    await SearchKnownDeviceAsync(localIPList[i] + j);
-                }
             }
         }
 

@@ -22,6 +22,8 @@ namespace UniversalSend.Models {
 
         public static object ServiceServer { get; set; }
 
+        public static object UdpDiscoveryService { get; set; }
+
         #endregion Public Properties
     }
 }

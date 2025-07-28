@@ -11,6 +11,7 @@ namespace UniversalSend.Services {
         #region Private Fields
 
         private bool _isRunning = false;
+        private UdpDiscoveryService _udpDiscovery;
 
         #endregion Private Fields
 
@@ -25,6 +26,9 @@ namespace UniversalSend.Services {
         #region Public Methods
 
         public async Task<bool> StartHttpServerAsync(int port) {
+            _udpDiscovery = new UdpDiscoveryService();
+            await _udpDiscovery.StartUdpListenerAsync();
+
             RestRouteHandler restRouteHandler = new RestRouteHandler();
             restRouteHandler.RegisterController<V1RequestController>(); // Register controller
             //restRouteHandler.RegisterController<V2RequestController>(); // Register controller
@@ -57,11 +61,15 @@ namespace UniversalSend.Services {
         }
 
         public void StopHttpServer() {
+            _udpDiscovery?.StopUdpListener();
+            _udpDiscovery = null;
+
             HttpServer.StopServer();
             _isRunning = false;
             Debug.WriteLine($"HTTP server has stopped");
         }
 
         #endregion Public Methods
+
     }
 }

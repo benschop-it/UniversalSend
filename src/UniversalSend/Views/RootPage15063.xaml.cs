@@ -77,7 +77,8 @@ namespace UniversalSend.Views {
 
         private async Task StartHttpServerAsync() {
             ProgramData.ServiceServer = new ServiceHttpServer();
-            await ((ServiceHttpServer)ProgramData.ServiceServer).StartHttpServerAsync((int)Settings.GetSettingContent(Settings.Network_Port));
+            var port = (int)Settings.GetSettingContent(Settings.Network_Port);
+            await ((ServiceHttpServer)ProgramData.ServiceServer).StartHttpServerAsync(port);
         }
 
         #endregion Private Methods
