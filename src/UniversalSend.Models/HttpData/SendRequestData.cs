@@ -11,6 +11,7 @@ namespace UniversalSend.Models.HttpData {
 
         [JsonProperty("files")]
         public Dictionary<string, FileRequestData> Files { get; set; }
+
         [JsonProperty("info")]
         public InfoData Info { get; set; }
 

@@ -11,13 +11,13 @@
     passed into the library. There are three ways runtime directives can express requirements
     for such types:
 
-    1.  Parameter, GenericParameter, TypeParameter, TypeEnumerableParameter  
+    1.  Parameter, GenericParameter, TypeParameter, TypeEnumerableParameter
         Use these directives to reflect on types passed as parameters.
 
-    2.  SubTypes  
+    2.  SubTypes
         Use the SubTypes directive to reflect on types derived from other types.
 
-    3.  AttributeImplies  
+    3.  AttributeImplies
         Use the AttributeImplies directive to indicate that your library needs to reflect on types or methods
         decorated with certain attributes.
 
@@ -28,6 +28,5 @@
   <Library Name="UniversalSend.Models">
 
     <!-- Add directives for the library here -->
-
   </Library>
 </Directives>

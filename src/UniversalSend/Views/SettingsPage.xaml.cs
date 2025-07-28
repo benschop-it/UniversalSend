@@ -56,6 +56,7 @@ namespace UniversalSend.Views {
         private void InitReceiveControls() {
             ReceiveSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Receive_SaveToFolder_Header")/*"Save directory"*/, new SaveLocationSettingControl()));
         }
+
         private void NavigateToDevPageButton_Click(object sender, RoutedEventArgs e) {
             Frame.Navigate(typeof(DevPage));
         }

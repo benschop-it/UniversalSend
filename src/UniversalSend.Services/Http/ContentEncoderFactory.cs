@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UniversalSend.Services.Http {
-    public class ContentEncoderFactory
-    {
-        internal IContentEncoder GetEncoder(IEnumerable<string> acceptEncodings)
-        {
+
+    public class ContentEncoderFactory {
+
+        internal IContentEncoder GetEncoder(IEnumerable<string> acceptEncodings) {
             var firstSupportedEncoding = GetSupportedAcceptEncoding(acceptEncodings);
-            switch (firstSupportedEncoding)
-            {
+            switch (firstSupportedEncoding) {
                 case ContentCoding.None:
                     return new NoContentEncoder();
                 case ContentCoding.Deflate:
@@ -21,15 +20,13 @@ namespace UniversalSend.Services.Http {
             throw new Exception($"{firstSupportedEncoding} not supported.");
         }
 
-        private static ContentCoding GetSupportedAcceptEncoding(IEnumerable<string> acceptEncodings)
-        {
+        private static ContentCoding GetSupportedAcceptEncoding(IEnumerable<string> acceptEncodings) {
             return acceptEncodings
                 .Select(GetAcceptEncoding)
                 .FirstOrDefault(x => x != ContentCoding.None);
         }
 
-        private static ContentCoding GetAcceptEncoding(string possibleValidEncoding)
-        {
+        private static ContentCoding GetAcceptEncoding(string possibleValidEncoding) {
             var trimmedEncoding = possibleValidEncoding.Trim();
             if ("gzip".Equals(trimmedEncoding, StringComparison.OrdinalIgnoreCase))
                 return ContentCoding.Gzip;

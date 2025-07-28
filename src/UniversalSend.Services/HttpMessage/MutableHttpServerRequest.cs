@@ -8,14 +8,12 @@ using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Services.HttpMessage
-{
-    public class MutableHttpServerRequest : IHttpServerRequest
-    {
+namespace UniversalSend.Services.HttpMessage {
+
+    public class MutableHttpServerRequest : IHttpServerRequest {
         private readonly List<IHttpRequestHeader> _headers;
 
-        internal MutableHttpServerRequest()
-        {
+        internal MutableHttpServerRequest() {
             _headers = new List<IHttpRequestHeader>();
 
             AcceptCharsets = Enumerable.Empty<string>();
@@ -40,10 +38,8 @@ namespace UniversalSend.Services.HttpMessage
         public IEnumerable<string> AccessControlRequestHeaders { get; set; }
         public string Origin { get; set; }
 
-        internal void AddHeader(IHttpRequestHeader header)
-        {
-            if (IsComplete)
-            {
+        internal void AddHeader(IHttpRequestHeader header) {
+            if (IsComplete) {
                 throw new InvalidOperationException("Can't add header after processing request is finished!");
             }
 
@@ -52,8 +48,7 @@ namespace UniversalSend.Services.HttpMessage
             _headers.Add(header);
         }
 
-        public async static Task<MutableHttpServerRequest> Parse(IInputStream requestStream)
-        {
+        public static async Task<MutableHttpServerRequest> Parse(IInputStream requestStream) {
             return await HttpRequestParser.Default.ParseRequestStream(requestStream);
         }
     }

@@ -37,6 +37,5 @@ namespace UniversalSend.Models.Tasks {
         public ReceiveTaskStates TaskState { get; set; } = ReceiveTaskStates.Waiting;
 
         #endregion Public Properties
-
     }
 }

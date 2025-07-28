@@ -11,23 +11,22 @@
 
     <Grid Background="{ThemeResource SystemListLowColor}" Padding="8">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid>
-            
         </Grid>
-        <TextBlock Grid.Column="1" Text="{x:Bind Device.Alias}"/>
+        <TextBlock Grid.Column="1" Text="{x:Bind Device.Alias}" />
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <Border>
-                <TextBlock Name="HashTagTextBlock"/>
+                <TextBlock Name="HashTagTextBlock" />
             </Border>
             <Border>
-                <TextBlock Text="{x:Bind Device.DeviceModel}"/>
+                <TextBlock Text="{x:Bind Device.DeviceModel}" />
             </Border>
         </StackPanel>
     </Grid>

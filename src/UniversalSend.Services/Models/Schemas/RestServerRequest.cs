@@ -1,14 +1,13 @@
 ﻿using System.Text;
 using UniversalSend.Services.HttpMessage;
 
-namespace UniversalSend.Services.Models.Schemas
-{
+namespace UniversalSend.Services.Models.Schemas {
+
     /// <summary>
     /// Wraps a <see cref="HttpServerRequest"/> with the defaults defined in the <see cref="Configuration"/>
     /// settings.
     /// </summary>
-    internal struct RestServerRequest
-    {
+    internal struct RestServerRequest {
         internal IHttpServerRequest HttpServerRequest { get; private set; }
 
         internal string AcceptCharset { get; private set; }
@@ -30,8 +29,7 @@ namespace UniversalSend.Services.Models.Schemas
             Encoding acceptEncoding,
             MediaType contentMediaType,
             string contentCharset,
-            Encoding contentEncoding)
-        {
+            Encoding contentEncoding) {
             this.HttpServerRequest = httpServerRequest;
             this.AcceptCharset = acceptCharset;
             this.AcceptMediaType = acceptMediaType;

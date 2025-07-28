@@ -12,7 +12,6 @@
 
     <Grid>
         <ToggleSwitch Name="MainToggleSwitch" Toggled="MainToggleSwitch_Toggled">
-            
         </ToggleSwitch>
     </Grid>
 </UserControl>

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
 namespace UniversalSend.Services.Rest.Models.Contracts {
-    public interface IRestResponse
-    {
+
+    public interface IRestResponse {
         int StatusCode { get; }
         IReadOnlyDictionary<string, string> Headers { get; }
     }

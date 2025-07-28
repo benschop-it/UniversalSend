@@ -1,8 +1,7 @@
-﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas
-{
+﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas {
+
     // From http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
-    public enum HttpResponseStatus
-    {
+    public enum HttpResponseStatus {
         Continue = 100,
         SwitchingProtocols = 101,
         OK = 200,

@@ -12,49 +12,49 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="Favorites"/>
+        <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="Favorites" />
 
         <ListView Grid.Row="1" Name="FavoritesListView" IsItemClickEnabled="True" Margin="0,8,0,0" ItemClick="FavoritesListView_ItemClick">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Favorite">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding DeviceName}"/>
-                        <TextBlock Grid.Row="1" Text="{Binding IPAddr}"/>
+                        <TextBlock Text="{Binding DeviceName}" />
+                        <TextBlock Grid.Row="1" Text="{Binding IPAddr}" />
                         <Button Grid.Column="1" Grid.RowSpan="2" x:Name="EditButton" Click="EditButton_Click">
-                            <FontIcon Glyph="&#xE70F;"/>
+                            <FontIcon Glyph="&#xE70F;" />
                         </Button>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
 
         <StackPanel Grid.Row="2">
-            <ProgressBar IsIndeterminate="True" Name="FindDeviceProgressBar" Visibility="Collapsed"/>
-            <TextBlock Name="MessageTextBlock" Visibility="Collapsed"/>
+            <ProgressBar IsIndeterminate="True" Name="FindDeviceProgressBar" Visibility="Collapsed" />
+            <TextBlock Name="MessageTextBlock" Visibility="Collapsed" />
         </StackPanel>
 
         <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,8,0,0">
-            <Button Content="Close" Name="CancelButton" Click="CancelButton_Click" Margin="0,0,4,0"/>
-            <Button Content="Add" Name="AddButton" Click="AddButton_Click"/>
+            <Button Content="Close" Name="CancelButton" Click="CancelButton_Click" Margin="0,0,4,0" />
+            <Button Content="Add" Name="AddButton" Click="AddButton_Click" />
         </StackPanel>
     </Grid>
 </UserControl>

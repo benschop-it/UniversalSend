@@ -65,6 +65,7 @@ namespace UniversalSend.Models.Helpers {
             }
             return files;
         }
+
         public static async Task<StorageFolder> GetReceiveStorageFolderAsync() {
             if (SystemHelper.GetDeviceFormFactorType() == SystemHelper.DeviceFormFactorType.Xbox) {
                 return ApplicationData.Current.LocalFolder;
@@ -108,6 +109,7 @@ namespace UniversalSend.Models.Helpers {
                 await FileIO.WriteBytesAsync(file, data);
             }
         }
+
         public static async Task WriteTestFileAsync(byte[] content) {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile storageFile = await storageFolder.GetFileAsync("test");

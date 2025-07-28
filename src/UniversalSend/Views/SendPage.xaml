@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:UniversalSend.Models.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -12,36 +12,36 @@
 
     <Grid Name="RootGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <ProgressBar Name="ProcessProgressBar" VerticalAlignment="Top" Margin="-24,-24,-24,0" Visibility="Collapsed" IsIndeterminate="True"/>
-        <TextBlock Grid.Row="0" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+        <ProgressBar Name="ProcessProgressBar" VerticalAlignment="Top" Margin="-24,-24,-24,0" Visibility="Collapsed" IsIndeterminate="True" />
+        <TextBlock Grid.Row="0" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" />
         <ScrollViewer Grid.Row="1" Height="100" Name="SelectSendItemButtons">
-            <StackPanel Orientation="Horizontal" Name="SelectSendItemButtonsStackPanel"/>
+            <StackPanel Orientation="Horizontal" Name="SelectSendItemButtonsStackPanel" />
         </ScrollViewer>
         <StackPanel Grid.Row="0" Grid.RowSpan="2" Name="SendQueueStackPanel" Visibility="Collapsed">
             <Grid>
-                <TextBlock Text="Select" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="Select" x:Uid="SendPage_SelectTextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" />
                 <Button HorizontalAlignment="Right" Name="CancelButton" Click="CancelButton_Click">
                     <FontIcon Glyph="&#xE894;" />
                 </Button>
             </Grid>
-            <TextBlock Name="FileCountTextBlock" Text="Files"/>
-            <TextBlock Name="FileSizeTextBlock" Text="Size"/>
+            <TextBlock Name="FileCountTextBlock" Text="Files" />
+            <TextBlock Name="FileSizeTextBlock" Text="Size" />
             <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" Padding="0,0,0,8">
-                <StackPanel Orientation="Horizontal" Name="SendQueueItemsStackpanel"/>
+                <StackPanel Orientation="Horizontal" Name="SendQueueItemsStackpanel" />
             </ScrollViewer>
             <StackPanel Orientation="Horizontal">
-                <Button Content="Edit" x:Uid="SendPage_EditSendTasksButton" Foreground="{ThemeResource SystemBaseLowColor}" ToolTipService.ToolTip="Feature under development..."/>
+                <Button Content="Edit" x:Uid="SendPage_EditSendTasksButton" Foreground="{ThemeResource SystemBaseLowColor}" ToolTipService.ToolTip="Feature under development..." />
                 <Button Content="Add" x:Uid="SendPage_AddSendTaskButton">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <TextBlock Text="Add File" x:Uid="SendPage_AddSendTaskTextBlock" HorizontalAlignment="Stretch" TextAlignment="Center"/>
-                                <VariableSizedWrapGrid Orientation="Horizontal" Name="AddFlyoutVariableSizedWrapGrid"/>
+                                <TextBlock Text="Add File" x:Uid="SendPage_AddSendTaskTextBlock" HorizontalAlignment="Stretch" TextAlignment="Center" />
+                                <VariableSizedWrapGrid Orientation="Horizontal" Name="AddFlyoutVariableSizedWrapGrid" />
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
@@ -51,53 +51,53 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <StackPanel.Resources>
                 <Style TargetType="Button">
-                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Background" Value="Transparent" />
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Text="Nearby Devices" x:Uid="SendPage_NearbyDevices_TextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,12,0"/>
+            <TextBlock Text="Nearby Devices" x:Uid="SendPage_NearbyDevices_TextBlock" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,12,0" />
             <Button Name="SearchDevicesButton" Click="SearchDevicesButton_Click" ToolTipService.ToolTip="Scan devices">
                 <Grid>
-                    <FontIcon Glyph="&#xE72C;" Name="SearchDevicesButtonIcon"/>
-                    <ProgressRing Visibility="Collapsed" IsActive="True" Name="SearchDevicesButtonProgressRing"/>
+                    <FontIcon Glyph="&#xE72C;" Name="SearchDevicesButtonIcon" />
+                    <ProgressRing Visibility="Collapsed" IsActive="True" Name="SearchDevicesButtonProgressRing" />
                 </Grid>
             </Button>
             <Button Name="ManualSendButton" Click="ManualSendButton_Click" ToolTipService.ToolTip="Manual send">
-                <FontIcon Glyph="&#xE93E;"/>
+                <FontIcon Glyph="&#xE93E;" />
             </Button>
             <Button Name="FavoriteButton" ToolTipService.ToolTip="Favorites" Click="FavoriteButton_Click">
-                <FontIcon Glyph="&#xEB51;"/>
+                <FontIcon Glyph="&#xEB51;" />
             </Button>
             <Button ToolTipService.ToolTip="Send mode (Feature under development...)">
-                <FontIcon Glyph="&#xE713;" Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}"/>
+                <FontIcon Glyph="&#xE713;" Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" />
             </Button>
         </StackPanel>
         <ListView Grid.Row="3" Name="KnownDeviceListView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="KnownDeviceListView_ItemClick">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Background" Value="{ThemeResource SystemBaseLowColor}"/>
-                    <Setter Property="Margin" Value="4"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Background" Value="{ThemeResource SystemBaseLowColor}" />
+                    <Setter Property="Margin" Value="4" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:Device">
                     <Grid Padding="8">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Grid Grid.RowSpan="2"/>
-                        <TextBlock Grid.Column="1" Text="{Binding Alias}"/>
+                        <Grid Grid.RowSpan="2" />
+                        <TextBlock Grid.Column="1" Text="{Binding Alias}" />
                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding IP}" Margin="0,0,8,0"/>
+                                <TextBlock Text="{Binding IP}" Margin="0,0,8,0" />
                             </StackPanel>
-                            <TextBlock Text="{Binding DeviceModel}"/>
+                            <TextBlock Text="{Binding DeviceModel}" />
                         </StackPanel>
                         <Button Grid.Column="2" Grid.RowSpan="2" Background="Transparent" x:Name="KnownDeviceItemFavoriteButton" Click="KnownDeviceItemFavoriteButton_Click">
                             <FontIcon Glyph="&#xEB51;" />

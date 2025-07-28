@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace UniversalSend.Services.HttpMessage.Plumbing
-{
-    public class HttpCodesTranslator
-    {
+namespace UniversalSend.Services.HttpMessage.Plumbing {
+
+    public class HttpCodesTranslator {
         public static HttpCodesTranslator Default { get; }
 
         // From http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
-        private readonly IDictionary<int, string> _statusCodeTexts = new Dictionary<int, string>()
-        {
+        private readonly IDictionary<int, string> _statusCodeTexts = new Dictionary<int, string>() {
             [100] = "Continue",
             [101] = "Switching Protocols",
             [200] = "OK",
@@ -51,15 +49,14 @@ namespace UniversalSend.Services.HttpMessage.Plumbing
             [505] = "HTTP Version not supported"
         };
 
-        static HttpCodesTranslator()
-        {
+        static HttpCodesTranslator() {
             Default = new HttpCodesTranslator();
         }
 
-        private HttpCodesTranslator() { }
+        private HttpCodesTranslator() {
+        }
 
-        public string GetHttpStatusCodeText(int statusCode)
-        {
+        public string GetHttpStatusCodeText(int statusCode) {
             return _statusCodeTexts[statusCode];
         }
     }

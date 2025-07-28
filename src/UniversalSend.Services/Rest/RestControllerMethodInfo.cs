@@ -6,12 +6,11 @@ using UniversalSend.Services.Attributes;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.Rest.Models.Contracts;
 
-namespace UniversalSend.Services.Rest
-{
-    internal class RestControllerMethodInfo
-    {
-        internal enum TypeWrapper
-        {
+namespace UniversalSend.Services.Rest {
+
+    internal class RestControllerMethodInfo {
+
+        internal enum TypeWrapper {
             None,
             Task,
             AsyncOperation
@@ -33,8 +32,7 @@ namespace UniversalSend.Services.Rest
         internal RestControllerMethodInfo(
             MethodInfo methodInfo,
             Func<object[]> constructorArgs,
-            TypeWrapper typeWrapper)
-        {
+            TypeWrapper typeWrapper) {
             constructorArgs.GuardNull(nameof(constructorArgs));
             _uriParser = new UriParser();
             _matchUri = GetUriFromMethod(methodInfo);
@@ -52,8 +50,7 @@ namespace UniversalSend.Services.Rest
             ContentParameterType = contentParameterType;
         }
 
-        private ParsedUri GetUriFromMethod(MethodInfo methodInfo)
-        {
+        private ParsedUri GetUriFromMethod(MethodInfo methodInfo) {
             var uriFormatter = methodInfo.GetCustomAttribute<UriFormatAttribute>();
             ParsedUri parsedUri;
             if (!_uriParser.TryParse(uriFormatter.UriFormat, out parsedUri))
@@ -62,8 +59,7 @@ namespace UniversalSend.Services.Rest
             return parsedUri;
         }
 
-        private Type[] GetValidParameterTypes()
-        {
+        private Type[] GetValidParameterTypes() {
             return new[] {
                 typeof(IEnumerable<byte>),
                 typeof(IEnumerable<sbyte>),
@@ -97,11 +93,9 @@ namespace UniversalSend.Services.Rest
             };
         }
 
-        private bool TryGetContentParameterType(MethodInfo methodInfo, out Type content)
-        {
+        private bool TryGetContentParameterType(MethodInfo methodInfo, out Type content) {
             var fromContentParameter = methodInfo.GetParameters().FirstOrDefault(p => p.GetCustomAttribute<FromContentAttribute>() != null);
-            if (fromContentParameter != null)
-            {
+            if (fromContentParameter != null) {
                 content = fromContentParameter.ParameterType;
                 return true;
             }
@@ -110,22 +104,19 @@ namespace UniversalSend.Services.Rest
             return false;
         }
 
-        private ParameterValueGetter[] GetParameterGetters(MethodInfo methodInfo)
-        {
+        private ParameterValueGetter[] GetParameterGetters(MethodInfo methodInfo) {
             var fromUriParams = (from p in methodInfo.GetParameters()
                                  where p.GetCustomAttribute<FromContentAttribute>() == null
                                  select p).ToList();
 
-            if (!ParametersHaveValidType(fromUriParams.Select(p => p.ParameterType)))
-            {
+            if (!ParametersHaveValidType(fromUriParams.Select(p => p.ParameterType))) {
                 throw new InvalidOperationException("Can't use method parameters with a custom type.");
             }
 
-           return fromUriParams.Select(x => GetParameterGetter(x, _matchUri)).ToArray();
+            return fromUriParams.Select(x => GetParameterGetter(x, _matchUri)).ToArray();
         }
 
-        private static ParameterValueGetter GetParameterGetter(ParameterInfo parameterInfo, ParsedUri matchUri)
-        {
+        private static ParameterValueGetter GetParameterGetter(ParameterInfo parameterInfo, ParsedUri matchUri) {
             var methodName = parameterInfo.Name;
             var firstPathPartMatch = matchUri.PathParts
                 .Select((x, i) => new { Part = x, Index = i })
@@ -145,13 +136,11 @@ namespace UniversalSend.Services.Rest
             throw new Exception($"Method {methodName} not found in rest controller method uri {matchUri}.");
         }
 
-        private bool ParametersHaveValidType(IEnumerable<Type> parameters)
-        {
+        private bool ParametersHaveValidType(IEnumerable<Type> parameters) {
             return !parameters.Except(_validParameterTypes).Any();
         }
 
-        private HttpMethod GetVerb()
-        {
+        private HttpMethod GetVerb() {
             TypeInfo returnType;
 
             if (ReturnTypeWrapper == TypeWrapper.None)
@@ -162,8 +151,7 @@ namespace UniversalSend.Services.Rest
             return GetVerb(returnType);
         }
 
-        private HttpMethod GetVerb(TypeInfo returnType)
-        {
+        private HttpMethod GetVerb(TypeInfo returnType) {
             if (IsRestResponseOfType<IGetResponse>(returnType))
                 return HttpMethod.GET;
             if (IsRestResponseOfType<IPostResponse>(returnType))
@@ -176,18 +164,15 @@ namespace UniversalSend.Services.Rest
             throw new ArgumentException($"Verb for return type {returnType} not know. Please use only {typeof(IGetResponse)}, {typeof(IPostResponse)}, {typeof(IPutResponse)}, {typeof(IDeleteResponse)} as return types.");
         }
 
-        private static bool IsRestResponseOfType<T>(TypeInfo returnType)
-        {
+        private static bool IsRestResponseOfType<T>(TypeInfo returnType) {
             return returnType.ImplementedInterfaces.Contains(typeof(T)) || returnType.AsType() == typeof(T);
         }
 
-        internal bool Match(ParsedUri uri)
-        {
+        internal bool Match(ParsedUri uri) {
             if (_matchUri.PathParts.Count != uri.PathParts.Count)
                 return false;
 
-            for (var i = 0; i < _matchUri.PathParts.Count; i++)
-            {
+            for (var i = 0; i < _matchUri.PathParts.Count; i++) {
                 var fromPart = _matchUri.PathParts[i];
                 var toPart = uri.PathParts[i];
                 if (fromPart.PartType == PathPart.PathPartType.Argument)
@@ -203,13 +188,11 @@ namespace UniversalSend.Services.Rest
             return _matchUri.Parameters.All(x => uri.Parameters.Any(y => y.Name.Equals(x.Name, StringComparison.OrdinalIgnoreCase)));
         }
 
-        internal IEnumerable<object> GetParametersFromUri(ParsedUri uri)
-        {
+        internal IEnumerable<object> GetParametersFromUri(ParsedUri uri) {
             return _parameterGetters.Select(x => x.GetParameterValue(uri)).ToArray();
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"Hosting {Verb} method on {_matchUri}";
         }
     }

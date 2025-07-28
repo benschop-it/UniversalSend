@@ -7,7 +7,7 @@
     Runtime directive documentation: https://go.microsoft.com/fwlink/?LinkID=391919
 
     Fully enable reflection on App1.MyClass and all its public/private members:
-    <Type Name="App1.MyClass" Dynamic="Required All"/>
+    <Type Name="App1.MyClass" Dynamic="Required All" />
 
     Enable dynamic instantiation of a specific AppClass<T> using System.Int32:
     <TypeInstantiation Name="App1.AppClass" Arguments="System.Int32" Activate="Required Public" />
@@ -25,6 +25,5 @@
     <Assembly Name="*Application*" Dynamic="Required All" />
 
     <!-- Add application-specific runtime directives here. -->
-    
   </Application>
 </Directives>

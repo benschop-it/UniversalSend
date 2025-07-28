@@ -28,6 +28,7 @@ namespace UniversalSend.Controls.ContentDialogControls {
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
             ProgramData.ContentDialogManager.HideContentDialog();
         }
+
         private async void EditButton_Click(object sender, RoutedEventArgs e) {
             Favorite favorite = ((Button)sender).DataContext as Favorite;
             await ProgramData.ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(favorite));

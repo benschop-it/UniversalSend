@@ -99,6 +99,7 @@ namespace UniversalSend.Models.Helpers {
                 throw;
             }
         }
+
         public static async Task<string> PostBinaryAsync(
             string url,
             byte[] binaryData,
@@ -152,6 +153,7 @@ namespace UniversalSend.Models.Helpers {
                 return "";
             }
         }
+
         /// <summary>
         /// Send a JSON PUT request and return string result
         /// </summary>
@@ -174,6 +176,7 @@ namespace UniversalSend.Models.Helpers {
                 throw;
             }
         }
+
         /// <summary>
         /// Set base URL
         /// </summary>

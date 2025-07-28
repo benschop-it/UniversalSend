@@ -1,11 +1,10 @@
 ﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas {
-    internal struct StreamReadResult
-    {
+
+    internal struct StreamReadResult {
         internal byte[] Data { get; }
         internal bool ReadSuccessful { get; }
 
-        internal StreamReadResult(byte[] data, bool successful)
-        {
+        internal StreamReadResult(byte[] data, bool successful) {
             Data = data;
             ReadSuccessful = successful;
         }

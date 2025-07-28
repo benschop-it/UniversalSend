@@ -12,19 +12,19 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Alias (Device Name):"/>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind DeviceName}"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="IP:"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind IP}"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Port:"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind Port}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Alias (Device Name):" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind DeviceName}" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="IP:" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind IP}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Port:" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind Port}" />
     </Grid>
 </UserControl>

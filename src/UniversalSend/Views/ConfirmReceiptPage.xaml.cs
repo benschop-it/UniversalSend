@@ -1,5 +1,4 @@
-﻿using UniversalSend.Models;
-using UniversalSend.Models.HttpData;
+﻿using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Managers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

@@ -1,5 +1,4 @@
 ﻿using System;
-using UniversalSend.Models;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using Windows.UI.Xaml;
@@ -66,6 +65,7 @@ namespace UniversalSend.Views {
                 //TODO: Cancel the operation
             });
         }
+
         private async void ReceiveManager_SendDataReceived(object sender, EventArgs e) {
             _receivedItemsCount++;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {

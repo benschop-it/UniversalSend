@@ -11,13 +11,13 @@
 
     <Grid MaxWidth="100" HorizontalAlignment="Left">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <Button Name="RestartButton" Click="RestartButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 ToolTipService.ToolTip="Restart Server">
-            <FontIcon Glyph="&#xE72C;" Name="RestartButtonIcon"/>
+            <FontIcon Glyph="&#xE72C;" Name="RestartButtonIcon" />
         </Button>
 
         <Button Grid.Column="1" Name="StopButton" Click="StopButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"

@@ -13,15 +13,15 @@
             <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Center">
                 <AppBarButton x:Uid="RootPage15063_ReceivePageItem"  Name="BottomAppBarReceiveButton" Click="BottomAppBarReceiveButton_Click">
                     <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xEC3F;"/>
+                        <FontIcon Glyph="&#xEC3F;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="RootPage15063_SendPageItem" Icon="Send" Name="BottomAppBarSendButton" Click="BottomAppBarSendButton_Click"/>
-                <AppBarButton x:Uid="RootPage15063_SettingPageItem" Icon="Setting" Name="BottomAppBarSettingsButton" Click="BottomAppBarSettingsButton_Click"/>
+                <AppBarButton x:Uid="RootPage15063_SendPageItem" Icon="Send" Name="BottomAppBarSendButton" Click="BottomAppBarSendButton_Click" />
+                <AppBarButton x:Uid="RootPage15063_SettingPageItem" Icon="Setting" Name="BottomAppBarSettingsButton" Click="BottomAppBarSettingsButton_Click" />
             </CommandBar>
         </AppBar>
     </Page.BottomAppBar>
     <Grid>
-        <Frame Name="MainFrame"/>
+        <Frame Name="MainFrame" />
     </Grid>
 </Page>

@@ -293,11 +293,13 @@ namespace UniversalSend.Views {
                     UpdateView();
                 });
         }
+
         private async void SendManager_SendPrepared(object sender, EventArgs e) {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 Frame.Navigate(typeof(FileSendingPage), sender);
             });
         }
+
         private async Task TypeTextAsync() {
             CreateTextSendTaskControl control = new CreateTextSendTaskControl();
             control.CancelButton.Click += (sender, e) => {

@@ -12,12 +12,16 @@ namespace UniversalSend.Models.HttpData {
 
         [JsonProperty("fileName")]
         public string FileName { get; set; }
+
         [JsonProperty("fileType")]
         public string FileType { get; set; }
+
         [JsonProperty("id")]
         public string Id { get; set; }
+
         [JsonProperty("preview")]
         public string Preview { get; set; }
+
         [JsonProperty("size")]
         public long Size { get; set; }
 

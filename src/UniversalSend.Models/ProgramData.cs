@@ -23,6 +23,5 @@ namespace UniversalSend.Models {
         public static object ServiceServer { get; set; }
 
         #endregion Public Properties
-
     }
 }

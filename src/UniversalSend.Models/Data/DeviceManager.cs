@@ -7,6 +7,7 @@ using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 
 namespace UniversalSend.Models.Data {
+
     public class DeviceManager {
 
         #region Public Enums

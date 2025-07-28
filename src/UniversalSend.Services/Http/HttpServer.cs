@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Networking.Sockets;
-using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
-using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
+using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.Logging;
+using Windows.Networking.Sockets;
 
-namespace UniversalSend.Services.Http
-{
-    public class HttpServer : IDisposable
-    {
+namespace UniversalSend.Services.Http {
+
+    public class HttpServer : IDisposable {
         private readonly int _port;
         private readonly StreamSocketListener _listener;
         private readonly SortedSet<RouteRegistration> _routes;
@@ -24,8 +23,7 @@ namespace UniversalSend.Services.Http
         private readonly ILogger _log;
         private readonly List<IHttpMessageInspector> _messageInspectors;
 
-        public HttpServer(HttpServerConfiguration configuration)
-        {
+        public HttpServer(HttpServerConfiguration configuration) {
             _log = LogManager.GetLogger<HttpServer>();
             _port = configuration.ServerPort;
             _listener = new StreamSocketListener();
@@ -42,19 +40,16 @@ namespace UniversalSend.Services.Http
 
         [Obsolete("Use constructor that takes a httpServerConfiguration")]
         public HttpServer(int serverPort)
-            : this(new HttpServerConfiguration().ListenOnPort(serverPort))
-        {
+            : this(new HttpServerConfiguration().ListenOnPort(serverPort)) {
         }
 
-        public async Task StartServerAsync()
-        {
+        public async Task StartServerAsync() {
             await _listener.BindServiceNameAsync(_port.ToString());
 
             _log.Info($"Webserver listening on port {_port}");
         }
 
-        public void StopServer()
-        {
+        public void StopServer() {
             ((IDisposable)this).Dispose();
 
             _log.Info($"Webserver stopped listening on port {_port}");
@@ -63,8 +58,7 @@ namespace UniversalSend.Services.Http
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         private async void ProcessRequestAsync(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args) {
-            await Task.Run(async () =>
-            {
+            await Task.Run(async () => {
                 var requestLog = new StringBuilder(); // Local log buffer
 
                 try {
@@ -101,11 +95,9 @@ namespace UniversalSend.Services.Http
             });
         }
 
-        internal async Task<HttpServerResponse> HandleRequestAsync(IHttpServerRequest request)
-        {
+        internal async Task<HttpServerResponse> HandleRequestAsync(IHttpServerRequest request) {
             var routeRegistration = _routes.FirstOrDefault(x => x.Match(request));
-            if (routeRegistration == null)
-            {
+            if (routeRegistration == null) {
                 return HttpServerResponse.Create(new Version(1, 1), HttpResponseStatus.BadRequest);
             }
 
@@ -120,10 +112,8 @@ namespace UniversalSend.Services.Http
             return httpResponse;
         }
 
-        private HttpServerResponse ApplyMessageInspectorsBeforeHandleRequest(IHttpServerRequest request)
-        {
-            foreach (var httpMessageInspector in _messageInspectors)
-            {
+        private HttpServerResponse ApplyMessageInspectorsBeforeHandleRequest(IHttpServerRequest request) {
+            foreach (var httpMessageInspector in _messageInspectors) {
                 var result = httpMessageInspector.BeforeHandleRequest(request);
                 if (result != null)
                     return result.Response;
@@ -133,10 +123,8 @@ namespace UniversalSend.Services.Http
         }
 
         private HttpServerResponse ApplyMessageInspectorsAfterHandleRequest(IHttpServerRequest request,
-            HttpServerResponse httpResponse)
-        {
-            foreach (var httpMessageInspector in _messageInspectors)
-            {
+            HttpServerResponse httpResponse) {
+            foreach (var httpMessageInspector in _messageInspectors) {
                 var result = httpMessageInspector.AfterHandleRequest(request, httpResponse);
                 if (result != null)
                     httpResponse = result.Response;
@@ -144,15 +132,13 @@ namespace UniversalSend.Services.Http
             return httpResponse;
         }
 
-        private async Task<HttpServerResponse> AddContentEncodingAsync(HttpServerResponse httpResponse, IEnumerable<string> acceptEncodings)
-        {
+        private async Task<HttpServerResponse> AddContentEncodingAsync(HttpServerResponse httpResponse, IEnumerable<string> acceptEncodings) {
             var contentEncoder = _contentEncoderFactory.GetEncoder(acceptEncodings);
             var encodedContent = await contentEncoder.Encode(httpResponse.Content);
 
             var newResponse = HttpServerResponse.Create(httpResponse.HttpVersion, httpResponse.ResponseStatus);
 
-            foreach (var header in httpResponse.Headers)
-            {
+            foreach (var header in httpResponse.Headers) {
                 newResponse.AddHeader(header);
             }
             newResponse.Content = encodedContent;
@@ -164,25 +150,20 @@ namespace UniversalSend.Services.Http
             return newResponse;
         }
 
-        private static void AddHeaderIfNotNull(IHttpHeader contentEncodingHeader, HttpServerResponse newResponse)
-        {
-            if (contentEncodingHeader != null)
-            {
+        private static void AddHeaderIfNotNull(IHttpHeader contentEncodingHeader, HttpServerResponse newResponse) {
+            if (contentEncodingHeader != null) {
                 newResponse.AddHeader(contentEncodingHeader);
             }
         }
 
-        private static async Task WriteResponseAsync(HttpServerResponse response, StreamSocket socket)
-        {
-            using (var output = socket.OutputStream)
-            {
+        private static async Task WriteResponseAsync(HttpServerResponse response, StreamSocket socket) {
+            using (var output = socket.OutputStream) {
                 await output.WriteAsync(response.ToBytes().AsBuffer());
                 await output.FlushAsync();
             }
         }
 
-        void IDisposable.Dispose()
-        {
+        void IDisposable.Dispose() {
             _listener.Dispose();
         }
     }

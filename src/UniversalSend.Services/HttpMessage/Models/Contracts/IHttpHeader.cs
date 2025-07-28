@@ -1,7 +1,6 @@
-﻿namespace UniversalSend.Services.HttpMessage.Models.Contracts
-{
-    public interface IHttpHeader
-    {
+﻿namespace UniversalSend.Services.HttpMessage.Models.Contracts {
+
+    public interface IHttpHeader {
         string Name { get; }
         string Value { get; }
     }

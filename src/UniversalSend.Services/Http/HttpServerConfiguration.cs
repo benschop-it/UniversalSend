@@ -4,14 +4,13 @@ using System.Linq;
 using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Http {
-    public class HttpServerConfiguration
-    {
+
+    public class HttpServerConfiguration {
         public int ServerPort { get; private set; } = 80;
         internal CorsConfiguration CorsConfiguration { get; private set; }
         internal IEnumerable<RouteRegistration> Routes { get; private set; } = new RouteRegistration[] { };
 
-        public HttpServerConfiguration ListenOnPort(int serverPort)
-        {
+        public HttpServerConfiguration ListenOnPort(int serverPort) {
             ServerPort = serverPort;
             return this;
         }
@@ -23,8 +22,7 @@ namespace UniversalSend.Services.Http {
         /// Access-Control-Max-Age = 10 min
         /// Access-Control-Allow-Headers = mirrors the Access-Control-Request-Headers field of the request.
         /// </summary>
-        public HttpServerConfiguration EnableCors()
-        {
+        public HttpServerConfiguration EnableCors() {
             return EnableCors(x => x.AddAllowedOrigin("*"));
         }
 
@@ -41,8 +39,7 @@ namespace UniversalSend.Services.Http {
         ///                  .AddAllowedOrigin("http://server2.com"));
         /// </example>
         /// <param name="builderFunc">The cors configuration builder function.</param>
-        public HttpServerConfiguration EnableCors(Action<ICorsConfiguration> builderFunc)
-        {
+        public HttpServerConfiguration EnableCors(Action<ICorsConfiguration> builderFunc) {
             var corsConfiguration = new CorsConfiguration();
             builderFunc(corsConfiguration);
 
@@ -54,8 +51,7 @@ namespace UniversalSend.Services.Http {
         /// Registers the <see cref="IRouteHandler"/> on the root url.
         /// </summary>
         /// <param name="restRoutehandler">The rest route handler to register.</param>
-        public HttpServerConfiguration RegisterRoute(IRouteHandler restRoutehandler)
-        {
+        public HttpServerConfiguration RegisterRoute(IRouteHandler restRoutehandler) {
             return RegisterRoute("/", restRoutehandler);
         }
 
@@ -64,12 +60,10 @@ namespace UniversalSend.Services.Http {
         /// </summary>
         /// <param name="urlPrefix">The urlprefix to use, e.g. /api, /api/v001, etc. </param>
         /// <param name="restRoutehandler">The rest route handler to register.</param>
-        public HttpServerConfiguration RegisterRoute(string urlPrefix, IRouteHandler restRoutehandler)
-        {
+        public HttpServerConfiguration RegisterRoute(string urlPrefix, IRouteHandler restRoutehandler) {
             var routeRegistration = new RouteRegistration(urlPrefix, restRoutehandler);
 
-            if (Routes.Contains(routeRegistration))
-            {
+            if (Routes.Contains(routeRegistration)) {
                 throw new Exception($"RouteHandler already registered for prefix: {urlPrefix}");
             }
 

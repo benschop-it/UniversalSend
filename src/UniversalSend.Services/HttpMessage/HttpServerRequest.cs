@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 
-namespace UniversalSend.Services.HttpMessage
-{
-    internal class HttpServerRequest : IHttpServerRequest
-    {
+namespace UniversalSend.Services.HttpMessage {
+
+    internal class HttpServerRequest : IHttpServerRequest {
         public IEnumerable<IHttpRequestHeader> Headers { get; }
         public HttpMethod? Method { get; }
         public Uri Uri { get; }
@@ -27,8 +26,7 @@ namespace UniversalSend.Services.HttpMessage
             string httpVersion, string contentTypeCharset, IEnumerable<string> acceptCharsets, int contentLength,
             string contentType, IEnumerable<string> acceptEncodings, IEnumerable<string> acceptMediaTypes,
             byte[] content, bool isComplete, HttpMethod? accessControlRequestMethod, IEnumerable<string> accessControlRequestHeaders,
-            string origin)
-        {
+            string origin) {
             Headers = headers;
             Method = method;
             Uri = uri;

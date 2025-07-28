@@ -10,30 +10,30 @@
     d:DesignWidth="400">
 
     <StackPanel>
-        <TextBlock Text="Manual Send" Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBlock Text="Manual Send" Style="{ThemeResource TitleTextBlockStyle}" />
         <Pivot Name="MainPivot" SelectionChanged="MainPivot_SelectionChanged">
             <Pivot.Resources>
                 <Style TargetType="PivotHeaderItem">
-                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="FontSize" Value="20" />
                 </Style>
             </Pivot.Resources>
             <PivotItem Header="Tag">
                 <StackPanel Name="HashTagControls">
-                    <TextBox HorizontalAlignment="Stretch" PlaceholderText="Tag" x:FieldModifier="public" Name="HashTagTextBox"/>
+                    <TextBox HorizontalAlignment="Stretch" PlaceholderText="Tag" x:FieldModifier="public" Name="HashTagTextBox" />
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="IP Address">
                 <StackPanel Name="IPAddressControls">
-                    <TextBox HorizontalAlignment="Stretch" PlaceholderText="IP Address" x:FieldModifier="public" Name="IPAddressTextBox"/>
+                    <TextBox HorizontalAlignment="Stretch" PlaceholderText="IP Address" x:FieldModifier="public" Name="IPAddressTextBox" />
                 </StackPanel>
             </PivotItem>
         </Pivot>
 
-        <ProgressBar Visibility="Collapsed" Margin="0,8,0,8" x:FieldModifier="public" Name="LoadingProgressBar" IsIndeterminate="True"/>
-        <TextBlock Name="ErrorMessageTextBlock" Foreground="#FFFFF000" x:FieldModifier="public"/>
+        <ProgressBar Visibility="Collapsed" Margin="0,8,0,8" x:FieldModifier="public" Name="LoadingProgressBar" IsIndeterminate="True" />
+        <TextBlock Name="ErrorMessageTextBlock" Foreground="#FFFFF000" x:FieldModifier="public" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-            <Button Content="Cancel" Name="CancelButton" x:FieldModifier="public" Margin="0,0,4,0"/>
-            <Button Content="OK" Name="ConfirmButton" x:FieldModifier="public"/>
+            <Button Content="Cancel" Name="CancelButton" x:FieldModifier="public" Margin="0,0,4,0" />
+            <Button Content="OK" Name="ConfirmButton" x:FieldModifier="public" />
         </StackPanel>
     </StackPanel>
 </UserControl>

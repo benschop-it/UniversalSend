@@ -11,14 +11,14 @@
 
     <Grid Margin="0,0,0,4">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="70" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBlock Text="{x:Bind TitleText}"/>
-        <!--<TextBlock Text="{x:Bind ContentText}" Grid.Column="1"/>-->
+        <TextBlock Text="{x:Bind TitleText}" />
+        <!--<TextBlock Text="{x:Bind ContentText}" Grid.Column="1" />-->
         <RichTextBlock Grid.Column="1" Padding="8,0,8,0">
             <Paragraph>
-                <Run Text="{x:Bind ContentText}"/>
+                <Run Text="{x:Bind ContentText}" />
             </Paragraph>
         </RichTextBlock>
     </Grid>

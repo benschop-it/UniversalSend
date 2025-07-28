@@ -11,12 +11,12 @@
 
     <Grid>
         <StackPanel>
-            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="Create New Folder"/>
-            <TextBlock Text="Please enter a name for the folder" Margin="0,0,0,4"/>
-            <TextBox Name="NameTextBox" x:FieldModifier="public" Tapped="NameTextBox_Tapped" HorizontalAlignment="Stretch"/>
+            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Text="Create New Folder" />
+            <TextBlock Text="Please enter a name for the folder" Margin="0,0,0,4" />
+            <TextBox Name="NameTextBox" x:FieldModifier="public" Tapped="NameTextBox_Tapped" HorizontalAlignment="Stretch" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
-                <Button Name="CancelButton" Content="Cancel" x:FieldModifier="public" Margin="0,0,4,0"/>
-                <Button Name="OKButton" Content="OK" x:FieldModifier="public"/>
+                <Button Name="CancelButton" Content="Cancel" x:FieldModifier="public" Margin="0,0,4,0" />
+                <Button Name="OKButton" Content="OK" x:FieldModifier="public" />
             </StackPanel>
         </StackPanel>
     </Grid>

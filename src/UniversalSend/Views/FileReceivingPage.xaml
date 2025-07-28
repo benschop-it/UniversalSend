@@ -4,65 +4,65 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tasks="using:UniversalSend.Models.Tasks"
     mc:Ignorable="d"
     xmlns:helpers="using:UniversalSend.Models.Helpers"
     Loaded="Page_Loaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <helpers:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+        <helpers:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TextBlock Name="PageHeader" Margin="24" Text="Receiving files..."/>
+        <TextBlock Name="PageHeader" Margin="24" Text="Receiving files..." />
         <ListView Margin="24,0,24,0" Name="FileReceivingListView" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="tasks:ReceiveTask">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid Grid.RowSpan="2">
-                            <Image/>
+                            <Image />
                         </Grid>
-                        <TextBlock Grid.Column="1" Text="{x:Bind File.FileName,Mode=OneWay}"/>
-                        <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{ThemeResource SystemAccentColor}" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}}"/>
+                        <TextBlock Grid.Column="1" Text="{x:Bind File.FileName,Mode=OneWay}" />
+                        <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{ThemeResource SystemAccentColor}" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel Grid.Row="2" Margin="24" Padding="8">
-            <TextBlock Name="ProgressBarLabel" Text="Total progress"/>
-            <ProgressBar Name="MainProgressBar" Margin="0,4,0,0"/>
-            <!--<TextBlock Name="FilesCountTextBlock"/>
-            <TextBlock Name="FilesSizeTextBlock"/>-->
+            <TextBlock Name="ProgressBarLabel" Text="Total progress" />
+            <ProgressBar Name="MainProgressBar" Margin="0,4,0,0" />
+            <!--<TextBlock Name="FilesCountTextBlock" />
+            <TextBlock Name="FilesSizeTextBlock" />-->
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,4,0,0">
                 <Button Name="DetailButton" Margin="0,0,8,0" Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon  Glyph="&#xF167;" Margin="0,4,6,0"/>
-                        <TextBlock VerticalAlignment="Center" Text="Details"/>
+                        <FontIcon  Glyph="&#xF167;" Margin="0,4,6,0" />
+                        <TextBlock VerticalAlignment="Center" Text="Details" />
                     </StackPanel>
                 </Button>
                 <Button Name="CancelButton" Click="CancelButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon  Glyph="&#xE711;" Margin="0,4,6,0"/>
-                        <TextBlock VerticalAlignment="Center" Text="Cancel"/>
+                        <FontIcon  Glyph="&#xE711;" Margin="0,4,6,0" />
+                        <TextBlock VerticalAlignment="Center" Text="Cancel" />
                     </StackPanel>
                 </Button>
                 <Button Name="FinishButton" Visibility="Collapsed" Click="FinishButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon  Glyph="&#xE8FB;" Margin="0,4,6,0"/>
-                        <TextBlock VerticalAlignment="Center" Text="Finish"/>
+                        <FontIcon  Glyph="&#xE8FB;" Margin="0,4,6,0" />
+                        <TextBlock VerticalAlignment="Center" Text="Finish" />
                     </StackPanel>
                 </Button>
             </StackPanel>

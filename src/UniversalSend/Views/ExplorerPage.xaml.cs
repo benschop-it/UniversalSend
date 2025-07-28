@@ -419,6 +419,7 @@ namespace UniversalSend.Views {
                 ViewModeButton.Label = "List View";
             }
         }
+
         private void ViewModeButton_Click(object sender, RoutedEventArgs e) {
             UpdateViewMode();
             Debug.WriteLine(_currentViewMode.ToString());

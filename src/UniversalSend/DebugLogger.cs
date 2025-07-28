@@ -2,7 +2,9 @@
 using UniversalSend.Services.Logging;
 
 namespace UniversalSend {
+
     public class DebugLogger : AbstractLogger {
+
         protected override bool IsLogEnabled(LogLevel trace) {
             // Ignore level, log everything
             return true;

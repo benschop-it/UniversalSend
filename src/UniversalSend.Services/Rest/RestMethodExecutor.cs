@@ -5,15 +5,13 @@ using UniversalSend.Services.Models.Schemas;
 using UniversalSend.Services.Rest.Models.Contracts;
 using Windows.Foundation;
 
-namespace UniversalSend.Services.Rest
-{
-    internal abstract class RestMethodExecutor : IRestMethodExecutor
-    {
-        public async Task<IRestResponse> ExecuteMethodAsync(RestControllerMethodInfo info, RestServerRequest request, ParsedUri requestUri)
-        {
+namespace UniversalSend.Services.Rest {
+
+    internal abstract class RestMethodExecutor : IRestMethodExecutor {
+
+        public async Task<IRestResponse> ExecuteMethodAsync(RestControllerMethodInfo info, RestServerRequest request, ParsedUri requestUri) {
             var methodInvokeResult = ExecuteAnonymousMethod(info, request, requestUri);
-            switch (info.ReturnTypeWrapper)
-            {
+            switch (info.ReturnTypeWrapper) {
                 case RestControllerMethodInfo.TypeWrapper.None:
                     return await Task.FromResult((IRestResponse)methodInvokeResult);
                 case RestControllerMethodInfo.TypeWrapper.AsyncOperation:
@@ -25,8 +23,7 @@ namespace UniversalSend.Services.Rest
             throw new Exception($"ReturnTypeWrapper of type {info.ReturnTypeWrapper} not known.");
         }
 
-        private static Task<T> ConvertToTask<T>(IAsyncOperation<T> methodInvokeResult)
-        {
+        private static Task<T> ConvertToTask<T>(IAsyncOperation<T> methodInvokeResult) {
             return methodInvokeResult.AsTask();
         }
 

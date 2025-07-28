@@ -5,8 +5,7 @@ namespace UniversalSend.Models.HttpData {
     /// <summary>
     /// Dictionary that maps FileId to Token
     /// </summary>
-    public sealed class FileResponseData : Dictionary<string, string>
-    {
+    public sealed class FileResponseData : Dictionary<string, string> {
     }
 
     public class FileResponseDataManager {

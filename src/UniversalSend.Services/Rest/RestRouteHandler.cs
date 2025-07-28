@@ -3,38 +3,32 @@ using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.Models.Contracts;
 
-namespace UniversalSend.Services.Rest
-{
-    public class RestRouteHandler : IRouteHandler
-    {
+namespace UniversalSend.Services.Rest {
+
+    public class RestRouteHandler : IRouteHandler {
         private readonly RestControllerRequestHandler _requestHandler;
         private readonly RestToHttpResponseConverter _restToHttpConverter;
         private readonly RestServerRequestFactory _restServerRequestFactory;
 
-        public RestRouteHandler()
-        {
+        public RestRouteHandler() {
             _restServerRequestFactory = new RestServerRequestFactory();
             _requestHandler = new RestControllerRequestHandler();
             _restToHttpConverter = new RestToHttpResponseConverter();
         }
 
-        public void RegisterController<T>() where T : class
-        {
+        public void RegisterController<T>() where T : class {
             _requestHandler.RegisterController<T>();
         }
 
-        public void RegisterController<T>(params object[] args) where T : class
-        {
+        public void RegisterController<T>(params object[] args) where T : class {
             _requestHandler.RegisterController<T>(() => args);
         }
 
-        public void RegisterController<T>(Func<object[]> args) where T : class
-        {
+        public void RegisterController<T>(Func<object[]> args) where T : class {
             _requestHandler.RegisterController<T>(args);
         }
 
-        public async Task<HttpServerResponse> HandleRequest(IHttpServerRequest request)
-        {
+        public async Task<HttpServerResponse> HandleRequest(IHttpServerRequest request) {
             var restServerRequest = _restServerRequestFactory.Create(request);
 
             var restResponse = await _requestHandler.HandleRequestAsync(restServerRequest);

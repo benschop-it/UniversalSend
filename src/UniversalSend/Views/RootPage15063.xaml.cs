@@ -42,6 +42,7 @@ namespace UniversalSend.Views {
         private void BottomAppBarSettingsButton_Click(object sender, RoutedEventArgs e) {
             MainFrame.Navigate(typeof(SettingsPage));
         }
+
         private async void NavigateHelper_NavigateToHistoryPageEvent(object sender, EventArgs e) {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 Frame.Navigate(typeof(HistoryPage), null, new DrillInNavigationTransitionInfo());
@@ -61,6 +62,7 @@ namespace UniversalSend.Views {
                 await ProgramData.ContentDialogManager.ShowContentDialogAsync(new PickReceiveFolderControl());
             }
         }
+
         private async void ReceiveManager_SendRequestReceived(object sender, EventArgs e) {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 Frame.Navigate(typeof(FileReceivingPage), sender);
@@ -72,6 +74,7 @@ namespace UniversalSend.Views {
                 Frame.Navigate(typeof(FileSendingPage), sender);
             });
         }
+
         private async Task StartHttpServerAsync() {
             ProgramData.ServiceServer = new ServiceHttpServer();
             await ((ServiceHttpServer)ProgramData.ServiceServer).StartHttpServerAsync((int)Settings.GetSettingContent(Settings.Network_Port));

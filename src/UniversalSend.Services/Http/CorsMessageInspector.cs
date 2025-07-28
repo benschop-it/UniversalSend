@@ -6,23 +6,21 @@ using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 
 namespace UniversalSend.Services.Http {
-    internal class CorsMessageInspector : IHttpMessageInspector
-    {
+
+    internal class CorsMessageInspector : IHttpMessageInspector {
         private readonly IEnumerable<string> _allowedOrigins;
         private readonly bool _allOriginsAllowed = false;
 
-        public CorsMessageInspector(IEnumerable<string> allowedOrigins)
-        {
+        public CorsMessageInspector(IEnumerable<string> allowedOrigins) {
             _allowedOrigins = allowedOrigins ?? Enumerable.Empty<string>();
             if (_allowedOrigins.Contains("*"))
                 _allOriginsAllowed = true;
         }
 
-        public BeforeHandleRequestResult BeforeHandleRequest(IHttpServerRequest request)
-        {
+        public BeforeHandleRequestResult BeforeHandleRequest(IHttpServerRequest request) {
             // could potentially pass this as state between the before handle request and after handle request
             // but before that would need to see if the performance increase is worth it
-            string allowOrigin;            
+            string allowOrigin;
             if (request.Method != HttpMethod.OPTIONS || !TryGetAllowOrigin(request.Origin, out allowOrigin))
                 return null;
 
@@ -36,8 +34,7 @@ namespace UniversalSend.Services.Http {
             return new BeforeHandleRequestResult(httpResponse);
         }
 
-        public AfterHandleRequestResult AfterHandleRequest(IHttpServerRequest request, HttpServerResponse httpResponse)
-        {
+        public AfterHandleRequestResult AfterHandleRequest(IHttpServerRequest request, HttpServerResponse httpResponse) {
             string origin;
             if (!TryGetAllowOrigin(request.Origin, out origin))
                 return null;
@@ -46,16 +43,13 @@ namespace UniversalSend.Services.Http {
             return new AfterHandleRequestResult(httpResponse);
         }
 
-        private bool TryGetAllowOrigin(string requestOrigin, out string allowedOrigin)
-        {
-            if (string.IsNullOrWhiteSpace(requestOrigin))
-            {
+        private bool TryGetAllowOrigin(string requestOrigin, out string allowedOrigin) {
+            if (string.IsNullOrWhiteSpace(requestOrigin)) {
                 allowedOrigin = null;
                 return false;
-            }                
+            }
 
-            if (_allOriginsAllowed)
-            {
+            if (_allOriginsAllowed) {
                 allowedOrigin = "*";
                 return true;
             }

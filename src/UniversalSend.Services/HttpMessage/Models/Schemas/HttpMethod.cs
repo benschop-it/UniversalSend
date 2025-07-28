@@ -1,7 +1,6 @@
-﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas
-{
-    public enum HttpMethod
-    {
+﻿namespace UniversalSend.Services.HttpMessage.Models.Schemas {
+
+    public enum HttpMethod {
         Unsupported,
         POST,
         GET,

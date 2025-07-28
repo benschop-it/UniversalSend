@@ -76,6 +76,7 @@ namespace UniversalSend.Views {
             SendingControls.Visibility = Visibility.Visible;
             await SendTaskManager.SendSendTasksAsync(Device);
         }
+
         private void UpdateUI() {
             FileSendingListView.ItemsSource = null;
             FileSendingListView.ItemsSource = SendTaskManager.SendTasks;

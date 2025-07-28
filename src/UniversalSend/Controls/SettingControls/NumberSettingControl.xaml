@@ -11,7 +11,7 @@
     Loaded="UserControl_Loaded">
 
     <Grid>
-        <TextBox Name="MainTextBox" TextChanged="MainTextBox_TextChanged"/>
-        <TextBox Name="DefaultTextBox" Visibility="Collapsed"/>
+        <TextBox Name="MainTextBox" TextChanged="MainTextBox_TextChanged" />
+        <TextBox Name="DefaultTextBox" Visibility="Collapsed" />
     </Grid>
 </UserControl>

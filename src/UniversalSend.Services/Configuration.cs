@@ -1,17 +1,15 @@
 ﻿using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services {
-    internal class Configuration
-    {
+
+    internal class Configuration {
         internal static Configuration Default { get; }
 
-        static Configuration()
-        {
+        static Configuration() {
             Default = new Configuration();
         }
 
-        public Configuration()
-        {
+        public Configuration() {
             DefaultAcceptType = MediaType.JSON;
             DefaultContentType = MediaType.JSON;
 

@@ -10,12 +10,12 @@
 
     <Grid>
         <StackPanel>
-            <Button Content="Start Service" Name="StartHttpServerButton" Click="StartHttpServerButton_Click"/>
-            <Button Content="Open App Local Data Folder" Name="OpenAppLocalFolderButton" Click="OpenAppLocalFolderButton_Click"/>
-            <Button Content="Open System Downloads Folder" Name="OpenDownloadFolderButton" Click="OpenDownloadFolderButton_Click"/>
-            <Button Content="Write RequestContent Data to Test File" Name="WriteRequestContentToTestFileButton" Click="WriteRequestContentToTestFileButton_Click"/>
-            <Button Content="Open Receive Page" Name="NavigateToReceivePageButton" Click="NavigateToReceivePageButton_Click"/>
-            <Button Content="Send SendRequest" Name="SendSendRequestButton" Click="SendSendRequestButton_Click"/>
+            <Button Content="Start Service" Name="StartHttpServerButton" Click="StartHttpServerButton_Click" />
+            <Button Content="Open App Local Data Folder" Name="OpenAppLocalFolderButton" Click="OpenAppLocalFolderButton_Click" />
+            <Button Content="Open System Downloads Folder" Name="OpenDownloadFolderButton" Click="OpenDownloadFolderButton_Click" />
+            <Button Content="Write RequestContent Data to Test File" Name="WriteRequestContentToTestFileButton" Click="WriteRequestContentToTestFileButton_Click" />
+            <Button Content="Open Receive Page" Name="NavigateToReceivePageButton" Click="NavigateToReceivePageButton_Click" />
+            <Button Content="Send SendRequest" Name="SendSendRequestButton" Click="SendSendRequestButton_Click" />
         </StackPanel>
     </Grid>
 </Page>

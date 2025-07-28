@@ -26,6 +26,5 @@ namespace UniversalSend.Models {
         public string FutureAccessListToken { get; set; }
 
         #endregion Public Properties
-
     }
 }

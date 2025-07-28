@@ -8,20 +8,20 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
+
     <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel.Resources>
                 <Style TargetType="ToggleButton">
-                    <Setter Property="Width" Value="70"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderBrush" Value="{ThemeResource SystemAccentColor}"/>
-                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Width" Value="70" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource SystemAccentColor}" />
+                    <Setter Property="BorderThickness" Value="1" />
                 </Style>
             </StackPanel.Resources>
-            <ToggleButton x:FieldModifier="public" Content="Off" Name="OffButton" Click="OffButton_Click"/>
-            <ToggleButton x:FieldModifier="public" Content="Favorites" BorderThickness="0,1,0,1" Name="FavoritesButton" Click="FavoritesButton_Click"/>
-            <ToggleButton x:FieldModifier="public" Content="On" Name="OnButton" Click="OnButton_Click"/>
+            <ToggleButton x:FieldModifier="public" Content="Off" Name="OffButton" Click="OffButton_Click" />
+            <ToggleButton x:FieldModifier="public" Content="Favorites" BorderThickness="0,1,0,1" Name="FavoritesButton" Click="FavoritesButton_Click" />
+            <ToggleButton x:FieldModifier="public" Content="On" Name="OnButton" Click="OnButton_Click" />
         </StackPanel>
     </Grid>
 </UserControl>

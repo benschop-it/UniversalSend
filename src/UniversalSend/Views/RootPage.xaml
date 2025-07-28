@@ -14,18 +14,18 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="RootPage_ReceivePageItem" Name="ReceivePageItem" Tag="Receive">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEC3F;"/>
+                        <FontIcon Glyph="&#xEC3F;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="RootPage_SendPageItem" Tag="Send">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE724;"/>
+                        <FontIcon Glyph="&#xE724;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.Content>
                 <Grid>
-                    <Frame Name="MainFrame"/>
+                    <Frame Name="MainFrame" />
                 </Grid>
             </NavigationView.Content>
         </NavigationView>

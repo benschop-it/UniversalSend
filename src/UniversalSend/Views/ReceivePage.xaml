@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:UniversalSend.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -12,40 +12,40 @@
 
     <Grid Name="RootGrid">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="0.5*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <StackPanel.Resources>
                 <Style TargetType="Button">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Height" Value="40"/>
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Height" Value="40" />
                 </Style>
             </StackPanel.Resources>
             <Button Name="HistoryButton" Click="HistoryButton_Click">
-                <FontIcon Glyph="&#xE81C;"/>
+                <FontIcon Glyph="&#xE81C;" />
             </Button>
             <Button Name="DeviceInfoButton">
-                <FontIcon Glyph="&#xF167;"/>
+                <FontIcon Glyph="&#xF167;" />
                 <Button.Flyout>
                     <Flyout>
                         <Grid>
-                            <controls:DeviceInfoControl/>
+                            <controls:DeviceInfoControl />
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
             </Button>
         </StackPanel>
-        <Image Name="IconImage" MaxHeight="200" MaxWidth="200" Margin="0,48,0,0"/>
-        <TextBlock Margin="24,0,24,8" Grid.Row="1" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}"/>
-        <TextBlock Margin="24,0,24,0" Grid.Row="2" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}"/>
+        <Image Name="IconImage" MaxHeight="200" MaxWidth="200" Margin="0,48,0,0" />
+        <TextBlock Margin="24,0,24,8" Grid.Row="1" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}" />
+        <TextBlock Margin="24,0,24,0" Grid.Row="2" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}" />
 
         <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="Quick Save" HorizontalAlignment="Center" Margin="8"/>
+            <TextBlock Text="Quick Save" HorizontalAlignment="Center" Margin="8" />
             <Grid>
-                <controls:QuickSaveOptionsControl x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="Feature under development…" IsEnabled="False"/>
+                <controls:QuickSaveOptionsControl x:Name="QuickSaveOptionsControl" ToolTipService.ToolTip="Feature under development…" IsEnabled="False" />
                 <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="{ThemeResource SystemAltLowColor}" Padding="8">
                     <TextBlock  Text="Feature under development…" />
                 </Border>

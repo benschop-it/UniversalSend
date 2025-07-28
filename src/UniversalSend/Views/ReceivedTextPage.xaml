@@ -10,16 +10,16 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Name="SenderNameTextBlock"/>
-        <TextBlock Grid.Row="1" Text="sent you a message:"/>
-        <TextBox Grid.Row="2" Name="ContentTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsReadOnly="True" TextWrapping="WrapWholeWords"/>
-        <Button Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Copy" Name="CopyButton" Click="CopyButton_Click"/>
-        <Button Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Close" Name="CloseButton" Click="CloseButton_Click"/>
+        <TextBlock Name="SenderNameTextBlock" />
+        <TextBlock Grid.Row="1" Text="sent you a message:" />
+        <TextBox Grid.Row="2" Name="ContentTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsReadOnly="True" TextWrapping="WrapWholeWords" />
+        <Button Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Copy" Name="CopyButton" Click="CopyButton_Click" />
+        <Button Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Close" Name="CloseButton" Click="CloseButton_Click" />
     </Grid>
 </Page>

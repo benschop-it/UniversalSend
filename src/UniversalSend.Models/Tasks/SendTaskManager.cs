@@ -118,6 +118,5 @@ namespace UniversalSend.Models.Tasks {
         }
 
         #endregion Public Methods
-
     }
 }

@@ -3,29 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace UniversalSend.Services.Rest
-{
-    internal class UriParser
-    {
+namespace UniversalSend.Services.Rest {
+
+    internal class UriParser {
         private readonly Regex _splitRegex;
 
-        public UriParser()
-        {
+        public UriParser() {
             _splitRegex = new Regex(@"(?<uri>.*?)(\?(?<parameters>.*?))?(#(?<fragment>.*?))?$");
         }
 
-        public bool TryParse(string uriFormatUri, out ParsedUri parsedUri)
-        {
+        public bool TryParse(string uriFormatUri, out ParsedUri parsedUri) {
             var match = _splitRegex.Match(uriFormatUri);
-            if (!match.Success)
-            {
+            if (!match.Success) {
                 parsedUri = null;
                 return false;
             }
 
             var uriGroup = match.Groups["uri"];
-            if (!uriGroup.Success)
-            {
+            if (!uriGroup.Success) {
                 parsedUri = null;
                 return false;
             }
@@ -39,21 +34,18 @@ namespace UniversalSend.Services.Rest
             return true;
         }
 
-        private IReadOnlyList<PathPart> ParsePathParts(string path)
-        {
+        private IReadOnlyList<PathPart> ParsePathParts(string path) {
             return path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Select(GetPathPart).ToArray();
         }
 
-        private PathPart GetPathPart(string pathPart)
-        {            
+        private PathPart GetPathPart(string pathPart) {
             if (pathPart.StartsWith("{") && pathPart.EndsWith("}"))
                 return new PathPart(PathPart.PathPartType.Argument, pathPart.Substring(1, pathPart.Length - 2));
 
             return new PathPart(PathPart.PathPartType.Path, pathPart);
         }
 
-        private static IReadOnlyList<UriParameter> ParseParameterGroup(Group group)
-        {
+        private static IReadOnlyList<UriParameter> ParseParameterGroup(Group group) {
             if (!group.Success)
                 return new UriParameter[] { };
 
@@ -62,8 +54,7 @@ namespace UniversalSend.Services.Rest
             return splitByAmpersand.Select(ParseParameterPart).ToArray();
         }
 
-        private static UriParameter ParseParameterPart(string parameter)
-        {
+        private static UriParameter ParseParameterPart(string parameter) {
             var splitParameter = parameter.Split('=');
             if (splitParameter.Length > 2)
                 throw new Exception($"Could not parse parameter: {parameter}");
@@ -74,8 +65,7 @@ namespace UniversalSend.Services.Rest
             return new UriParameter(splitParameter[0], StripBraces(splitParameter[1]));
         }
 
-        private static string StripBraces(string value)
-        {
+        private static string StripBraces(string value) {
             if (value.StartsWith("{") && value.EndsWith("}"))
                 return value.Substring(1, value.Length - 2);
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 namespace UniversalSend.Models.Managers {
+
     public class HistoryManager {
 
         #region Public Properties
@@ -35,6 +36,5 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
-
     }
 }

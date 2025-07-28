@@ -15,71 +15,71 @@
         <DataTemplate x:Name="GridViewModeItemTemplate" x:DataType="models:ViewStorageItem">
             <Grid Height="180" MaxWidth="150">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <Image Margin="4" Width="128" Height="128" Source="{x:Bind Icon}" x:Phase="1"/>
+                <Image Margin="4" Width="128" Height="128" Source="{x:Bind Icon}" x:Phase="1" />
                 <TextBlock Grid.Row="1" Margin="3" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                           TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip" Text="{x:Bind Name}" x:Phase="0"/>
+                           TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip" Text="{x:Bind Name}" x:Phase="0" />
             </Grid>
         </DataTemplate>
 
         <Style x:Name="GridViewModeListViewItemStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
 
         <ItemsPanelTemplate x:Name="GridViewModeItemsPanelTemplate">
-            <ItemsWrapGrid Orientation="Horizontal"/>
+            <ItemsWrapGrid Orientation="Horizontal" />
         </ItemsPanelTemplate>
 
         <!-- List View Mode Template -->
         <DataTemplate x:Name="ListViewModeItemTemplate" x:DataType="models:ViewStorageItem">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Image Margin="4" Width="48" Height="48" Source="{x:Bind Icon}" x:Phase="1"/>
+                <Image Margin="4" Width="48" Height="48" Source="{x:Bind Icon}" x:Phase="1" />
                 <TextBlock Grid.Column="1" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left"
-                           TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip" Text="{x:Bind Name}" x:Phase="0"/>
+                           TextWrapping="Wrap" MaxLines="3" TextTrimming="Clip" Text="{x:Bind Name}" x:Phase="0" />
             </Grid>
         </DataTemplate>
 
         <Style x:Name="ListViewModeListViewItemStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
 
         <ItemsPanelTemplate x:Name="ListViewModeItemsPanelTemplate">
-            <ItemsStackPanel Orientation="Vertical"/>
+            <ItemsStackPanel Orientation="Vertical" />
         </ItemsPanelTemplate>
     </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <!-- Top Command Bar Area -->
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
             <ProgressBar Grid.Row="0" Name="LoadingProgressBar" Visibility="Collapsed"
-                         Canvas.ZIndex="2" IsIndeterminate="True" VerticalAlignment="Top"/>
+                         Canvas.ZIndex="2" IsIndeterminate="True" VerticalAlignment="Top" />
 
             <Grid Grid.Row="1" Background="{Binding ElementName=MainCommandBar,Path=Background}">
                 <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left" Name="MainCommandBar">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Name="BackButton" Icon="Back" Label="Back" Click="BackButton_Click"/>
-                        <AppBarButton Name="RefreshButton" Icon="Refresh" Label="Refresh" Click="RefreshButton_Click"/>
-                        <AppBarButton Name="HomeButton" Icon="Home" Label="Go to Root" Click="HomeButton_Click"/>
-                        <AppBarButton Name="CreateFolderButton" Icon="NewFolder" Label="New Folder" Click="CreateFolderButton_Click"/>
+                        <AppBarButton Name="BackButton" Icon="Back" Label="Back" Click="BackButton_Click" />
+                        <AppBarButton Name="RefreshButton" Icon="Refresh" Label="Refresh" Click="RefreshButton_Click" />
+                        <AppBarButton Name="HomeButton" Icon="Home" Label="Go to Root" Click="HomeButton_Click" />
+                        <AppBarButton Name="CreateFolderButton" Icon="NewFolder" Label="New Folder" Click="CreateFolderButton_Click" />
                         <AppBarButton Name="ViewModeButton" Label="Grid View" Click="ViewModeButton_Click">
                             <AppBarButton.Icon>
-                                <FontIcon Name="ViewModeButtonIcon" Glyph="&#xF0E2;"/>
+                                <FontIcon Name="ViewModeButtonIcon" Glyph="&#xF0E2;" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                     </CommandBar.PrimaryCommands>
@@ -89,14 +89,14 @@
             <ScrollViewer Background="{ThemeResource SystemControlBackgroundBaseLowBrush}"
                           HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled"
                           HorizontalScrollBarVisibility="Auto" Height="32" Padding="8,0,8,0">
-                <TextBlock VerticalAlignment="Center" Name="FolderPathTextBlock"/>
+                <TextBlock VerticalAlignment="Center" Name="FolderPathTextBlock" />
             </ScrollViewer>
         </Grid>
 
         <!-- File Listing Area -->
         <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1">
             <TextBlock Text="This folder is empty." Visibility="Collapsed"
-                       Name="EmptyFolderTip" HorizontalAlignment="Center" Margin="8"/>
+                       Name="EmptyFolderTip" HorizontalAlignment="Center" Margin="8" />
             <ListView Name="lvFiles" SelectionMode="Extended" SelectionChanged="OnSelectionChanged"
                       IsMultiSelectCheckBoxEnabled="True" ItemClick="lvFiles_ItemClick" IsItemClickEnabled="True"
                       RightTapped="lvFiles_RightTapped">
@@ -109,7 +109,7 @@
                                 <FontIcon Glyph="&#xE8AD;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Cut" Name="ListViewFlyout_Cut" Click="ListViewFlyout_Cut_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8C6;" />
@@ -125,7 +125,7 @@
                                 <FontIcon Glyph="&#xE77F;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Open File Location" Name="ListViewFlyout_OpenFilePath" Click="ListViewFlyout_OpenFilePath_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xED25;" />
@@ -136,7 +136,7 @@
                                 <FontIcon Glyph="&#xE62F;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Delete Permanently" Name="ListViewFlyout_Delete" Click="ListViewFlyout_Delete_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE74D;" />
@@ -147,7 +147,7 @@
                                 <FontIcon Glyph="&#xE8AC;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Properties" Name="ListViewFlyout_Properties" Click="ListViewFlyout_Properties_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE946;" />

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 namespace UniversalSend.Models.Managers {
+
     public class FavoriteManager {
 
         #region Public Properties

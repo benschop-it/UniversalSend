@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    This file contains runtime directives that specify the types your application 
-    accesses via reflection and other dynamic code patterns. Runtime directives 
-    are used to control the .NET Native optimizer and ensure it doesn't remove 
-    code your library accesses. If your library doesn't use any reflection, 
-    you generally don't need to edit this file. However, if your library reflects 
-    types — especially those passed into or derived from types in your library — 
+    This file contains runtime directives that specify the types your application
+    accesses via reflection and other dynamic code patterns. Runtime directives
+    are used to control the .NET Native optimizer and ensure it doesn't remove
+    code your library accesses. If your library doesn't use any reflection,
+    you generally don't need to edit this file. However, if your library reflects
+    types — especially those passed into or derived from types in your library —
     you should write runtime directives.
 
-    The most common way a library uses reflection is to inspect types 
-    passed into the library. There are three ways to express such reflection 
+    The most common way a library uses reflection is to inspect types
+    passed into the library. There are three ways to express such reflection
     requirements in runtime directives:
 
-    1.  Parameter, GenericParameter, TypeParameter, TypeEnumerableParameter  
+    1.  Parameter, GenericParameter, TypeParameter, TypeEnumerableParameter
         Use these directives to reflect types passed as parameters.
 
-    2.  SubTypes  
+    2.  SubTypes
         Use SubTypes directives to reflect types derived from other types.
 
-    3.  AttributeImplies  
-        Use AttributeImplies directives to indicate your library reflects on 
+    3.  AttributeImplies
+        Use AttributeImplies directives to indicate your library reflects on
         types or methods marked with specific attributes.
 
-    For detailed information on writing runtime directives for libraries, 
+    For detailed information on writing runtime directives for libraries,
     see: https://go.microsoft.com/fwlink/?LinkID=391919
 -->
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
   <Library Name="UniversalSend.Services">
 
   	<!-- Add directives for your library here -->
-
   </Library>
 </Directives>

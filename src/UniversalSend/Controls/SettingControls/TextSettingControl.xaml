@@ -11,6 +11,6 @@
     Loaded="UserControl_Loaded">
 
     <Grid>
-        <TextBox Name="MainTextBox" TextChanged="MainTextBox_TextChanged"/>
+        <TextBox Name="MainTextBox" TextChanged="MainTextBox_TextChanged" />
     </Grid>
 </UserControl>

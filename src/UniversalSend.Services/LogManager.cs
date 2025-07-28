@@ -3,64 +3,53 @@ using System.Threading;
 using UniversalSend.Services.Logging;
 
 namespace UniversalSend.Services {
-    public static class LogManager
-    {
+
+    public static class LogManager {
         private static ILogFactory _logFactory;
 
-        static LogManager()
-        {
+        static LogManager() {
             _logFactory = new NullLogFactory();
         }
 
-        public static ILogger GetLogger<T>()
-        {
+        public static ILogger GetLogger<T>() {
             return _logFactory.GetLogger<T>();
         }
 
-        public static ILogger GetLogger(string name)
-        {
+        public static ILogger GetLogger(string name) {
             return _logFactory.GetLogger(name);
         }
 
-        public static void SetLogFactory(ILogFactory logFactory)
-        {
+        public static void SetLogFactory(ILogFactory logFactory) {
             Interlocked.Exchange(ref _logFactory, logFactory);
         }
 
-        private class NullLogFactory : ILogFactory
-        {
+        private class NullLogFactory : ILogFactory {
             private readonly NullLogger _nullLogger;
 
-            public NullLogFactory()
-            {
+            public NullLogFactory() {
                 _nullLogger = new NullLogger();
             }
 
-            ILogger ILogFactory.GetLogger<T>()
-            {
+            ILogger ILogFactory.GetLogger<T>() {
                 return _nullLogger;
             }
 
-            ILogger ILogFactory.GetLogger(string name)
-            {
+            ILogger ILogFactory.GetLogger(string name) {
                 return _nullLogger;
             }
 
-            public void Dispose()
-            {
+            public void Dispose() {
             }
         }
 
-        private class NullLogger : AbstractLogger
-        {
+        private class NullLogger : AbstractLogger {
+
             protected override bool IsLogEnabled(LogLevel trace) => false;
 
-            protected override void LogMessage(string message, LogLevel loggingLevel, params object[] args)
-            {
+            protected override void LogMessage(string message, LogLevel loggingLevel, params object[] args) {
             }
 
-            protected override void LogMessage(string message, LogLevel loggingLevel, Exception ex)
-            {
+            protected override void LogMessage(string message, LogLevel loggingLevel, Exception ex) {
             }
         }
     }

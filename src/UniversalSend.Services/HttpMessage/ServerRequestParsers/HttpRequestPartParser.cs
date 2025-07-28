@@ -1,9 +1,8 @@
-﻿using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.HttpMessage.Models.Contracts;
+﻿using UniversalSend.Services.HttpMessage.Models.Contracts;
 
 namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
-    internal abstract class HttpRequestPartParser : IHttpRequestPartParser
-    {
+
+    internal abstract class HttpRequestPartParser : IHttpRequestPartParser {
         public bool IsFinished { get; protected set; }
 
         public bool IsSucceeded { get; protected set; }

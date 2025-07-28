@@ -5,20 +5,25 @@ using UniversalSend.Models.HttpData;
 
 namespace UniversalSend.Models.Data {
 
-    public class UniversalSendFile
-    {
+    public class UniversalSendFile {
+
         #region Public Properties
 
         [JsonProperty("fileName")]
         public string FileName { get; set; }
+
         [JsonProperty("fileType")]
         public string FileType { get; set; }
+
         [JsonProperty("id")]
         public string Id { get; set; }
+
         [JsonProperty("size")]
         public long Size { get; set; }
+
         [JsonProperty("text")]
         public string Text { get; set; }
+
         [JsonProperty("transferToken")]
         public string TransferToken { get; set; }
 

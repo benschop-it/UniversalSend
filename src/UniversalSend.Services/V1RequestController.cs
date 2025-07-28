@@ -39,7 +39,7 @@ namespace UniversalSend.Services {
         }
 
         [UriFormat("v1/register")]
-        public PostResponse PostRegister([FromContent]RegisterRequestData registerRequestData) {
+        public PostResponse PostRegister([FromContent] RegisterRequestData registerRequestData) {
             Debug.WriteLine($"POST v1 register request Called: {registerRequestData.Alias} {registerRequestData.DeviceModel} {registerRequestData.DeviceType} {registerRequestData.Fingerprint}");
 
             return new PostResponse(
@@ -56,7 +56,7 @@ namespace UniversalSend.Services {
         }
 
         [UriFormat("v1/send-request")]
-        public IAsyncOperation<IPostResponse> PostSendRequest([FromContent]SendRequestData requestData) {
+        public IAsyncOperation<IPostResponse> PostSendRequest([FromContent] SendRequestData requestData) {
             Debug.WriteLine($"POST v1 send-request Called\nrequestdata:{JsonConvert.SerializeObject(requestData)}");
 
             ReceiveManager.SendRequestEvent(requestData);
@@ -90,6 +90,5 @@ namespace UniversalSend.Services {
         }
 
         #endregion Public Methods
-
     }
 }

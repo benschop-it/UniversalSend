@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
-    public class QuantifiedHeaderValue
-    {
+
+    public class QuantifiedHeaderValue {
         private static string QUALITY_KEY = "q";
 
         internal string HeaderValue { get; }
@@ -12,38 +12,28 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
         internal decimal Quality { get; private set; }
 
-        public QuantifiedHeaderValue(string headerValue, IDictionary<string, string> quantifiers)
-        {
+        public QuantifiedHeaderValue(string headerValue, IDictionary<string, string> quantifiers) {
             HeaderValue = headerValue;
             Quantifiers = quantifiers;
 
             ExtractQuality();
         }
 
-        private void ExtractQuality()
-        {
-            if (Quantifiers.ContainsKey(QUALITY_KEY))
-            {
+        private void ExtractQuality() {
+            if (Quantifiers.ContainsKey(QUALITY_KEY)) {
                 decimal qualityAsDec;
-                if (decimal.TryParse(Quantifiers[QUALITY_KEY], out qualityAsDec))
-                {
+                if (decimal.TryParse(Quantifiers[QUALITY_KEY], out qualityAsDec)) {
                     Quality = Math.Min(Math.Max(qualityAsDec, 0), 1);
-                }
-                else
-                {
+                } else {
                     Quality = 0;
                 }
-            }
-            else
-            {
+            } else {
                 Quality = 1;
             }
         }
 
-        internal string FindQuantifierValue(string quantifierKey)
-        {
-            if (Quantifiers.ContainsKey(quantifierKey))
-            {
+        internal string FindQuantifierValue(string quantifierKey) {
+            if (Quantifiers.ContainsKey(quantifierKey)) {
                 return Quantifiers[quantifierKey];
             }
 

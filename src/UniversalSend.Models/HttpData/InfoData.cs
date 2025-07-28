@@ -9,8 +9,10 @@ namespace UniversalSend.Models.HttpData {
 
         [JsonProperty("alias")]
         public string Alias { get; set; }
+
         [JsonProperty("deviceModel")]
         public string DeviceModel { get; set; }
+
         [JsonProperty("deviceType")]
         public string DeviceType { get; set; }
 

@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace UniversalSend.Services.HttpMessage.Plumbing
-{
-    internal class Constants
-    {
+namespace UniversalSend.Services.HttpMessage.Plumbing {
+
+    internal class Constants {
         internal static Encoding DefaultHttpEncoding { get; }
 
         internal static readonly byte SpaceByte;
@@ -12,8 +11,7 @@ namespace UniversalSend.Services.HttpMessage.Plumbing
         internal static readonly byte LFByte;
         internal static readonly byte ColonByte;
 
-        static Constants()
-        {
+        static Constants() {
             DefaultHttpEncoding = Encoding.GetEncoding("iso-8859-1");
 
             SpaceByte = Constants.DefaultHttpEncoding.GetBytes(new[] { ' ' }).Single();
