@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.InstanceCreators;
-using UniversalSend.Services.Models.Contracts;
 using UniversalSend.Services.Models.Schemas;
+using UniversalSend.Services.Rest.Models.Contracts;
 using Windows.Foundation;
 
 namespace UniversalSend.Services.Rest

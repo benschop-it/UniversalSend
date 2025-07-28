@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
-namespace UniversalSend.Services.Models.Contracts
-{
+namespace UniversalSend.Services.Rest.Models.Contracts {
     public interface IRestResponse
     {
         int StatusCode { get; }

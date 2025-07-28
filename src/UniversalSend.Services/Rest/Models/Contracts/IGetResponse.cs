@@ -1,5 +1,4 @@
-namespace UniversalSend.Services.Models.Contracts
-{
+namespace UniversalSend.Services.Rest.Models.Contracts {
     public interface IGetResponse : IContentRestResponse
     {
     }

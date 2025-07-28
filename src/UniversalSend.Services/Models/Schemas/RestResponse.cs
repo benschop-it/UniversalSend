@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UniversalSend.Services.Models.Contracts;
+using UniversalSend.Services.Rest.Models.Contracts;
 
 namespace UniversalSend.Services.Models.Schemas
 {

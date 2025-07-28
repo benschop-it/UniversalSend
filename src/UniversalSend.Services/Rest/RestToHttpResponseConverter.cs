@@ -1,8 +1,8 @@
 ﻿using System;
 using UniversalSend.Services.Http;
 using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.Models.Contracts;
 using UniversalSend.Services.Models.Schemas;
+using UniversalSend.Services.Rest.Models.Contracts;
 
 namespace UniversalSend.Services.Rest
 {

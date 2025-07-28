@@ -8,8 +8,8 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Services.Attributes;
-using UniversalSend.Services.Models.Contracts;
 using UniversalSend.Services.Models.Schemas;
+using UniversalSend.Services.Rest.Models.Contracts;
 using Windows.Foundation;
 
 namespace UniversalSend.Services {

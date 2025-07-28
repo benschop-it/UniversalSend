@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
-using UniversalSend.Services.Models.Contracts;
+using UniversalSend.Services.Rest.Models.Contracts;
 
 namespace UniversalSend.Services.Rest
 {

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UniversalSend.Services.Models.Contracts;
 using UniversalSend.Services.Models.Schemas;
+using UniversalSend.Services.Rest.Models.Contracts;
 using Windows.Foundation;
 
 namespace UniversalSend.Services.Rest
