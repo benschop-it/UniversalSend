@@ -1,30 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 using UniversalSend.Models.Data;
 
-namespace UniversalSend.Models.HttpData
-{
-    public class RegisterRequestData
-    {
-        public string alias { get; set; }
-        public string deviceModel { get; set; }
-        public string deviceType { get; set; }
-        public string fingerprint { get; set; }
+namespace UniversalSend.Models.HttpData {
+
+    public class RegisterRequestData {
+
+        #region Public Properties
+
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+
+        [JsonProperty("deviceModel")]
+        public string DeviceModel { get; set; }
+
+        [JsonProperty("deviceType")]
+        public string DeviceType { get; set; }
+
+        [JsonProperty("fingerprint")]
+        public string Fingerprint { get; set; }
+
+        #endregion Public Properties
     }
 
-    public class RegisterRequestDataManager
-    {
-        public static RegisterRequestData CreateFromDevice(Device device)
-        {
+    public class RegisterRequestDataManager {
+
+        #region Public Methods
+
+        public static RegisterRequestData CreateFromDevice(Device device) {
             RegisterRequestData registerRequestData = new RegisterRequestData();
-            registerRequestData.alias = device.Alias;
-            registerRequestData.deviceModel = device.DeviceModel;
-            registerRequestData.deviceType = device.DeviceType;
-            registerRequestData.fingerprint = device.Fingerprint;
+            registerRequestData.Alias = device.Alias;
+            registerRequestData.DeviceModel = device.DeviceModel;
+            registerRequestData.DeviceType = device.DeviceType;
+            registerRequestData.Fingerprint = device.Fingerprint;
             return registerRequestData;
         }
+
+        #endregion Public Methods
     }
 }

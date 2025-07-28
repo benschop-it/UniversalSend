@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace UniversalSend.Models.HttpData
-{
-    public sealed class FileResponseData : Dictionary<string, string> //fileId,token
+namespace UniversalSend.Models.HttpData {
+
+    /// <summary>
+    /// Dictionary that maps FileId to Token
+    /// </summary>
+    public sealed class FileResponseData : Dictionary<string, string>
     {
     }
 
-    public class FileResponseDataManager
-    {
-        public static FileResponseData CreateFromDictionary(Dictionary<string, string>keyValuePairs)
-        {
+    public class FileResponseDataManager {
+
+        #region Public Methods
+
+        public static FileResponseData CreateFromDictionary(Dictionary<string, string> keyValuePairs) {
             FileResponseData fileResponseData = new FileResponseData();
-            foreach(var item in keyValuePairs)
-            {
-                fileResponseData.Add(item.Key,item.Value);
+            foreach (var item in keyValuePairs) {
+                fileResponseData.Add(item.Key, item.Value);
             }
             return fileResponseData;
         }
+
+        #endregion Public Methods
     }
 }

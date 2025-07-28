@@ -198,6 +198,8 @@
     <Compile Include="Controls\SettingsItemControl.xaml.cs">
       <DependentUpon>SettingsItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DebugLogFactory.cs" />
+    <Compile Include="DebugLogger.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -469,11 +471,12 @@
       <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Models\DataModels\" />
-    <Folder Include="Models\DataTemplateModels\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\..\restup\src\WebServer.Logging\WebServer.Logging.csproj">
+      <Project>{06A3D120-5923-4AD1-8411-7395A1EC6E94}</Project>
+      <Name>WebServer.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\restup\src\Webserver.Models\Webserver.Models.csproj">
       <Project>{0b20d095-2896-41a6-865d-172dfd5ecc99}</Project>
       <Name>Webserver.Models</Name>

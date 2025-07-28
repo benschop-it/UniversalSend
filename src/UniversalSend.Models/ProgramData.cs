@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.HttpData;
-using UniversalSend.Models.Tasks;
+using UniversalSend.Models.Managers;
 
-namespace UniversalSend.Models
-{
-    public class ProgramData
-    {
+namespace UniversalSend.Models {
+
+    public class ProgramData {
+
+        #region Public Properties
+
         public static ContentDialogManager ContentDialogManager { get; set; } = new ContentDialogManager();
-        public static object ServiceServer { get; set; }
-        public static Device LocalDevice { get; set; } = new Device 
-        {/*{Environment.MachineName}*/
+
+        public static Device LocalDevice { get; set; } = new Device {
             //Alias = $"WindowsPhone (UWP)",
             ProtocolVersion = "v1",
             //DeviceModel = "Microsoft",
@@ -24,26 +20,9 @@ namespace UniversalSend.Models
             HttpProtocol = "http",
         };
 
-        //public static RegisterData LocalDeviceRegisterData { get; set; } = new RegisterData
-        //{
-        //    alias = $"{Environment.MachineName} (UWP)",
-        //    version = "v1",
-        //    deviceModel = "Microsoft",
-        //    deviceType = "Desktop",
-        //    fingerprint = Guid.NewGuid().ToString(),
-        //    port = 53317,
-        //    protocol = "http",
-        //    download = true,
-        //    announce = false
-        //};
+        public static object ServiceServer { get; set; }
 
-        //public static InfoData LocalDeviceInfoData { get; set; } = new InfoData
-        //{
-        //    alias = $"{Environment.MachineName} (UWP)",
-        //    deviceModel = "Microsoft",
-        //    deviceType = "Desktop"
-        //};
+        #endregion Public Properties
 
-        //public static ServiceHttpServer ServiceServer { get; set; }
     }
 }

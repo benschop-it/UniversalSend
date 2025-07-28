@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI;
 
 namespace UniversalSend.Models {
+
     public class ColorHelper {
-        public static string ConvertColorToArgbString(Color color) {
-            // Use String.Format to format ARGB values as a hexadecimal string
-            return string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", color.A, color.R, color.G, color.B);
-        }
+
+        #region Public Methods
 
         public static Color ConvertArgbStringToColor(string argbString) {
             // Remove the '#' prefix from the string
@@ -32,5 +27,12 @@ namespace UniversalSend.Models {
             // Create and return a Windows.UI.Color object
             return Color.FromArgb(a, r, g, b);
         }
+
+        public static string ConvertColorToArgbString(Color color) {
+            // Use String.Format to format ARGB values as a hexadecimal string
+            return string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", color.A, color.R, color.G, color.B);
+        }
+
+        #endregion Public Methods
     }
 }

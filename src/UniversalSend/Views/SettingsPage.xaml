@@ -30,7 +30,7 @@
                 <StackPanel Name="LabSettingsStackPanel">
                     
                 </StackPanel>
-                <Button Margin="0,4,0,8" Content="Developer Options" Name="NavigateToDevPageButton" Visibility="Collapsed" Click="NavigateToDevPageButton_Click"/>
+                <Button Margin="0,4,0,8" Content="Developer Options" Name="NavigateToDevPageButton" Visibility="Visible" Click="NavigateToDevPageButton_Click"/>
                 <TextBlock Text="About" Style="{ThemeResource SubtitleTextBlockStyle}"/>
 
                 <settingcontrols:AboutControl/>

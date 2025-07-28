@@ -1,43 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 using UniversalSend.Models.Data;
 
-namespace UniversalSend.Models.HttpData
-{
-    public sealed class RegisterData
-    {
-        public string alias { get; set; }
-        public string version { get; set; }
-        public string deviceModel { get; set; }
-        public string deviceType { get; set; }
-        public string fingerprint { get; set; }
-        public int port { get; set; }
-        public string protocol { get; set; }
-        public bool download { get; set; }
-        public bool announce { get; set; }
+namespace UniversalSend.Models.HttpData {
+
+    public sealed class RegisterData {
+
+        #region Public Properties
+
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+        [JsonProperty("announce")]
+        public bool Announce { get; set; }
+        [JsonProperty("deviceModel")]
+        public string DeviceModel { get; set; }
+        [JsonProperty("deviceType")]
+        public string DeviceType { get; set; }
+        [JsonProperty("download")]
+        public bool Download { get; set; }
+        [JsonProperty("fingerprint")]
+        public string Fingerprint { get; set; }
+        [JsonProperty("port")]
+        public int Port { get; set; }
+        [JsonProperty("protocol")]
+        public string Protocol { get; set; }
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
+        #endregion Public Properties
     }
 
-    public class RegisterDataManager
-    {
+    public class RegisterDataManager {
+
+        #region Public Methods
+
         /// <summary>
         /// Gets RegisterData from a Device instance, commonly used to retrieve local device registration information
         /// </summary>
-        public static RegisterData GetRegisterDataFromDevice(Device device)
-        {
+        public static RegisterData GetRegisterDataFromDevice(Device device) {
             RegisterData registerData = new RegisterData();
-            registerData.alias = device.Alias;
-            registerData.version = device.ProtocolVersion;
-            registerData.deviceModel = device.DeviceModel;
-            registerData.deviceType = device.DeviceType;
-            registerData.fingerprint = device.Fingerprint;
-            registerData.port = device.Port;
-            registerData.protocol = device.HttpProtocol;
-            registerData.download = true;
-            registerData.announce = false;
+            registerData.Alias = device.Alias;
+            registerData.Version = device.ProtocolVersion;
+            registerData.DeviceModel = device.DeviceModel;
+            registerData.DeviceType = device.DeviceType;
+            registerData.Fingerprint = device.Fingerprint;
+            registerData.Port = device.Port;
+            registerData.Protocol = device.HttpProtocol;
+            registerData.Download = true;
+            registerData.Announce = false;
             return registerData;
         }
+
+        #endregion Public Methods
     }
 }

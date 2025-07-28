@@ -1,18 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UniversalSend.Models
-{
-    public class NavigateHelper
-    {
+namespace UniversalSend.Models {
+
+    public class NavigateHelper {
+
+        #region Public Events
+
         public static event EventHandler NavigateToHistoryPageEvent;
 
-        public static void NavigateToHitoryPage()
-        {
-            NavigateToHistoryPageEvent?.Invoke(null,EventArgs.Empty);
+        #endregion Public Events
+
+        #region Public Methods
+
+        public static void NavigateToHistoryPage() {
+            NavigateToHistoryPageEvent?.Invoke(null, EventArgs.Empty);
         }
+
+        #endregion Public Methods
     }
 }

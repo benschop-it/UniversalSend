@@ -1,45 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UniversalSend.Models;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using UniversalSend.Models.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+namespace UniversalSend.Controls {
 
-namespace UniversalSend.Controls
-{
-    public sealed partial class DeviceInfoControl : UserControl
-    {
-        string DeviceName = ProgramData.LocalDevice.Alias;
-        string IP = ProgramData.LocalDevice.IP;
-        int Port = ProgramData.LocalDevice.Port;
+    public sealed partial class DeviceInfoControl : UserControl {
 
-        public DeviceInfoControl()
-        {
-            this.InitializeComponent();
+        #region Private Fields
+
+        private string DeviceName = ProgramData.LocalDevice.Alias;
+        private string IP = ProgramData.LocalDevice.IP;
+        private int Port = ProgramData.LocalDevice.Port;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public DeviceInfoControl() {
+            InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
             IP = "";
             List<string> ipList = NetworkHelper.GetIPv4AddrList();
-            foreach (string ip in ipList)
-            {
+            foreach (string ip in ipList) {
                 IP += $"{ip}\n";
             }
-            if (IP.Length > 1)
+
+            Debug.WriteLine("IPv4 addresses: " + IP);
+
+            if (IP.Length > 1) {
                 IP = IP.Substring(0, IP.Length - 1);
+            }
+
             Bindings.Update();
         }
+
+        #endregion Private Methods
     }
 }

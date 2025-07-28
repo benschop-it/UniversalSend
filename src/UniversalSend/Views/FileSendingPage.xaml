@@ -5,13 +5,13 @@
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:UniversalSend.Models"
+    xmlns:helpers="using:UniversalSend.Models.Helpers"
     xmlns:tasks="using:UniversalSend.Models.Tasks"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <models:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+        <helpers:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
     </Page.Resources>
     <Grid>
         <Grid Name="PrepareControls">

@@ -1,18 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
-namespace UniversalSend.Models.HttpData
-{
-    public class RegisterResponseData
-    {
-        public string alias { get; set; }
-        public string deviceModel { get; set; }
-        public string deviceType { get; set; }
-        public string fingerprint { get; set; }
-        public bool announcement { get; set; }
+namespace UniversalSend.Models.HttpData {
 
+    public class RegisterResponseData {
+
+        #region Public Properties
+
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+
+        [JsonProperty("announcement")]
+        public bool Announcement { get; set; }
+
+        [JsonProperty("deviceModel")]
+        public string DeviceModel { get; set; }
+
+        [JsonProperty("deviceType")]
+        public string DeviceType { get; set; }
+
+        [JsonProperty("fingerprint")]
+        public string Fingerprint { get; set; }
+
+        #endregion Public Properties
     }
 }

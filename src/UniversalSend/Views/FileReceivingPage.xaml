@@ -7,11 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:tasks="using:UniversalSend.Models.Tasks"
     mc:Ignorable="d"
-    xmlns:models="using:UniversalSend.Models"
+    xmlns:helpers="using:UniversalSend.Models.Helpers"
     Loaded="Page_Loaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <models:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+        <helpers:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +35,7 @@
                         <Grid Grid.RowSpan="2">
                             <Image/>
                         </Grid>
-                        <TextBlock Grid.Column="1" Text="{x:Bind file.FileName,Mode=OneWay}"/>
+                        <TextBlock Grid.Column="1" Text="{x:Bind File.FileName,Mode=OneWay}"/>
                         <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{ThemeResource SystemAccentColor}" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}}"/>
                     </Grid>
                 </DataTemplate>

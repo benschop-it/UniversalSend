@@ -1,56 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UniversalSend.Controls;
 using UniversalSend.Controls.SettingControls;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
-using Windows.ApplicationModel;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 describes the "Blank Page" item template
+namespace UniversalSend.Views {
 
-namespace UniversalSend.Views
-{
-    /// <summary>
-    /// A blank page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class SettingsPage : Page
-    {
-        public SettingsPage()
-        {
-            this.InitializeComponent();
+    public sealed partial class SettingsPage : Page {
+
+        #region Public Constructors
+
+        public SettingsPage() {
+            InitializeComponent();
             PageHeader.Margin = UIManager.RootElementMargin;
             RootStackPanel.Margin = UIManager.RootElementMarginWithoutTop;
         }
 
-        void InitControls()
-        {
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void InitAboutControls() {
+            // Placeholder for about section controls
+        }
+
+        private void InitControls() {
             InitNetworkControls();
             InitReceiveControls();
             InitAboutControls();
             InitLabControls();
         }
 
-        void InitReceiveControls()
-        {
-            ReceiveSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Receive_SaveToFolder_Header")/*"Save directory"*/, new SaveLocationSettingControl()));
+        private void InitLabControls() {
+            LabSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Lab_UseInternalExplorer")/*Use internal file explorer*/, new ToggleSwitchSettingsControl(Settings.Lab_UseInternalExplorer)));
         }
 
-        void InitNetworkControls()
-        {
+        private void InitNetworkControls() {
             Dictionary<int, string> selectionDisplayName = new Dictionary<int, string>();
             selectionDisplayName.Add((int)DeviceManager.DeviceType.mobile, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Mobile") /*"Phone/Tablet"*/);
             selectionDisplayName.Add((int)DeviceManager.DeviceType.desktop, LocalizeManager.GetLocalizedString("SettingsPage_Network_DeviceType_Desktop")/*"PC"*/);
@@ -66,24 +53,17 @@ namespace UniversalSend.Views
             NetworkSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("Settings_Network_MulticastAddress")/*"Multicast Broadcast"*/, new TextSettingControl(Settings.Network_MulticastAddress)));
         }
 
-        void InitLabControls()
-        {
-            LabSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Lab_UseInternalExplorer")/*Use internal file explorer*/, new ToggleSwitchSettingsControl(Settings.Lab_UseInternalExplorer)));
+        private void InitReceiveControls() {
+            ReceiveSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Receive_SaveToFolder_Header")/*"Save directory"*/, new SaveLocationSettingControl()));
         }
-
-        void InitAboutControls()
-        {
-            // Placeholder for about section controls
-        }
-
-        private void NavigateToDevPageButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void NavigateToDevPageButton_Click(object sender, RoutedEventArgs e) {
             Frame.Navigate(typeof(DevPage));
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
+        private void Page_Loaded(object sender, RoutedEventArgs e) {
             InitControls();
         }
+
+        #endregion Private Methods
     }
 }

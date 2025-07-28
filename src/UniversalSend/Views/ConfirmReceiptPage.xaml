@@ -20,15 +20,15 @@
 
         <FontIcon/>
 
-        <TextBlock Grid.Row="1" Text="{x:Bind SendRequestData.info.alias}"/>
+        <TextBlock Grid.Row="1" Text="{x:Bind SendRequestData.Info.Alias}"/>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <TextBlock Text="{x:Bind SendRequestData.info.deviceModel}"/>
+            <TextBlock Text="{x:Bind SendRequestData.Info.DeviceModel}"/>
         </StackPanel>
 
         <TextBlock Grid.Row="3">
             <Run Text="wants to send you "/>
-            <Run Text="{x:Bind SendRequestData.files.Count}"/>
+            <Run Text="{x:Bind SendRequestData.Files.Count}"/>
             <Run Text=" file(s)"/>
         </TextBlock>
 

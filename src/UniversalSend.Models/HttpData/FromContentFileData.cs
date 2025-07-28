@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace UniversalSend.Models.HttpData {
 
-namespace UniversalSend.Models.HttpData
-{
-    public class FromContentFileData
-    {
+    public class FromContentFileData {
+
+        #region Public Properties
+
         public byte[] FileData { get; set; }
+
+        #endregion Public Properties
     }
 }

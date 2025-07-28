@@ -1,48 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UniversalSend.Models;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using UniversalSend.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
-// For more information on the "UserControl" item template, see https://go.microsoft.com/fwlink/?LinkId=234236
+namespace UniversalSend.Controls.SettingControls {
 
-namespace UniversalSend.Controls.SettingControls
-{
-    public sealed partial class TextSettingControl : UserControl
-    {
+    public sealed partial class TextSettingControl : UserControl {
+
+        #region Public Constructors
+
+        public TextSettingControl(string key) {
+            InitializeComponent();
+            SettingKey = key;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public string SettingKey { get; set; }
 
-        public TextSettingControl(string key)
-        {
-            this.InitializeComponent();
-            this.SettingKey = key;
-        }
+        #endregion Public Properties
 
-        private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(SettingKey))
+        #region Private Methods
+
+        private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e) {
+            if (!string.IsNullOrEmpty(SettingKey)) {
                 Settings.SetSetting(SettingKey, MainTextBox.Text);
+            }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(SettingKey))
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+            if (string.IsNullOrEmpty(SettingKey)) {
                 return;
+            }
 
             string settingValue = Settings.GetSettingContentAsString(SettingKey);
 
-            if (string.IsNullOrEmpty(settingValue))
-            {
+            if (string.IsNullOrEmpty(settingValue)) {
                 MainTextBox.Text = "Unavailable";
                 MainTextBox.IsEnabled = false;
                 return;
@@ -50,5 +44,7 @@ namespace UniversalSend.Controls.SettingControls
 
             MainTextBox.Text = settingValue;
         }
+
+        #endregion Private Methods
     }
 }

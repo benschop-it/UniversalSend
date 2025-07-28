@@ -1,24 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UniversalSend.Models
-{
-    public class Toast
-    {
-        public string Title { get; set; } = "";
+namespace UniversalSend.Models {
+
+    public class Toast {
+
+        #region Public Properties
+
         public string Content { get; set; } = "";
+        public string Title { get; set; } = "";
+
+        #endregion Public Properties
     }
 
-    public class ToastManager
-    {
+    public class ToastManager {
+
+        #region Public Events
+
         public event EventHandler SendToastEvent;
 
-        public void SendTosat(Toast toast)
-        {
-            SendToastEvent?.Invoke(toast,EventArgs.Empty);
+        #endregion Public Events
+
+        #region Public Methods
+
+        public void SendTosat(Toast toast) {
+            SendToastEvent?.Invoke(toast, EventArgs.Empty);
         }
+
+        #endregion Public Methods
     }
 }

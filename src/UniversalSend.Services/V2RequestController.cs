@@ -1,22 +1,17 @@
 ﻿using Newtonsoft.Json;
 using Restup.Webserver.Attributes;
-using Restup.Webserver.Models.Contracts;
 using Restup.Webserver.Models.Schemas;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniversalSend.Models;
+using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using Windows.Storage;
 
-namespace UniversalSend.Services
-{
+namespace UniversalSend.Services {
+
     [RestController(InstanceCreationType.PerCall)]
-    public class V2RequestController
-    {
+    public class V2RequestController {
         //[UriFormat("v2/hello")]
         //public GetResponse GetHello()
         //{
@@ -26,28 +21,26 @@ namespace UniversalSend.Services
         //        new DataReceived() { ID = 1, PropName = "Hello from UWP REST Server!" });
         //}
 
-        //// Handle POST /api/data  
+        //// Handle POST /api/data
         //[UriFormat("v2/data")]
         //public IPostResponse PostData([FromContent] dynamic data)
         //{
-        //    string receivedData = data?.input; // Get data from request body  
+        //    string receivedData = data?.input; // Get data from request body
         //    return new PostResponse(
         //        PostResponse.ResponseStatus.Created,
-        //        receivedData); // Fix: pass string directly instead of anonymous type  
+        //        receivedData); // Fix: pass string directly instead of anonymous type
         //}
 
-
-
+        #region Public Methods
 
         [UriFormat("v2/register")]
-        public PostResponse PostRegister([FromContent] RegisterData data)
-        {
+        public PostResponse PostRegister([FromContent] RegisterData data) {
             Debug.WriteLine("POST /register called"); // Debug output
             if (data != null)
                 Debug.WriteLine(JsonConvert.SerializeObject(data));
             return new PostResponse(
                 PostResponse.ResponseStatus.Created,
-                "", JsonConvert.SerializeObject(RegisterDataManager.GetRegisterDataFromDevice(ProgramData.LocalDevice)/*ProgramData.LocalDeviceRegisterData*/)); // Fix: pass string directly instead of anonymous type  
+                "", JsonConvert.SerializeObject(RegisterDataManager.GetRegisterDataFromDevice(ProgramData.LocalDevice)/*ProgramData.LocalDeviceRegisterData*/)); // Fix: pass string directly instead of anonymous type
         }
 
         //[UriFormat("v2/prepare-upload?fileId={fileId}&token={token}")]
@@ -61,10 +54,11 @@ namespace UniversalSend.Services
         //        );
         //}
 
-        public async void SaveFileData(string fileId, byte[] data)
-        {
+        public async void SaveFileData(string fileId, byte[] data) {
             StorageFile storageFile = await StorageHelper.CreateFileInAppLocalFolderAsync(fileId);
             await StorageHelper.WriteBytesToFileAsync(storageFile, data);
         }
+
+        #endregion Public Methods
     }
 }
