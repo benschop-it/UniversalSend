@@ -1,4 +1,4 @@
-﻿using Restup.WebServer.Logging;
+﻿using UniversalSend.Services.Logging;
 
 namespace UniversalSend {
 

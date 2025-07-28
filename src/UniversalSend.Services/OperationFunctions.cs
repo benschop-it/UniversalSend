@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Restup.HttpMessage;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +10,7 @@ using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
+using UniversalSend.Services.HttpMessage;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 

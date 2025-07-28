@@ -120,8 +120,134 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Attributes\FromContentAttribute.cs" />
+    <Compile Include="Attributes\RestControllerAttribute.cs" />
+    <Compile Include="Attributes\UriFormatAttribute.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="EncodingCache.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="HttpMessage\Headers\HttpHeaderBase.cs" />
+    <Compile Include="HttpMessage\Headers\HttpRequestHeaderBase.cs" />
+    <Compile Include="HttpMessage\Headers\Request\AcceptCharsetHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\AcceptEncodingHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\AcceptHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\AccessControlRequestHeadersHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\AccessControlRequestMethodHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\ContentLengthHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\ContentTypeHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\HttpMultiQuantifiedHeaderBase.cs" />
+    <Compile Include="HttpMessage\Headers\Request\HttpRequestHandleHeaderData.cs" />
+    <Compile Include="HttpMessage\Headers\Request\HttpSingleQuantifiedHeaderBase.cs" />
+    <Compile Include="HttpMessage\Headers\Request\OriginHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Request\QuantifiedHeaderValue.cs" />
+    <Compile Include="HttpMessage\Headers\Request\RequestHeaderFactory.cs" />
+    <Compile Include="HttpMessage\Headers\Response\AccessControlAllowHeadersHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\AccessControlAllowMethodsHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\AccessControlAllowOriginHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\AccessControlMaxAgeHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\AllowHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\CloseConnectionHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\ContentEncodingHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\ContentLengthHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\ContentTypeHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\DateHeader.cs" />
+    <Compile Include="HttpMessage\Headers\Response\LocationHeader.cs" />
+    <Compile Include="HttpMessage\Headers\UntypedRequestHeader.cs" />
+    <Compile Include="HttpMessage\Headers\UntypedResponseHeader.cs" />
+    <Compile Include="HttpMessage\HttpServerRequest.cs" />
+    <Compile Include="HttpMessage\HttpServerResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IContentRestResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IDeleteResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IGetResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IHttpHeader.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IHttpRequestHeader.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IHttpRequestHeaderVisitor.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IHttpRequestPartParser.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IHttpResponsePartParser.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IInstanceCreator.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IPostResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IPutResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IRestMethodExecutor.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IRestResponse.cs" />
+    <Compile Include="HttpMessage\Models\Contracts\IRouteHandler.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\BadRequestResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\DeleteResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\ExtractedWord.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\GetResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\HttpMethod.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\HttpResponseStatus.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\InstanceCreationType.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\MediaType.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\MethodNotAllowedResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\PostResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\PutResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\RestResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\RestServerRequest.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\StatusOnlyResponse.cs" />
+    <Compile Include="HttpMessage\Models\Schemas\StreamReadResult.cs" />
+    <Compile Include="HttpMessage\MutableHttpServerRequest.cs" />
+    <Compile Include="HttpMessage\Plumbing\Constants.cs" />
+    <Compile Include="HttpMessage\Plumbing\Extensions.cs" />
+    <Compile Include="HttpMessage\Plumbing\HttpCodesTranslator.cs" />
+    <Compile Include="HttpMessage\Plumbing\HttpRequestStream.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\ContentParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\HeadersParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\HttpMethodParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\HttpRequestParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\HttpRequestPartParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\MethodParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\ProtocolVersionParser.cs" />
+    <Compile Include="HttpMessage\ServerRequestParsers\ResourceIdentifierParser.cs" />
+    <Compile Include="HttpMessage\ServerResponseParsers\ContentParser.cs" />
+    <Compile Include="HttpMessage\ServerResponseParsers\HeadersParser.cs" />
+    <Compile Include="HttpMessage\ServerResponseParsers\HttpServerResponseParser.cs" />
+    <Compile Include="HttpMessage\ServerResponseParsers\StartLineParser.cs" />
+    <Compile Include="Http\AfterHandleRequestResult.cs" />
+    <Compile Include="Http\BeforeHandleRequestResult.cs" />
+    <Compile Include="Http\CompressContentEncoder.cs" />
+    <Compile Include="Http\ContentCoding.cs" />
+    <Compile Include="Http\ContentEncoderFactory.cs" />
+    <Compile Include="Http\ContentSerializer.cs" />
+    <Compile Include="Http\CorsConfiguration.cs" />
+    <Compile Include="Http\CorsMessageInspector.cs" />
+    <Compile Include="Http\DeflateContentEncoder.cs" />
+    <Compile Include="Http\GzipContentEncoder.cs" />
+    <Compile Include="Http\HttpServer.cs" />
+    <Compile Include="Http\HttpServerConfiguration.cs" />
+    <Compile Include="Http\IContentEncoder.cs" />
+    <Compile Include="Http\ICorsConfiguration.cs" />
+    <Compile Include="Http\IHttpMessageInspector.cs" />
+    <Compile Include="Http\NoContentEncoder.cs" />
+    <Compile Include="Http\RouteRegistration.cs" />
+    <Compile Include="HttpMessage\IHttpServerRequest.cs" />
+    <Compile Include="InstanceCreators\InstanceCreatorCache.cs" />
+    <Compile Include="InstanceCreators\PerCallInstanceCreator.cs" />
+    <Compile Include="InstanceCreators\SingletonInstanceCreator.cs" />
+    <Compile Include="Logging\AbstractLogger.cs" />
+    <Compile Include="Logging\ILogFactory.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="LogManager.cs" />
+    <Compile Include="OperationController.cs" />
     <Compile Include="OperationFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rest\MatchUri.cs" />
+    <Compile Include="Rest\ParameterValueGetter.cs" />
+    <Compile Include="Rest\ParsedUri.cs" />
+    <Compile Include="Rest\PathParameterValueGetter.cs" />
+    <Compile Include="Rest\PathPart.cs" />
+    <Compile Include="Rest\QueryParameterValueGetter.cs" />
+    <Compile Include="Rest\RestControllerMethodExecutor.cs" />
+    <Compile Include="Rest\RestControllerMethodExecutorFactory.cs" />
+    <Compile Include="Rest\RestControllerMethodInfo.cs" />
+    <Compile Include="Rest\RestControllerMethodWithContentExecutor.cs" />
+    <Compile Include="Rest\RestControllerRequestHandler.cs" />
+    <Compile Include="Rest\RestMethodExecutor.cs" />
+    <Compile Include="Rest\RestResponseFactory.cs" />
+    <Compile Include="Rest\RestRouteHandler.cs" />
+    <Compile Include="Rest\RestServerRequestFactory.cs" />
+    <Compile Include="Rest\RestToHttpResponseConverter.cs" />
+    <Compile Include="Rest\UriParameter.cs" />
+    <Compile Include="Rest\UriParser.cs" />
     <Compile Include="ServiceHttpServer.cs" />
     <Compile Include="V1RequestController.cs" />
     <Compile Include="V2RequestController.cs" />
@@ -133,23 +259,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\restup\src\WebServer.Logging\WebServer.Logging.csproj">
-      <Project>{06a3d120-5923-4ad1-8411-7395a1ec6e94}</Project>
-      <Name>WebServer.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\restup\src\Webserver.Models\Webserver.Models.csproj">
-      <Project>{0b20d095-2896-41a6-865d-172dfd5ecc99}</Project>
-      <Name>Webserver.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\restup\src\WebServer\WebServer.csproj">
-      <Project>{837b8ff3-ded6-4dc7-ad58-dbb0b3e44dd4}</Project>
-      <Name>WebServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UniversalSend.Models\UniversalSend.Models.csproj">
       <Project>{271ddfd9-c2e7-47da-a0dd-6d8553987df6}</Project>
       <Name>UniversalSend.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

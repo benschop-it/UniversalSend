@@ -1,18 +1,16 @@
 ﻿using Newtonsoft.Json;
-using Restup.Webserver.Attributes;
-using Restup.Webserver.Models.Contracts;
-using Restup.Webserver.Models.Schemas;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
+using UniversalSend.Services.Attributes;
+using UniversalSend.Services.Models.Contracts;
+using UniversalSend.Services.Models.Schemas;
 using Windows.Foundation;
-using Windows.Storage;
 
 namespace UniversalSend.Services {
 
@@ -92,5 +90,6 @@ namespace UniversalSend.Services {
         }
 
         #endregion Public Methods
+
     }
 }

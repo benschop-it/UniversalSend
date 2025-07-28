@@ -1,8 +1,6 @@
-﻿using Restup.WebServer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UniversalSend.Models;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Tasks;
@@ -66,7 +64,6 @@ namespace UniversalSend.Views {
             StartHttpServerAsync();
         }
         private async void WriteRequestContentToTestFileButton_Click(object sender, RoutedEventArgs e) {
-            await StorageHelper.WriteTestFileAsync(RestupTest.requestContent);
         }
 
         #endregion Private Methods

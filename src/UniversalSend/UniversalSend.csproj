@@ -473,18 +473,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\restup\src\WebServer.Logging\WebServer.Logging.csproj">
-      <Project>{06A3D120-5923-4AD1-8411-7395A1EC6E94}</Project>
-      <Name>WebServer.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\restup\src\Webserver.Models\Webserver.Models.csproj">
-      <Project>{0b20d095-2896-41a6-865d-172dfd5ecc99}</Project>
-      <Name>Webserver.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\restup\src\WebServer\WebServer.csproj">
-      <Project>{837B8FF3-DED6-4DC7-AD58-DBB0B3E44DD4}</Project>
-      <Name>WebServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UniversalSend.Models\UniversalSend.Models.csproj">
       <Project>{271ddfd9-c2e7-47da-a0dd-6d8553987df6}</Project>
       <Name>UniversalSend.Models</Name>

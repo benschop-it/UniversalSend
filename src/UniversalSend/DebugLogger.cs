@@ -1,5 +1,5 @@
-﻿using Restup.WebServer.Logging;
-using System;
+﻿using System;
+using UniversalSend.Services.Logging;
 
 namespace UniversalSend {
     public class DebugLogger : AbstractLogger {

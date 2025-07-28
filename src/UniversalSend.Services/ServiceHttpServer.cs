@@ -1,9 +1,9 @@
-﻿using Restup.Webserver.Http;
-using Restup.Webserver.Rest;
-using Restup.WebServer;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Services.Http;
+using UniversalSend.Services.Rest;
+using UniversalSend.Services.Webserver.Http;
 
 namespace UniversalSend.Services {
 
