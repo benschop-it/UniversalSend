@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using Windows.UI.Xaml;
@@ -11,6 +13,8 @@ namespace UniversalSend.Views {
         #region Private Fields
 
         private int _receivedItemsCount = 0;
+        private IReceiveTaskManager _receiveTaskManager => App.Services.GetRequiredService<IReceiveTaskManager>();
+        private IReceiveManager _receiveManager => App.Services.GetRequiredService<IReceiveManager>();
 
         #endregion Private Fields
 
@@ -26,8 +30,8 @@ namespace UniversalSend.Views {
 
         public void UpdateUI() {
             FileReceivingListView.ItemsSource = null;
-            FileReceivingListView.ItemsSource = ReceiveTaskManager.ReceivingTasks;
-            if (_receivedItemsCount == ReceiveTaskManager.ReceivingTasks.Count) {
+            FileReceivingListView.ItemsSource = _receiveTaskManager.ReceivingTasks;
+            if (_receivedItemsCount == _receiveTaskManager.ReceivingTasks.Count) {
                 ProgressBarLabel.Text = "Completed";
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;
@@ -45,15 +49,15 @@ namespace UniversalSend.Views {
 
         private void FinishButton_Click(object sender, RoutedEventArgs e) {
             //To-Do: Add to history
-            ReceiveTaskManager.ReceivingTasks.Clear();
+            _receiveTaskManager.ReceivingTasks.Clear();
             Frame.GoBack();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e) {
-            ReceiveManager.SendDataReceived += ReceiveManager_SendDataReceived;
-            ReceiveManager.CancelReceived += ReceiveManager_CancelReceived;
+            _receiveManager.SendDataReceived += ReceiveManager_SendDataReceived;
+            _receiveManager.CancelReceived += ReceiveManager_CancelReceived;
             UpdateUI();
-            MainProgressBar.Maximum = ReceiveTaskManager.ReceivingTasks.Count;
+            MainProgressBar.Maximum = _receiveTaskManager.ReceivingTasks.Count;
         }
 
         private async void ReceiveManager_CancelReceived(object sender, EventArgs e) {

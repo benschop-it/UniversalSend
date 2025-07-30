@@ -7,12 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:storage="using:Windows.Storage"
     xmlns:models="using:UniversalSend.Models"
+    xmlns:misc="using:UniversalSend.Misc"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
         <!-- Grid View Mode Template -->
-        <DataTemplate x:Name="GridViewModeItemTemplate" x:DataType="models:ViewStorageItem">
+        <DataTemplate x:Name="GridViewModeItemTemplate" x:DataType="misc:ViewStorageItem">
             <Grid Height="180" MaxWidth="150">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -33,7 +34,7 @@
         </ItemsPanelTemplate>
 
         <!-- List View Mode Template -->
-        <DataTemplate x:Name="ListViewModeItemTemplate" x:DataType="models:ViewStorageItem">
+        <DataTemplate x:Name="ListViewModeItemTemplate" x:DataType="misc:ViewStorageItem">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />

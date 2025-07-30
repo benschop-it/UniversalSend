@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -13,25 +15,29 @@ namespace UniversalSend.Controls.ContentDialogControls {
 
     public sealed partial class EditFavoriteItemControl : UserControl {
 
+        private IFavoriteManager _favoriteManager => App.Services.GetRequiredService<IFavoriteManager>();
+        private IContentDialogManager _contentDialogManager => App.Services.GetRequiredService<IContentDialogManager>();
+
         #region Public Constructors
 
-        public EditFavoriteItemControl(Favorite favorite) {
+        public EditFavoriteItemControl(IFavorite favorite) {
             InitializeComponent();
             Favorite = favorite;
 
             TitleTextBlock.Text = "Edit";
-            DeviceNameTextBox.Text = Favorite.DeviceName;
-            IPAddrTextBox.Text = Favorite.IPAddr;
-            PortTextBox.Text = Favorite.Port.ToString();
+            DeviceNameTextBox.Text = favorite.DeviceName;
+            IPAddrTextBox.Text = favorite.IPAddr;
+            PortTextBox.Text = favorite.Port.ToString();
         }
 
         public EditFavoriteItemControl() {
             InitializeComponent();
+
             TitleTextBlock.Text = "Add to Favorites";
             DeleteButton.Visibility = Visibility.Collapsed;
         }
 
-        public EditFavoriteItemControl(Device device) {
+        public EditFavoriteItemControl(IDevice device) {
             InitializeComponent();
             TitleTextBlock.Text = "Add to Favorites";
             DeleteButton.Visibility = Visibility.Collapsed;
@@ -44,19 +50,19 @@ namespace UniversalSend.Controls.ContentDialogControls {
 
         #region Public Properties
 
-        public Favorite Favorite { get; set; }
+        public IFavorite Favorite { get; set; }
 
         #endregion Public Properties
 
         #region Private Methods
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            ProgramData.ContentDialogManager.HideContentDialog();
+            _contentDialogManager.HideContentDialog();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e) {
-            FavoriteManager.Favorites.Remove(Favorite);
-            ProgramData.ContentDialogManager.HideContentDialog();
+            _favoriteManager.Favorites.Remove(Favorite);
+            _contentDialogManager.HideContentDialog();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
@@ -78,17 +84,17 @@ namespace UniversalSend.Controls.ContentDialogControls {
             }
 
             if (Favorite == null) {
-                Favorite = new Favorite(DeviceNameTextBox.Text, IPAddrTextBox.Text, Convert.ToInt64(PortTextBox.Text));
-                FavoriteManager.Favorites.Add(Favorite);
-                FavoriteManager.SaveFavoritesData();
+                Favorite = _favoriteManager.CreateFavorite(DeviceNameTextBox.Text, IPAddrTextBox.Text, Convert.ToInt64(PortTextBox.Text));
+                _favoriteManager.Favorites.Add(Favorite);
+                _favoriteManager.SaveFavoritesData();
             } else {
                 Favorite.DeviceName = DeviceNameTextBox.Text;
                 Favorite.IPAddr = IPAddrTextBox.Text;
                 Favorite.Port = Convert.ToInt64(PortTextBox.Text);
-                FavoriteManager.SaveFavoritesData();
+                _favoriteManager.SaveFavoritesData();
             }
 
-            ProgramData.ContentDialogManager.HideContentDialog();
+            _contentDialogManager.HideContentDialog();
         }
 
         #endregion Private Methods

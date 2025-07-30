@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class OriginHeader : HttpRequestHeaderBase {
+    internal class OriginHeader : HttpRequestHeaderBase {
         internal static string NAME = "Origin";
 
         public OriginHeader(string value) : base(NAME, value) {

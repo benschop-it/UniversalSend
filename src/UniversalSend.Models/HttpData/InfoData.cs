@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    public class InfoData {
+    internal class InfoData : IInfoData {
 
         #region Public Properties
 
@@ -17,20 +17,5 @@ namespace UniversalSend.Models.HttpData {
         public string DeviceType { get; set; }
 
         #endregion Public Properties
-    }
-
-    public class InfoDataManager {
-
-        #region Public Methods
-
-        public static InfoData GetInfoDataFromDevice(Device device) {
-            InfoData infoData = new InfoData();
-            infoData.Alias = device.Alias;
-            infoData.DeviceType = device.DeviceType;
-            infoData.DeviceModel = device.DeviceModel;
-            return infoData;
-        }
-
-        #endregion Public Methods
     }
 }

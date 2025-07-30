@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using UniversalSend.Interfaces;
 using UniversalSend.Models;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
+using UniversalSend.Strings;
 using UniversalSend.Views;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
@@ -29,6 +33,16 @@ namespace UniversalSend {
         #region Private Fields
 
         private bool _normalLaunch = true;
+        private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
+        private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
+        private IHistoryManager _historyManager => App.Services.GetRequiredService<IHistoryManager>();
+        private IFavoriteManager _favoriteManager => App.Services.GetRequiredService<IFavoriteManager>();
+        private IRegister _register => App.Services.GetRequiredService<IRegister>();
+        private IStorageHelper _storageHelper => App.Services.GetRequiredService<IStorageHelper>();
+        private ISettings _settings => App.Services.GetRequiredService<ISettings>();
+        private ISystemHelper _systemHelper => App.Services.GetRequiredService<ISystemHelper>();
+        private IUIManager _uiManager => App.Services.GetRequiredService<IUIManager>();
+        private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
 
         #endregion Private Fields
 
@@ -51,9 +65,9 @@ namespace UniversalSend {
 
             if (e.Parameter is ShareOperation) {
                 _normalLaunch = false;
-                List<SendTask> sendTasks = await ProcessShareActivatedAsync(e.Parameter as ShareOperation);
-                SendTaskManager.SendTasks.AddRange(sendTasks);
-                SendManager.SendCreatedEvent();
+                List<ISendTask> sendTasks = await ProcessShareActivatedAsync(e.Parameter as ShareOperation);
+                _sendTaskManager.SendTasks.AddRange(sendTasks);
+                _sendManager.SendCreatedEvent();
             }
         }
 
@@ -62,19 +76,21 @@ namespace UniversalSend {
         #region Private Methods
 
         private void Init() {
-            Settings.InitUserSettings();
-            Register.StartRegister();
-            HistoryManager.InitHistoriesList();
-            FavoriteManager.InitFavoritesData();
-            UIManager.InitRootElementMargin();
+            _settings.InitUserSettings();
+            _register.StartRegister();
+            _historyManager.InitHistoriesList();
+            _favoriteManager.InitFavoritesData();
+            _uiManager.InitRootElementMargin();
             InitData();
         }
 
         private void InitData() {
-            ProgramData.LocalDevice.Alias = Settings.GetSettingContentAsString(Settings.Network_DeviceName);
-            ProgramData.LocalDevice.DeviceModel = Settings.GetSettingContentAsString(Settings.Network_DeviceModel);
-            ProgramData.LocalDevice.DeviceType = Settings.GetSettingContentAsString(Settings.Network_DeviceType);
-            ProgramData.LocalDevice.Port = (int)Settings.GetSettingContent(Settings.Network_Port);
+            IDevice localDevice = _deviceManager.GetLocalDevice();
+
+            localDevice.Alias = _settings.GetSettingContentAsString(Constants.Network_DeviceName);
+            localDevice.DeviceModel = _settings.GetSettingContentAsString(Constants.Network_DeviceModel);
+            localDevice.DeviceType = _settings.GetSettingContentAsString(Constants.Network_DeviceType);
+            localDevice.Port = (int)_settings.GetSettingContent(Constants.Network_Port);
         }
 
         private void NavigateToRootPage() {
@@ -98,48 +114,48 @@ namespace UniversalSend {
             }
         }
 
-        private async Task<List<SendTask>> ProcessShareActivatedAsync(ShareOperation shareOperation) {
-            List<SendTask> sendTasks = new List<SendTask>();
+        private async Task<List<ISendTask>> ProcessShareActivatedAsync(ShareOperation shareOperation) {
+            List<ISendTask> sendTasks = new List<ISendTask>();
             if (shareOperation.Data.Contains(StandardDataFormats.Text)) {
                 string text = await shareOperation.Data.GetTextAsync();
 
                 // To output the text from this example, you need a TextBlock control
                 // with a name of "sharedContent".
                 Debug.WriteLine($"ShareActivated-Text:{text}");
-                sendTasks.Add(SendTaskManager.CreateSendTask(text));
+                sendTasks.Add(_sendTaskManager.CreateSendTask(text));
             } else if (shareOperation.Data.Contains(StandardDataFormats.ApplicationLink)) {
                 Uri uri = await shareOperation.Data.GetApplicationLinkAsync();
                 Debug.WriteLine($"ShareActivated-ApplicationLink:{uri.ToString()}");
-                sendTasks.Add(SendTaskManager.CreateSendTask(uri.ToString()));
+                sendTasks.Add(_sendTaskManager.CreateSendTask(uri.ToString()));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Bitmap)) {
                 RandomAccessStreamReference accessStreamReference = await shareOperation.Data.GetBitmapAsync();
                 Debug.WriteLine($"ShareActivated-Bitmap");
                 var randomAccessStreamWithContentType = await (await shareOperation.Data.GetBitmapAsync()).OpenReadAsync();
                 byte[] buffer = new byte[randomAccessStreamWithContentType.Size];
                 await randomAccessStreamWithContentType.ReadAsync(buffer.AsBuffer(), (uint)randomAccessStreamWithContentType.Size, InputStreamOptions.None);
-                StorageFile storageFile = await StorageHelper.CreateTempFile(Guid.NewGuid().ToString() + randomAccessStreamWithContentType.ContentType);
-                await StorageHelper.WriteBytesToFileAsync(storageFile, buffer);
-                sendTasks.Add(await SendTaskManager.CreateSendTask(storageFile));
+                StorageFile storageFile = await _storageHelper.CreateTempFile(Guid.NewGuid().ToString() + randomAccessStreamWithContentType.ContentType);
+                await _storageHelper.WriteBytesToFileAsync(storageFile, buffer);
+                sendTasks.Add(await _sendTaskManager.CreateSendTask(storageFile));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Html)) {
                 string htmlStr = await shareOperation.Data.GetHtmlFormatAsync();
                 Debug.WriteLine($"ShareActivated-Html:{htmlStr}");
-                sendTasks.Add(SendTaskManager.CreateSendTask(htmlStr));
+                sendTasks.Add(_sendTaskManager.CreateSendTask(htmlStr));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Rtf)) {
                 string rtfStr = await shareOperation.Data.GetRtfAsync();
                 Debug.WriteLine($"ShareActivated-Rtf:{rtfStr}");
-                sendTasks.Add(SendTaskManager.CreateSendTask(rtfStr));
+                sendTasks.Add(_sendTaskManager.CreateSendTask(rtfStr));
             } else if (shareOperation.Data.Contains(StandardDataFormats.StorageItems)) {
                 List<IStorageItem> items = (await shareOperation.Data.GetStorageItemsAsync()).ToList();
                 Debug.WriteLine($"ShareActivated-StorageItems: number of items: {items.Count}");
                 foreach (var item in items) {
                     if (item is StorageFile) {
-                        sendTasks.Add(await SendTaskManager.CreateSendTask(item as StorageFile));
+                        sendTasks.Add(await _sendTaskManager.CreateSendTask(item as StorageFile));
                     }
                 }
             } else if (shareOperation.Data.Contains(StandardDataFormats.WebLink)) {
                 Uri uri = await shareOperation.Data.GetWebLinkAsync();
                 Debug.WriteLine($"ShareActivated-WebLink:{uri.ToString()}");
-                sendTasks.Add(SendTaskManager.CreateSendTask(uri.ToString()));
+                sendTasks.Add(_sendTaskManager.CreateSendTask(uri.ToString()));
             }
             return sendTasks;
         }

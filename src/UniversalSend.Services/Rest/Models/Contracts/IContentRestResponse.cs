@@ -1,6 +1,6 @@
 namespace UniversalSend.Services.Rest.Models.Contracts {
 
-    public interface IContentRestResponse : IRestResponse {
+    internal interface IContentRestResponse : IRestResponse {
         object ContentData { get; }
     }
 }

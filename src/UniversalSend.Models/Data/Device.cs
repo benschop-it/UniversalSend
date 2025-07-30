@@ -1,6 +1,8 @@
-﻿namespace UniversalSend.Models.Data {
+﻿using UniversalSend.Models.Interfaces;
 
-    public class Device {
+namespace UniversalSend.Models.Data {
+
+    public class Device : IDevice {
 
         #region Public Properties
 

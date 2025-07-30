@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using UniversalSend.Models;
+using UniversalSend.Models.Interfaces;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,6 +13,7 @@ using Windows.UI.Xaml.Media;
 namespace UniversalSend.Controls.SettingControls {
 
     public sealed partial class NumberSettingControl : UserControl {
+        private readonly ISettings _settings = App.Services.GetRequiredService<ISettings>();
 
         #region Public Constructors
 
@@ -33,7 +36,7 @@ namespace UniversalSend.Controls.SettingControls {
             MainTextBox.BorderBrush = DefaultTextBox.BorderBrush;
 
             if (!string.IsNullOrEmpty(SettingKey) && MainTextBox.Text.All(char.IsDigit)) {
-                Settings.SetSetting(SettingKey, Convert.ToInt32(MainTextBox.Text));
+                _settings.SetSetting(SettingKey, Convert.ToInt32(MainTextBox.Text));
             } else {
                 MainTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
             }
@@ -43,7 +46,7 @@ namespace UniversalSend.Controls.SettingControls {
             if (string.IsNullOrEmpty(SettingKey))
                 return;
 
-            string settingValue = Settings.GetSettingContentAsString(SettingKey);
+            string settingValue = _settings.GetSettingContentAsString(SettingKey);
 
             if (string.IsNullOrEmpty(settingValue)) {
                 MainTextBox.Text = "Unavailable";

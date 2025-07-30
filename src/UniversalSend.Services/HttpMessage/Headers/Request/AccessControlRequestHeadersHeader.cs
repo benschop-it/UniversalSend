@@ -4,7 +4,7 @@ using UniversalSend.Services.HttpMessage.Models.Contracts;
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class AccessControlRequestHeadersHeader : HttpRequestHeaderBase {
+    internal class AccessControlRequestHeadersHeader : HttpRequestHeaderBase {
         internal static string NAME = "Access-Control-Request-Headers";
 
         public IEnumerable<string> Headers { get; }

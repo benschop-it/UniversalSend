@@ -5,7 +5,7 @@ using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Http {
 
-    public class HttpServerConfiguration {
+    internal class HttpServerConfiguration {
         public int ServerPort { get; private set; } = 80;
         internal CorsConfiguration CorsConfiguration { get; private set; }
         internal IEnumerable<RouteRegistration> Routes { get; private set; } = new RouteRegistration[] { };

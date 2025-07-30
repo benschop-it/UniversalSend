@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using UniversalSend.Controls;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using Windows.UI.Xaml;
@@ -16,6 +18,9 @@ namespace UniversalSend.Views {
         #region Private Fields
 
         private int _sendedItemsCount = 0;
+        private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
+        private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
+        private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
 
         #endregion Private Fields
 
@@ -23,14 +28,14 @@ namespace UniversalSend.Views {
 
         public FileSendingPage() {
             InitializeComponent();
-            SendManager.SendStateChanged += SendManager_SendStateChanged;
+            _sendManager.SendStateChanged += SendManager_SendStateChanged;
         }
 
         #endregion Public Constructors
 
         #region Private Properties
 
-        private Device Device { get; set; }
+        private IDevice Device { get; set; }
 
         #endregion Private Properties
 
@@ -38,9 +43,9 @@ namespace UniversalSend.Views {
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
-            Device = (Device)e.Parameter;
+            Device = (IDevice)e.Parameter;
             UpdateUI();
-            MainProgressBar.Maximum = SendTaskManager.SendTasks.Count;
+            MainProgressBar.Maximum = _sendTaskManager.SendTasks.Count;
             await StartTaskAsync();
         }
 
@@ -53,7 +58,7 @@ namespace UniversalSend.Views {
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e) {
-            SendTaskManager.SendTasks.Clear();
+            _sendTaskManager.SendTasks.Clear();
             Frame.GoBack();
         }
 
@@ -65,22 +70,22 @@ namespace UniversalSend.Views {
         }
 
         private async Task StartTaskAsync() {
-            LocalDeviceGrid.Children.Add(new DeviceItemControl(ProgramData.LocalDevice));
+            LocalDeviceGrid.Children.Add(new DeviceItemControl(_deviceManager.GetLocalDevice()));
             ReceiveDeviceGrid.Children.Add(new DeviceItemControl(Device));
-            bool sendSendRequestSuccess = await SendTaskManager.SendSendRequestAsync(Device);
+            bool sendSendRequestSuccess = await _sendTaskManager.SendSendRequestAsync(Device);
             if (sendSendRequestSuccess == false) {
                 PrepareLabel.Text = "The receiver declined the transfer request.";
                 return;
             }
             PrepareControls.Visibility = Visibility.Collapsed;
             SendingControls.Visibility = Visibility.Visible;
-            await SendTaskManager.SendSendTasksAsync(Device);
+            await _sendTaskManager.SendSendTasksAsync(Device);
         }
 
         private void UpdateUI() {
             FileSendingListView.ItemsSource = null;
-            FileSendingListView.ItemsSource = SendTaskManager.SendTasks;
-            if (_sendedItemsCount == SendTaskManager.SendTasks.Count) {
+            FileSendingListView.ItemsSource = _sendTaskManager.SendTasks;
+            if (_sendedItemsCount == _sendTaskManager.SendTasks.Count) {
                 ProgressBarLabel.Text = "Completed";
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;

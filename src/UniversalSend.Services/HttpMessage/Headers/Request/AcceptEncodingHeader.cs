@@ -4,7 +4,7 @@ using UniversalSend.Services.HttpMessage.Models.Contracts;
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class AcceptEncodingHeader : HttpMultiQuantifiedHeaderBase {
+    internal class AcceptEncodingHeader : HttpMultiQuantifiedHeaderBase {
         internal static string NAME = "Accept-Encoding";
 
         public IEnumerable<string> AcceptEncodings { get; }

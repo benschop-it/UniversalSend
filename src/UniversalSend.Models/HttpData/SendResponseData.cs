@@ -1,5 +1,5 @@
 ﻿namespace UniversalSend.Models.HttpData {
 
-    public class SendResponseData {
+    internal class SendResponseData {
     }
 }

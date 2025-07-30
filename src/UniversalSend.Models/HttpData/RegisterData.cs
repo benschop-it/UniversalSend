@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    public sealed class RegisterData {
+    internal sealed class RegisterData : IRegisterData {
 
         #region Public Properties
 
@@ -35,29 +35,5 @@ namespace UniversalSend.Models.HttpData {
         public string Version { get; set; }
 
         #endregion Public Properties
-    }
-
-    public class RegisterDataManager {
-
-        #region Public Methods
-
-        /// <summary>
-        /// Gets RegisterData from a Device instance, commonly used to retrieve local device registration information
-        /// </summary>
-        public static RegisterData GetRegisterDataFromDevice(Device device) {
-            RegisterData registerData = new RegisterData();
-            registerData.Alias = device.Alias;
-            registerData.Version = device.ProtocolVersion;
-            registerData.DeviceModel = device.DeviceModel;
-            registerData.DeviceType = device.DeviceType;
-            registerData.Fingerprint = device.Fingerprint;
-            registerData.Port = device.Port;
-            registerData.Protocol = device.HttpProtocol;
-            registerData.Download = true;
-            registerData.Announce = false;
-            return registerData;
-        }
-
-        #endregion Public Methods
     }
 }

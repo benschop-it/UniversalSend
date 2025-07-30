@@ -5,9 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Models;
-using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
-using UniversalSend.Models.HttpData;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Services.HttpMessage;
@@ -16,12 +15,32 @@ using Windows.Storage.AccessCache;
 
 namespace UniversalSend.Services {
 
-    public class OperationFunctions {
+    internal class OperationFunctions  {
+
+        private IReceiveManager _receiveManager;
+        private IReceiveTaskManager _receiveTaskManager;
+        private IRegister _register;
+        private IDeviceManager _deviceManager;
+        private IHistoryManager _historyManager;
+
+        public OperationFunctions(
+            IReceiveManager receiveManager,
+            IReceiveTaskManager receiveTaskManager,
+            IRegister register,
+            IDeviceManager deviceManager,
+            IHistoryManager historyManager
+        ) {
+            _receiveManager = receiveManager ?? throw new ArgumentNullException(nameof(receiveManager));
+            _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
+            _register = register ?? throw new ArgumentNullException(nameof(register));
+            _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            _historyManager = historyManager ?? throw new ArgumentNullException(nameof(historyManager));
+        }
 
         #region Public Methods
 
         // Handles registration request from remote device
-        public static object RegisterRequestFunc(MutableHttpServerRequest mutableHttpServerRequest) {
+        public object RegisterRequestFunc(MutableHttpServerRequest mutableHttpServerRequest) {
             var headerList = mutableHttpServerRequest.Headers.ToList();
             var item = headerList.Find(x => x.Name.Equals("host"));
             if (item == null) {
@@ -37,28 +56,18 @@ namespace UniversalSend.Services {
 
             Debug.WriteLine($"RegisterRequestFunc: {host} {ip} {portStr} {jsonStr}");
 
-            RegisterRequestData registerRequestData = JsonConvert.DeserializeObject<RegisterRequestData>(jsonStr);
+            IRegisterRequestData registerRequestData = JsonConvert.DeserializeObject<IRegisterRequestData>(jsonStr);
             if (registerRequestData == null) {
                 return null;
             }
 
-            Device device = new Device {
-                Alias = registerRequestData.Alias,
-                HttpProtocol = "http",
-                ProtocolVersion = "v1",
-                DeviceModel = registerRequestData.DeviceModel,
-                DeviceType = registerRequestData.DeviceType,
-                Fingerprint = registerRequestData.Fingerprint,
-                IP = ip,
-                Port = port
-            };
-
-            Register.NewDeviceRegisterV1Event(device);
+            IDevice device = _deviceManager.GetDeviceFromRequestData(registerRequestData, ip, port);
+            _register.NewDeviceRegisterV1Event(device);
             return null;
         }
 
         // Handles incoming file from remote device
-        public static async Task<object> SendRequestFuncAsync(MutableHttpServerRequest mutableHttpServerRequest) {
+        public async Task<object> SendRequestFuncAsync(MutableHttpServerRequest mutableHttpServerRequest) {
             Debug.WriteLine($"SendRequestFuncAsync {mutableHttpServerRequest.Uri.ToString()}");
 
             Dictionary<string, string> queryParameters = StringHelper.GetURLQueryParameters(mutableHttpServerRequest.Uri.ToString());
@@ -66,14 +75,14 @@ namespace UniversalSend.Services {
 
             string fileId, token;
             if (!queryParameters.TryGetValue("fileId", out fileId) || !queryParameters.TryGetValue("token", out token)) {
-                ReceiveManager.SendDataReceivedEvent(null);
+                _receiveManager.SendDataReceivedEvent(null);
                 return null;
             }
 
-            ReceiveTask task = ReceiveTaskManager.WriteFileContentToReceivingTask(fileId, token, mutableHttpServerRequest.Content);
+            IReceiveTask task = _receiveTaskManager.WriteFileContentToReceivingTask(fileId, token, mutableHttpServerRequest.Content);
 
             if (task != null) {
-                ReceiveManager.SendDataReceivedEvent(task);
+                _receiveManager.SendDataReceivedEvent(task);
                 Debug.WriteLine("Writing data to file");
                 var headerList = mutableHttpServerRequest.Headers.ToList();
                 var item = headerList.Find(x => x.Name.Equals("host"));
@@ -85,7 +94,7 @@ namespace UniversalSend.Services {
                 string ip = host.Substring(0, host.LastIndexOf(":"));
                 await WriteFileAsync(task, ip);
             } else {
-                ReceiveManager.SendDataReceivedEvent(null);
+                _receiveManager.SendDataReceivedEvent(null);
             }
 
             return null;
@@ -95,14 +104,15 @@ namespace UniversalSend.Services {
 
         #region Private Methods
 
-        private static async Task WriteFileAsync(ReceiveTask task, string ip) {
-            StorageFile file = await ReceiveTaskManager.WriteReceiveTaskToFileAsync(task);
-            var history = new History(
-                task.File, StorageApplicationPermissions.FutureAccessList.Add(file),
-                DeviceManager.CreateDeviceFromInfoData(task.Sender)
+        private async Task WriteFileAsync(IReceiveTask task, string ip) {
+            IStorageFile file = await _receiveTaskManager.WriteReceiveTaskToFileAsync(task);
+            var history = _historyManager.CreateHistory(
+                task.File,
+                StorageApplicationPermissions.FutureAccessList.Add(file),
+                _deviceManager.CreateDeviceFromInfoData(task.Sender)
             );
 
-            HistoryManager.AddHistoriesList(history);
+            _historyManager.AddHistoriesList(history);
         }
 
         #endregion Private Methods

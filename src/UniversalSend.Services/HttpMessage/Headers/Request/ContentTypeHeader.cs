@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class ContentTypeHeader : HttpSingleQuantifiedHeaderBase {
+    internal class ContentTypeHeader : HttpSingleQuantifiedHeaderBase {
         internal static string NAME = "Content-Type";
         internal static string CHARSET_QUANTIFIER_NAME = "charset";
 

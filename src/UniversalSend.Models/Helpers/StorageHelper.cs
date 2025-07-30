@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Strings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
@@ -10,11 +12,19 @@ using Windows.System;
 
 namespace UniversalSend.Models.Helpers {
 
-    public class StorageHelper {
+    internal class StorageHelper : IStorageHelper {
+
+        private readonly ISystemHelper _systemHelper;
+        private readonly ISettings _settings;
+
+        public StorageHelper(ISystemHelper systemHelper, ISettings settings) {
+            _systemHelper = systemHelper ?? throw new ArgumentNullException(nameof(systemHelper));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
 
         #region Public Methods
 
-        public static async Task<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName) {
+        public async Task<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName) {
             if (!await IsItemExsitAsync(storageFolder, fileName)) {
                 return await storageFolder.CreateFileAsync(fileName);
             } else {
@@ -28,16 +38,16 @@ namespace UniversalSend.Models.Helpers {
             return null;
         }
 
-        public static async Task<StorageFile> CreateFileInAppLocalFolderAsync(string fileName) {
+        public async Task<StorageFile> CreateFileInAppLocalFolderAsync(string fileName) {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             return await CreateFileAsync(folder, fileName);
         }
 
-        public static async Task<StorageFile> CreateFileInDownloadsFolderAsync(string fileName) {
+        public async Task<StorageFile> CreateFileInDownloadsFolderAsync(string fileName) {
             return await DownloadsFolder.CreateFileAsync(fileName);
         }
 
-        public static async Task<StorageFolder> CreateFolderInAppLocalFolderAsync(string folderName) {
+        public async Task<StorageFolder> CreateFolderInAppLocalFolderAsync(string folderName) {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             IStorageItem storageItem = await folder.GetItemAsync(folderName);
             if (storageItem == null || storageItem is StorageFile) {
@@ -47,13 +57,13 @@ namespace UniversalSend.Models.Helpers {
             }
         }
 
-        public static async Task<StorageFile> CreateTempFile(string fileName) {
+        public async Task<StorageFile> CreateTempFile(string fileName) {
             StorageFolder folder = await CreateFolderInAppLocalFolderAsync("Temp");
             return await CreateFileAsync(folder, fileName);
         }
 
         //public static StorageFolder DefaultSaveFolder = DownloadsFolder.
-        public static async Task<List<StorageFile>> GetFilesInFolder(StorageFolder folder) {
+        public async Task<List<StorageFile>> GetFilesInFolder(StorageFolder folder) {
             var items = await folder.GetItemsAsync();
             List<StorageFile> files = new List<StorageFile>();
             foreach (var item in items) {
@@ -66,11 +76,11 @@ namespace UniversalSend.Models.Helpers {
             return files;
         }
 
-        public static async Task<StorageFolder> GetReceiveStorageFolderAsync() {
-            if (SystemHelper.GetDeviceFormFactorType() == SystemHelper.DeviceFormFactorType.Xbox) {
+        public async Task<StorageFolder> GetReceiveStorageFolderAsync() {
+            if (_systemHelper.GetDeviceFormFactorType() == DeviceFormFactorType.Xbox) {
                 return ApplicationData.Current.LocalFolder;
             } else {
-                string folderToken = Settings.GetSettingContentAsString(Settings.Receive_SaveToFolder);
+                string folderToken = _settings.GetSettingContentAsString(Constants.Receive_SaveToFolder);
                 if (!String.IsNullOrEmpty(folderToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(folderToken)) {
                     try {
                         StorageFolder storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(folderToken);
@@ -84,18 +94,18 @@ namespace UniversalSend.Models.Helpers {
             }
         }
 
-        public static async Task<bool> IsItemExsitAsync(StorageFolder parentFolder, string itemName) {
+        public async Task<bool> IsItemExsitAsync(StorageFolder parentFolder, string itemName) {
             IStorageItem storageItem = await parentFolder.TryGetItemAsync(itemName);
             return storageItem == null ? false : true;
         }
 
-        public static async void LaunchAppLocalFolder() {
+        public async void LaunchAppLocalFolder() {
             var t = new FolderLauncherOptions();
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             await Launcher.LaunchFolderAsync(folder, t);
         }
 
-        public static async Task<byte[]> ReadBytesFromFileAsync(StorageFile file) {
+        public async Task<byte[]> ReadBytesFromFileAsync(IStorageFile file) {
             if (file != null) {
                 IBuffer buffer = await FileIO.ReadBufferAsync(file);
                 byte[] bytes = buffer.ToArray();
@@ -104,13 +114,13 @@ namespace UniversalSend.Models.Helpers {
             return null;
         }
 
-        public static async Task WriteBytesToFileAsync(StorageFile file, byte[] data) {
+        public async Task WriteBytesToFileAsync(IStorageFile file, byte[] data) {
             if (file != null && data != null) {
                 await FileIO.WriteBytesAsync(file, data);
             }
         }
 
-        public static async Task WriteTestFileAsync(byte[] content) {
+        public async Task WriteTestFileAsync(byte[] content) {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile storageFile = await storageFolder.GetFileAsync("test");
             await WriteBytesToFileAsync(storageFile, content);

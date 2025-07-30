@@ -6,6 +6,6 @@ namespace UniversalSend.Services.Attributes {
     /// This class is only used as a marker
     /// </summary>
     [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
-    public sealed class FromContentAttribute : Attribute {
+    internal sealed class FromContentAttribute : Attribute {
     }
 }

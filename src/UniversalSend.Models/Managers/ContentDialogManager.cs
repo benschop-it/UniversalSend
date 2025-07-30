@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using UniversalSend.Models.Interfaces;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Models.Managers {
 
-    public class ContentDialogManager {
+    internal class ContentDialogManager : IContentDialogManager {
 
         #region Private Properties
 

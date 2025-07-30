@@ -1,12 +1,13 @@
 ﻿using System;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
-    public class TokenFactory {
+    internal class TokenFactory : ITokenFactory {
 
         #region Public Methods
 
-        public static string CreateToken() {
+        public string CreateToken() {
             Guid guid = Guid.NewGuid();
             return guid.ToString();
         }

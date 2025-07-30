@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class ContentLengthHeader : HttpRequestHeaderBase {
+    internal class ContentLengthHeader : HttpRequestHeaderBase {
         internal static string NAME = "Content-Length";
 
         public int Length { get; }

@@ -1,12 +1,35 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Services.Controllers;
 using UniversalSend.Services.Http;
+using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.Rest;
 
 namespace UniversalSend.Services {
 
-    public class ServiceHttpServer {
+    internal class ServiceHttpServer : IServiceHttpServer {
+
+        private readonly IRegisterResponseDataManager _registerResponseDataManager;
+        private readonly IDeviceManager _deviceManager;
+        private readonly IRegister _register;
+        private readonly ISettings _settings;
+        private OperationFunctions _operationFunctions;
+
+        public ServiceHttpServer(
+            IRegisterResponseDataManager registerResponseDataManager,
+            IDeviceManager deviceManager,
+            IRegister register,
+            ISettings settings,
+            OperationFunctions operationFunctions
+        ) {
+            _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
+            _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            _register = register ?? throw new ArgumentNullException(nameof(register));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _operationFunctions = operationFunctions ?? throw new ArgumentNullException(nameof(operationFunctions));    
+        }
 
         #region Private Fields
 
@@ -17,16 +40,16 @@ namespace UniversalSend.Services {
 
         #region Public Properties
 
-        public HttpServer HttpServer { get; set; }
+        internal HttpServer HttpServer { get; set; }
 
-        public HttpServerConfiguration HttpServerConfiguration { get; set; }
+        internal HttpServerConfiguration HttpServerConfiguration { get; set; }
 
         #endregion Public Properties
 
         #region Public Methods
 
         public async Task<bool> StartHttpServerAsync(int port) {
-            _udpDiscovery = new UdpDiscoveryService();
+            _udpDiscovery = new UdpDiscoveryService(_registerResponseDataManager, _deviceManager, _register, _settings);
             await _udpDiscovery.StartUdpListenerAsync();
 
             RestRouteHandler restRouteHandler = new RestRouteHandler();
@@ -45,14 +68,14 @@ namespace UniversalSend.Services {
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/send?fileId={}&token={}")) {
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/send?fileId={}&token={}",
-                    OperationFunctions.SendRequestFuncAsync
+                    _operationFunctions.SendRequestFuncAsync
                 );
             }
 
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/register")) {
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/register",
-                    OperationFunctions.RegisterRequestFunc
+                    _operationFunctions.RegisterRequestFunc
                 );
             }
 

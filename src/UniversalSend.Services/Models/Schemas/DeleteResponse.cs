@@ -4,7 +4,7 @@ using UniversalSend.Services.Rest.Models.Contracts;
 
 namespace UniversalSend.Services.Models.Schemas {
 
-    public class DeleteResponse : RestResponse, IDeleteResponse {
+    internal class DeleteResponse : RestResponse, IDeleteResponse {
 
         public enum ResponseStatus {
             OK = 200,

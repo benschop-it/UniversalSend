@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using UniversalSend.Models;
+using UniversalSend.Misc;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
+using UniversalSend.Strings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -17,11 +20,15 @@ namespace UniversalSend.Views {
 
     public sealed partial class HistoryPage : Page {
 
+        private IHistoryManager _historyManager => App.Services.GetRequiredService<IHistoryManager>();
+        private IStorageHelper _storageHelper => App.Services.GetRequiredService<IStorageHelper>();
+        private ISettings _settings => App.Services.GetRequiredService<ISettings>();
+
         #region Public Constructors
 
         public HistoryPage() {
             this.InitializeComponent();
-            UseInternalExplorer = Convert.ToBoolean(Settings.GetSettingContentAsString(Settings.Lab_UseInternalExplorer));
+            UseInternalExplorer = Convert.ToBoolean(_settings.GetSettingContentAsString(Constants.Lab_UseInternalExplorer));
             initAsync();
         }
 
@@ -29,7 +36,7 @@ namespace UniversalSend.Views {
 
         #region Private Properties
 
-        private History RightTabedHistoryItem { get; set; }
+        private IHistory RightTabedHistoryItem { get; set; }
 
         private bool UseInternalExplorer { get; set; }
 
@@ -38,8 +45,8 @@ namespace UniversalSend.Views {
         #region Private Methods
 
         private void ClearHistoryButton_Click(object sender, RoutedEventArgs e) {
-            HistoryManager.HistoriesList.Clear();
-            HistoryManager.SaveHistoriesList();
+            _historyManager.HistoriesList.Clear();
+            _historyManager.SaveHistoriesList();
             UpdateUI();
         }
 
@@ -49,7 +56,7 @@ namespace UniversalSend.Views {
 
         private async Task initAsync() {
             try {
-                StorageFolder storageFolder = await StorageHelper.GetReceiveStorageFolderAsync();
+                StorageFolder storageFolder = await _storageHelper.GetReceiveStorageFolderAsync();
                 if (storageFolder == null)
                     LaunchFolderButton.IsEnabled = false;
             } catch {
@@ -58,7 +65,7 @@ namespace UniversalSend.Views {
             UpdateUI();
         }
 
-        private async Task LaunchFileAsync(History history) {
+        private async Task LaunchFileAsync(IHistory history) {
             if (StorageApplicationPermissions.FutureAccessList.ContainsItem(history.FutureAccessListToken)) {
                 try {
                     StorageFile storageFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(history.FutureAccessListToken);
@@ -74,7 +81,7 @@ namespace UniversalSend.Views {
                 Frame.Navigate(typeof(ExplorerPage), null, new DrillInNavigationTransitionInfo());
             } else {
                 var t = new FolderLauncherOptions();
-                StorageFolder folder = await StorageHelper.GetReceiveStorageFolderAsync();
+                StorageFolder folder = await _storageHelper.GetReceiveStorageFolderAsync();
                 await Launcher.LaunchFolderAsync(folder, t);
             }
         }
@@ -87,7 +94,7 @@ namespace UniversalSend.Views {
         }
 
         private async void MainListView_ItemClick(object sender, ItemClickEventArgs e) {
-            History history = e.ClickedItem as History;
+            IHistory history = e.ClickedItem as IHistory;
             if (history == null)
                 return;
             if (String.IsNullOrEmpty(history.FutureAccessListToken)) {
@@ -98,7 +105,7 @@ namespace UniversalSend.Views {
         }
 
         private void MainListView_RightTapped(object sender, RightTappedRoutedEventArgs e) {
-            RightTabedHistoryItem = (e.OriginalSource as FrameworkElement).DataContext as History;
+            RightTabedHistoryItem = (e.OriginalSource as FrameworkElement).DataContext as IHistory;
             if (String.IsNullOrEmpty(RightTabedHistoryItem.FutureAccessListToken)) {
                 MenuFlyout_OpenFile.Visibility = Visibility.Collapsed;
                 MenuFlyout_OpenFilePath.Visibility = Visibility.Collapsed;
@@ -109,8 +116,8 @@ namespace UniversalSend.Views {
         }
 
         private void MenuFlyout_Delete_Click(object sender, RoutedEventArgs e) {
-            HistoryManager.HistoriesList.Remove(RightTabedHistoryItem);
-            HistoryManager.SaveHistoriesList();
+            _historyManager.HistoriesList.Remove(RightTabedHistoryItem);
+            _historyManager.SaveHistoriesList();
             UpdateUI();
         }
 
@@ -141,7 +148,7 @@ namespace UniversalSend.Views {
 
         private void UpdateUI() {
             MainListView.ItemsSource = null;
-            List<History> list = HistoryManager.HistoriesList.ToList();
+            List<IHistory> list = _historyManager.HistoriesList.ToList();
             list.Reverse();
             MainListView.ItemsSource = list;
         }

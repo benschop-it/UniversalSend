@@ -9,7 +9,7 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
     /// <remarks>
     /// All methods in this class are thread safe
     /// </remarks>
-    public class HttpRequestHandleHeaderData : IHttpRequestHeaderVisitor<MutableHttpServerRequest> {
+    internal class HttpRequestHandleHeaderData : IHttpRequestHeaderVisitor<MutableHttpServerRequest> {
         internal static HttpRequestHandleHeaderData Default { get; }
 
         static HttpRequestHandleHeaderData() {

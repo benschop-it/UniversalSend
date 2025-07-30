@@ -1,6 +1,6 @@
 namespace UniversalSend.Services.Http {
 
-    public interface ICorsConfiguration {
+    internal interface ICorsConfiguration {
 
         ICorsConfiguration AddAllowedOrigin(string allowedOrigin);
     }

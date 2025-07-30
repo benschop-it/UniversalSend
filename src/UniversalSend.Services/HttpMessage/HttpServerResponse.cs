@@ -9,7 +9,7 @@ using UniversalSend.Services.HttpMessage.ServerResponseParsers;
 
 namespace UniversalSend.Services.HttpMessage {
 
-    public class HttpServerResponse {
+    internal class HttpServerResponse {
         private readonly List<IHttpHeader> _headers;
 
         internal IEnumerable<IHttpHeader> Headers => _headers;

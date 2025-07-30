@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Headers {
 
-    public abstract class HttpRequestHeaderBase : HttpHeaderBase, IHttpRequestHeader {
+    internal abstract class HttpRequestHeaderBase : HttpHeaderBase, IHttpRequestHeader {
 
         protected HttpRequestHeaderBase(string name, string value) : base(name, value) {
         }

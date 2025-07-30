@@ -1,4 +1,6 @@
-﻿using UniversalSend.Models.Data;
+﻿using Microsoft.Extensions.DependencyInjection;
+using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,7 +22,7 @@ namespace UniversalSend.Views {
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
-            UniversalSendFile file = (UniversalSendFile)e.Parameter;
+            IUniversalSendFile file = (IUniversalSendFile)e.Parameter;
             SenderNameTextBlock.Text = "";
             ContentTextBox.Text = file.Text;
         }

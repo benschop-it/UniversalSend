@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public abstract class HttpSingleQuantifiedHeaderBase : HttpRequestHeaderBase {
+    internal abstract class HttpSingleQuantifiedHeaderBase : HttpRequestHeaderBase {
         public QuantifiedHeaderValue QuantifiedHeaderValue { get; }
 
         protected HttpSingleQuantifiedHeaderBase(string name, string value, QuantifiedHeaderValue quantifiedHeaderValue)

@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Services.HttpMessage.Headers.Response {
 
-    public class ContentLengthHeader : HttpHeaderBase {
+    internal class ContentLengthHeader : HttpHeaderBase {
         internal static string NAME = "Content-Length";
 
         public int Length { get; }

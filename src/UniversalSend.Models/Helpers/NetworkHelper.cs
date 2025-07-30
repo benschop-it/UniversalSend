@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using UniversalSend.Models.Interfaces;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
 
 namespace UniversalSend.Models.Helpers {
 
-    public class NetworkHelper {
+    internal class NetworkHelper : INetworkHelper {
 
         #region Public Methods
 
-        public static List<string> GetIPAddrList() {
+        public List<string> GetIPAddrList() {
             var hosts = NetworkInformation.GetHostNames();
             List<string> AddrList = new List<string>();
             foreach (var item in hosts) {
@@ -19,7 +20,7 @@ namespace UniversalSend.Models.Helpers {
             return AddrList;
         }
 
-        public static List<string> GetIPv4AddrList() {
+        public List<string> GetIPv4AddrList() {
             var hosts = NetworkInformation.GetHostNames();
             List<string> AddrList = new List<string>();
             foreach (var item in hosts) {
@@ -34,7 +35,7 @@ namespace UniversalSend.Models.Helpers {
 
         #region Private Methods
 
-        private static bool IsHostIpaddr(HostName hostName) {
+        private bool IsHostIpaddr(HostName hostName) {
             bool isIpaddr = (hostName.Type == HostNameType.Ipv4) || (hostName.Type == HostNameType.Ipv6);
             if (isIpaddr == false) {
                 return false;

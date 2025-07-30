@@ -5,7 +5,7 @@ using UniversalSend.Services.HttpMessage.Models.Schemas;
 
 namespace UniversalSend.Services.HttpMessage {
 
-    public interface IHttpServerRequest {
+    internal interface IHttpServerRequest {
         IEnumerable<IHttpRequestHeader> Headers { get; }
         HttpMethod? Method { get; }
         Uri Uri { get; }

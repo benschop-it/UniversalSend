@@ -4,7 +4,7 @@ using UniversalSend.Services.HttpMessage.Plumbing;
 
 namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
 
-    public class StartLineParser : IHttpResponsePartParser {
+    internal class StartLineParser : IHttpResponsePartParser {
 
         public byte[] ParseToBytes(HttpServerResponse response) {
             return Constants.DefaultHttpEncoding.GetBytes(ParseToString(response));

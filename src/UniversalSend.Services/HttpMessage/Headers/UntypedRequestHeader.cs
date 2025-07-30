@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Headers {
 
-    public class UntypedRequestHeader : HttpRequestHeaderBase {
+    internal class UntypedRequestHeader : HttpRequestHeaderBase {
 
         public UntypedRequestHeader(string name, string value) : base(name, value) {
         }

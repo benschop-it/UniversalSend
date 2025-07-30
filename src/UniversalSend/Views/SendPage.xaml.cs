@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ContentDialogControls;
 using UniversalSend.Controls.SendPage;
-using UniversalSend.Models;
+using UniversalSend.Interfaces;
+using UniversalSend.Misc;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using Windows.Storage;
@@ -27,16 +30,25 @@ namespace UniversalSend.Views {
 
         private bool ShareActivated = false;
 
+        private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
+        private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
+        private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
+        private IContentDialogManager _contentDialogManager => App.Services.GetRequiredService<IContentDialogManager>();
+        private IFavoriteManager _favoriteManager => App.Services.GetRequiredService<IFavoriteManager>();
+        private IStorageHelper _storageHelper => App.Services.GetRequiredService<IStorageHelper>();
+        private IRegister _register => App.Services.GetRequiredService<IRegister>();
+        private IUIManager _uiManager => App.Services.GetRequiredService<IUIManager>();
+
         #endregion Private Fields
 
         #region Public Constructors
 
         public SendPage() {
             this.InitializeComponent();
-            Register.NewDeviceRegister += Register_NewDeviceRegister;
-            DeviceManager.KnownDevicesChanged += DeviceManager_KnownDevicesChanged;
-            SendManager.SendCreated += SendManager_SendCreated;
-            RootGrid.Margin = UIManager.RootElementMargin;
+            _register.NewDeviceRegister += Register_NewDeviceRegister;
+            _deviceManager.KnownDevicesChanged += DeviceManager_KnownDevicesChanged;
+            _sendManager.SendCreated += SendManager_SendCreated;
+            RootGrid.Margin = _uiManager.RootElementMargin;
             SearchFavoriteDevicesAsync();
         }
 
@@ -61,7 +73,7 @@ namespace UniversalSend.Views {
             if (e.Parameter is string) {
                 if (e.Parameter.ToString() == "ShareActivated") {
                     ShareActivated = true;
-                    SendManager.SendPrepared += SendManager_SendPrepared;
+                    _sendManager.SendPrepared += SendManager_SendPrepared;
                 }
             }
         }
@@ -70,13 +82,13 @@ namespace UniversalSend.Views {
 
         #region Private Methods
 
-        private void AddItemToSendQueue(SendTask task) {
-            SendTaskManager.SendTasks.Add(task);
+        private void AddItemToSendQueue(ISendTask task) {
+            _sendTaskManager.SendTasks.Add(task);
             UpdateView();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            SendTaskManager.SendTasks.Clear();
+            _sendTaskManager.SendTasks.Clear();
             SendQueueStackPanel.Visibility = Visibility.Collapsed;
             SelectSendItemButtons.Visibility = Visibility.Visible;
         }
@@ -86,12 +98,12 @@ namespace UniversalSend.Views {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 Task.Delay(1000);
                 KnownDeviceListView.ItemsSource = null;
-                KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+                KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             });
         }
 
         private async void FavoriteButton_Click(object sender, RoutedEventArgs e) {
-            await ProgramData.ContentDialogManager.ShowContentDialogAsync(new FavoritesControl());
+            await _contentDialogManager.ShowContentDialogAsync(new FavoritesControl());
         }
 
         private async void FileButton_Click(object sender, RoutedEventArgs e) {
@@ -136,17 +148,17 @@ namespace UniversalSend.Views {
         }
 
         private async void KnownDeviceItemFavoriteButton_Click(object sender, RoutedEventArgs e) {
-            Device device = ((Button)sender).DataContext as Device;
-            await ProgramData.ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(device));
+            IDevice device = ((Button)sender).DataContext as IDevice;
+            await _contentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(device));
         }
 
         private async void KnownDeviceListView_ItemClick(object sender, ItemClickEventArgs e) {
-            if (SendTaskManager.SendTasks.Count == 0) {
+            if (_sendTaskManager.SendTasks.Count == 0) {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
-            Device device = (Device)e.ClickedItem;
-            SendManager.SendPreparedEvent(device);
+            IDevice device = (IDevice)e.ClickedItem;
+            _sendManager.SendPreparedEvent(device);
         }
 
         private async Task ManualSendAsync() {
@@ -155,10 +167,10 @@ namespace UniversalSend.Views {
                 manualSendControl.ConfirmButton.IsEnabled = false;
                 if (manualSendControl.Mode == 1) {
                     if (StringHelper.IsIpaddr(manualSendControl.IPAddressTextBox.Text)) {
-                        Device device = await DeviceManager.FindDeviceByIPAsync(manualSendControl.IPAddressTextBox.Text);
+                        IDevice device = await _deviceManager.FindDeviceByIPAsync(manualSendControl.IPAddressTextBox.Text);
                         if (device != null) {
-                            SendManager.SendPreparedEvent(device);
-                            ProgramData.ContentDialogManager.HideContentDialog();
+                            _sendManager.SendPreparedEvent(device);
+                            _contentDialogManager.HideContentDialog();
                         }
                         manualSendControl.ErrorMessageTextBlock.Text = $"Error: failed to get host info for {manualSendControl.IPAddressTextBox.Text}:53317";
                     }
@@ -168,11 +180,11 @@ namespace UniversalSend.Views {
                     manualSendControl.LoadingProgressBar.Visibility = Visibility.Visible;
                     if (manualSendControl.HashTagTextBox.Text.All(char.IsDigit)) {
                         int hashTag = Convert.ToInt32(manualSendControl.HashTagTextBox.Text);
-                        Device device = await DeviceManager.FindDeviceByHashTagAsync(manualSendControl.HashTagTextBox.Text);
+                        IDevice device = await _deviceManager.FindDeviceByHashTagAsync(manualSendControl.HashTagTextBox.Text);
                         manualSendControl.LoadingProgressBar.Visibility = Visibility.Collapsed;
                         if (device != null) {
-                            SendManager.SendPreparedEvent(device);
-                            ProgramData.ContentDialogManager.HideContentDialog();
+                            _sendManager.SendPreparedEvent(device);
+                            _contentDialogManager.HideContentDialog();
                         }
                         manualSendControl.ErrorMessageTextBlock.Text = $"Error: no host found for this hashtag";
                     }
@@ -182,13 +194,13 @@ namespace UniversalSend.Views {
             };
 
             manualSendControl.CancelButton.Click += (sender, e) => {
-                ProgramData.ContentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialog();
             };
-            await ProgramData.ContentDialogManager.ShowContentDialogAsync(manualSendControl);
+            await _contentDialogManager.ShowContentDialogAsync(manualSendControl);
         }
 
         private async void ManualSendButton_Click(object sender, RoutedEventArgs e) {
-            if (SendTaskManager.SendTasks.Count == 0) {
+            if (_sendTaskManager.SendTasks.Count == 0) {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
@@ -208,7 +220,7 @@ namespace UniversalSend.Views {
                 List<StorageFile> files = filesReadonlyList.ToList();
                 foreach (var file in files) {
                     if (file != null) {
-                        AddItemToSendQueue(await SendTaskManager.CreateSendTask(file));
+                        AddItemToSendQueue(await _sendTaskManager.CreateSendTask(file));
                     }
                 }
             }
@@ -225,9 +237,9 @@ namespace UniversalSend.Views {
 
             StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null) {
-                List<StorageFile> files = await StorageHelper.GetFilesInFolder(folder);
+                List<StorageFile> files = await _storageHelper.GetFilesInFolder(folder);
                 foreach (StorageFile file in files) {
-                    AddItemToSendQueue(await SendTaskManager.CreateSendTask(file));
+                    AddItemToSendQueue(await _sendTaskManager.CreateSendTask(file));
                 }
             }
             ProcessProgressBar.Visibility = Visibility.Collapsed;
@@ -235,7 +247,7 @@ namespace UniversalSend.Views {
 
         private void Page_Loaded(object sender, RoutedEventArgs e) {
             KnownDeviceListView.ItemsSource = null;
-            KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+            KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             if (!Inited) {
                 InitButton();
             }
@@ -249,19 +261,19 @@ namespace UniversalSend.Views {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 Task.Delay(1000);
                 KnownDeviceListView.ItemsSource = null;
-                KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+                KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             });
         }
 
         private async Task SearchDevicesAsync() {
-            DeviceManager.KnownDevices.Clear();
+            _deviceManager.KnownDevices.Clear();
 
             await SearchFavoriteDevicesAsync();
             SearchDevicesButtonIcon.Visibility = Visibility.Collapsed;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Visible;
 
             KnownDeviceListView.ItemsSource = null;
-            KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+            KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             SearchDevicesButtonIcon.Visibility = Visibility.Visible;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Collapsed;
         }
@@ -271,19 +283,19 @@ namespace UniversalSend.Views {
         }
 
         private async Task SearchFavoriteDevicesAsync() {
-            DeviceManager.KnownDevices.Clear();
+            _deviceManager.KnownDevices.Clear();
             SearchDevicesButtonIcon.Visibility = Visibility.Collapsed;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Visible;
 
             List<string> ipList = new List<string>();
-            foreach (var favorite in FavoriteManager.Favorites) {
+            foreach (var favorite in _favoriteManager.Favorites) {
                 ipList.Add(favorite.IPAddr);
             }
 
-            await DeviceManager.SearchKnownDevicesAsync(ipList); // Priority search for favorites
+            await _deviceManager.SearchKnownDevicesAsync(ipList); // Priority search for favorites
             SearchDevicesButtonIcon.Visibility = Visibility.Visible;
             SearchDevicesButtonProgressRing.Visibility = Visibility.Collapsed;
-            KnownDeviceListView.ItemsSource = DeviceManager.KnownDevices;
+            KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
         }
 
         private async void SendManager_SendCreated(object sender, EventArgs e) {
@@ -302,28 +314,28 @@ namespace UniversalSend.Views {
         private async Task TypeTextAsync() {
             CreateTextSendTaskControl control = new CreateTextSendTaskControl();
             control.CancelButton.Click += (sender, e) => {
-                ProgramData.ContentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialog();
             };
             control.ConfirmButton.Click += (sender, e) => {
                 if (!string.IsNullOrEmpty(control.MainTextBox.Text)) {
-                    AddItemToSendQueue(SendTaskManager.CreateSendTask(control.MainTextBox.Text));
+                    AddItemToSendQueue(_sendTaskManager.CreateSendTask(control.MainTextBox.Text));
                 }
-                ProgramData.ContentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialog();
             };
-            await ProgramData.ContentDialogManager.ShowContentDialogAsync(control);
+            await _contentDialogManager.ShowContentDialogAsync(control);
         }
 
         private void UpdateView() {
-            if (SendTaskManager.SendTasks.Count != 0) {
+            if (_sendTaskManager.SendTasks.Count != 0) {
                 SelectSendItemButtons.Visibility = Visibility.Collapsed;
                 SendQueueStackPanel.Visibility = Visibility.Visible;
                 long totalSize = 0;
                 SendQueueItemsStackpanel.Children.Clear();
-                foreach (var item in SendTaskManager.SendTasks) {
+                foreach (var item in _sendTaskManager.SendTasks) {
                     SendQueueItemsStackpanel.Children.Add(new Border { Background = new SolidColorBrush { Color = Colors.DarkGray }, Height = 45, Width = 45, Margin = new Thickness(2) });
                     totalSize += item.File.Size;
                 }
-                FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{SendTaskManager.SendTasks.Count}";
+                FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{_sendTaskManager.SendTasks.Count}";
                 FileSizeTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileSize")}{StringHelper.GetByteUnit(totalSize)}";
             } else {
                 SelectSendItemButtons.Visibility = Visibility.Visible;

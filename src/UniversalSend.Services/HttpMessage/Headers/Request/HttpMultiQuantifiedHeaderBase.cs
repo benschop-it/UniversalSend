@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public abstract class HttpMultiQuantifiedHeaderBase : HttpRequestHeaderBase {
+    internal abstract class HttpMultiQuantifiedHeaderBase : HttpRequestHeaderBase {
         public IEnumerable<QuantifiedHeaderValue> QuantifiedHeaderValues { get; }
 
         protected HttpMultiQuantifiedHeaderBase(

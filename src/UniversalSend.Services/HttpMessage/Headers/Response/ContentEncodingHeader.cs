@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Services.HttpMessage.Headers.Response {
 
-    public class ContentEncodingHeader : HttpHeaderBase {
+    internal class ContentEncodingHeader : HttpHeaderBase {
         internal static string NAME = "Content-Encoding";
 
         public string Encoding { get; }

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
-using UniversalSend.Models;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Strings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
@@ -10,6 +12,9 @@ using Windows.UI.Xaml.Controls;
 namespace UniversalSend.Controls.SettingControls {
 
     public sealed partial class SaveLocationSettingControl : UserControl {
+
+        private IStorageHelper _storageHelper => App.Services.GetRequiredService<IStorageHelper>();
+        private ISettings _settings => App.Services.GetRequiredService<ISettings>();
 
         #region Public Constructors
 
@@ -23,7 +28,7 @@ namespace UniversalSend.Controls.SettingControls {
         #region Private Methods
 
         private async Task InitAsync() {
-            StorageFolder folder = await StorageHelper.GetReceiveStorageFolderAsync();
+            StorageFolder folder = await _storageHelper.GetReceiveStorageFolderAsync();
             if (folder != null) {
                 PathTextBlock.Text = "Path: " + folder.Path;
             } else {
@@ -44,7 +49,7 @@ namespace UniversalSend.Controls.SettingControls {
             StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null) {
                 string folderToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
-                Settings.SetSetting(Settings.Receive_SaveToFolder, folderToken);
+                _settings.SetSetting(Constants.Receive_SaveToFolder, folderToken);
                 PathTextBlock.Text = "Path: " + folder.Path;
             }
         }

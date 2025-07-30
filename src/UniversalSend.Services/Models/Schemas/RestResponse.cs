@@ -3,7 +3,7 @@ using UniversalSend.Services.Rest.Models.Contracts;
 
 namespace UniversalSend.Services.Models.Schemas {
 
-    public class RestResponse : IRestResponse {
+    internal class RestResponse : IRestResponse {
         public int StatusCode { get; }
         public IReadOnlyDictionary<string, string> Headers { get; }
 

@@ -4,7 +4,7 @@ using UniversalSend.Models.Managers;
 
 namespace UniversalSend.Models {
 
-    public class ProgramData {
+    internal class ProgramData {
 
         #region Public Properties
 

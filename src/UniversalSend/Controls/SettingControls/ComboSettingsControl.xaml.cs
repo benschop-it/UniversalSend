@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using UniversalSend.Models;
+using UniversalSend.Models.Interfaces;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Controls.SettingControls {
 
     public sealed partial class ComboSettingsControl : UserControl {
+        private readonly ISettings _settings = App.Services.GetRequiredService<ISettings>();
 
         #region Public Constructors
 
@@ -33,7 +36,7 @@ namespace UniversalSend.Controls.SettingControls {
         #region Private Methods
 
         private void MainComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            Settings.SetSetting(Key, Enum.GetName(EnumType, ((SelectionItem)MainComboBox.SelectedItem).ConstNumber));
+            _settings.SetSetting(Key, Enum.GetName(EnumType, ((SelectionItem)MainComboBox.SelectedItem).ConstNumber));
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e) {
@@ -52,7 +55,7 @@ namespace UniversalSend.Controls.SettingControls {
 
             MainComboBox.ItemsSource = items;
 
-            string setting = Settings.GetSettingContentAsString(Key);
+            string setting = _settings.GetSettingContentAsString(Key);
             if (!string.IsNullOrEmpty(setting)) {
                 MainComboBox.SelectedIndex = items.FindIndex(x => x.Name == setting);
             } else {

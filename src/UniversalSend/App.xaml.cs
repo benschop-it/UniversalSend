@@ -1,8 +1,12 @@
-﻿using System;
-using UniversalSend.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using UniversalSend.Models.Common;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Managers;
 using UniversalSend.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Services.Maps;
 using Windows.Storage.Pickers.Provider;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -19,6 +23,7 @@ namespace UniversalSend {
         #region Private Fields
 
         private Frame _rootFrame;
+        public static IServiceProvider Services { get; private set; }
 
         #endregion Private Fields
 
@@ -32,6 +37,7 @@ namespace UniversalSend {
             InitializeComponent();
             Suspending += OnSuspending;
             LogManager.SetLogFactory(new DebugLogFactory());
+            ConfigureServices();
         }
 
         #endregion Public Constructors
@@ -118,6 +124,16 @@ namespace UniversalSend {
         #endregion Protected Methods
 
         #region Private Methods
+
+        private void ConfigureServices() {
+            var services = new ServiceCollection();
+
+            // Register your services
+            services.AddSingleton<IFavoriteManager, FavoriteManager>();
+            //services.AddSingleton<IHistoryService, HistoryService>();
+
+            Services = services.BuildServiceProvider();
+        }
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e) {
             if (_rootFrame != null && _rootFrame.CanGoBack && _rootFrame.Content is HistoryPage || _rootFrame.Content is ExplorerPage) {

@@ -1,21 +1,11 @@
-﻿using Windows.System.Profile;
+﻿using UniversalSend.Models.Interfaces;
+using Windows.System.Profile;
 
 namespace UniversalSend.Models.Helpers {
 
-    public class SystemHelper {
+    internal class SystemHelper : ISystemHelper {
 
-        public enum DeviceFormFactorType {
-            Phone,
-            Desktop,
-            Tablet,
-            IoT,
-            SurfaceHub,
-            Xbox,
-            Holographic,
-            Other
-        }
-
-        public static DeviceFormFactorType GetDeviceFormFactorType() {
+        public DeviceFormFactorType GetDeviceFormFactorType() {
             switch (AnalyticsInfo.VersionInfo.DeviceFamily) {
                 case "Windows.Mobile":
                     return DeviceFormFactorType.Phone;

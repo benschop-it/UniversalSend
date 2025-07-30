@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Services;
 using Windows.Storage;
@@ -13,9 +13,24 @@ namespace UniversalSend.Views {
 
     public sealed partial class DevPage : Page {
 
+        private IStorageHelper _storageHelper;
+        private ISendTaskManager _sendTaskManager;
+        private IDeviceManager _deviceManager;
+        private IServiceHttpServer _serviceHttpServer;
+
         #region Public Constructors
 
-        public DevPage() {
+        public DevPage(
+            IStorageHelper storageHelper, 
+            ISendTaskManager sendTaskManager, 
+            IDeviceManager deviceManager,
+            IServiceHttpServer serviceHttpServer
+        ) {
+            _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
+            _sendTaskManager = sendTaskManager ?? throw new ArgumentNullException(nameof(sendTaskManager));
+            _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            _serviceHttpServer = serviceHttpServer ?? throw new ArgumentNullException(nameof(serviceHttpServer));
+
             InitializeComponent();
         }
 
@@ -28,7 +43,7 @@ namespace UniversalSend.Views {
         }
 
         private void OpenAppLocalFolderButton_Click(object sender, RoutedEventArgs e) {
-            StorageHelper.LaunchAppLocalFolder();
+            _storageHelper.LaunchAppLocalFolder();
         }
 
         private void OpenDownloadFolderButton_Click(object sender, RoutedEventArgs e) {
@@ -36,19 +51,19 @@ namespace UniversalSend.Views {
         }
 
         private async Task SendSendRequestAsync() {
-            List<StorageFile> files = new List<StorageFile>();
+            List<IStorageFile> files = new List<IStorageFile>();
             files.Add(await ApplicationData.Current.LocalFolder.GetFileAsync("test.txt"));
-            await SendTaskManager.CreateSendTasks(files);
+            await _sendTaskManager.CreateSendTasks(files);
 
             // TODO: Replace with actual known device list
-            Device device = new Device {
-                Alias = "RM-1116_15169 (UWP)",
-                IP = "192.168.0.193",
-                Port = 53317,
-            };
+            IDevice device = _deviceManager.CreateDevice(
+                "RM-1116_15169 (UWP)",
+                "192.168.0.193",
+                53317
+            );
 
-            await SendTaskManager.SendSendRequestAsync(device);
-            await SendTaskManager.SendSendTasksAsync(device);
+            await _sendTaskManager.SendSendRequestAsync(device);
+            await _sendTaskManager.SendSendTasksAsync(device);
         }
 
         private async void SendSendRequestButton_Click(object sender, RoutedEventArgs e) {
@@ -56,8 +71,7 @@ namespace UniversalSend.Views {
         }
 
         private async Task StartHttpServerAsync() {
-            ServiceHttpServer server = new ServiceHttpServer();
-            await server.StartHttpServerAsync(53317);
+            await _serviceHttpServer.StartHttpServerAsync(53317);
         }
 
         private void StartHttpServerButton_Click(object sender, RoutedEventArgs e) {

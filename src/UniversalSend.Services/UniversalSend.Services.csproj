@@ -224,11 +224,7 @@
     <Compile Include="InstanceCreators\InstanceCreatorCache.cs" />
     <Compile Include="InstanceCreators\PerCallInstanceCreator.cs" />
     <Compile Include="InstanceCreators\SingletonInstanceCreator.cs" />
-    <Compile Include="Logging\AbstractLogger.cs" />
-    <Compile Include="Logging\ILogFactory.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="LogManager.cs" />
-    <Compile Include="OperationController.cs" />
+    <Compile Include="Controllers\OperationController.cs" />
     <Compile Include="OperationFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\MatchUri.cs" />
@@ -251,8 +247,8 @@
     <Compile Include="Rest\UriParser.cs" />
     <Compile Include="ServiceHttpServer.cs" />
     <Compile Include="UdpDiscoveryService.cs" />
-    <Compile Include="V1RequestController.cs" />
-    <Compile Include="V2RequestController.cs" />
+    <Compile Include="Controllers\V1RequestController.cs" />
+    <Compile Include="Controllers\V2RequestController.cs" />
     <EmbeddedResource Include="Properties\UniversalSend.Services.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +262,6 @@
       <Name>UniversalSend.Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

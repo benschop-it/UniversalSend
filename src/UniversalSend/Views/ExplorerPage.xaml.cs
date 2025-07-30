@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ContentDialogControls;
-using UniversalSend.Models;
+using UniversalSend.Misc;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
+using UniversalSend.Strings;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers.Provider;
@@ -32,6 +35,9 @@ namespace UniversalSend.Views {
         private List<StorageFolder> _folderStack = new List<StorageFolder>();
         private IStorageItem _rightTabedItem = null;
         private List<ViewStorageItem> _viewItems = new List<ViewStorageItem>();
+        private IContentDialogManager _contentDialogManager => App.Services.GetRequiredService<IContentDialogManager>();
+        private IStorageHelper _storageHelper => App.Services.GetRequiredService<IStorageHelper>();
+        private ISettings _settings => App.Services.GetRequiredService<ISettings>();
 
         #endregion Private Fields
 
@@ -48,7 +54,9 @@ namespace UniversalSend.Views {
 
         public ExplorerPage() {
             InitializeComponent();
-            string ViewMode = Settings.GetSettingContentAsString(Settings.ExplorerPage_ViewMode);
+            ContentDialogManager = _contentDialogManager;
+
+            string ViewMode = _settings.GetSettingContentAsString(Constants.ExplorerPage_ViewMode);
             if (ViewMode == "List") {
                 _currentViewMode = ExplorerPage.ViewMode.List;
             } else {
@@ -64,7 +72,7 @@ namespace UniversalSend.Views {
 
         private IStorageItem ClipboardItem { get; set; }
 
-        private ContentDialogManager ContentDialogManager { get; set; } = new ContentDialogManager();
+        private IContentDialogManager ContentDialogManager { get; set; }
 
         #endregion Private Properties
 
@@ -72,7 +80,7 @@ namespace UniversalSend.Views {
 
         public async Task<StorageFolder> GetFolderOfCurrentViewAsync() {
             if (_folderStack.Count <= 1) {
-                return await StorageHelper.GetReceiveStorageFolderAsync();
+                return await _storageHelper.GetReceiveStorageFolderAsync();
             }
             StorageFolder folder = _folderStack[_folderStack.Count - 2];
             return folder;
@@ -83,7 +91,7 @@ namespace UniversalSend.Views {
         #region Protected Methods
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
-            Settings.InitUserSettings();
+            _settings.InitUserSettings();
             UpdateViewMode();
             if (e.Parameter is FileOpenPickerUI) {
                 // Get parameter
@@ -95,7 +103,7 @@ namespace UniversalSend.Views {
                 _allowedFileTypes = _fileSavePickerUI.AllowedFileTypes.ToList();
                 _fileSavePickerUI.TargetFileRequested += FileSavePickerUI_TargetFileRequested;
             }
-            await UpdateViewAsync(await StorageHelper.GetReceiveStorageFolderAsync());
+            await UpdateViewAsync(await _storageHelper.GetReceiveStorageFolderAsync());
         }
 
         #endregion Protected Methods
@@ -118,7 +126,7 @@ namespace UniversalSend.Views {
                     if (_folderStack.Count != 0) {
                         folder = _folderStack.Last();
                     } else {
-                        folder = await StorageHelper.GetReceiveStorageFolderAsync();
+                        folder = await _storageHelper.GetReceiveStorageFolderAsync();
                     }
 
                     await folder.CreateFolderAsync(control.NameTextBox.Text);
@@ -137,7 +145,7 @@ namespace UniversalSend.Views {
             if (_folderStack.Count != 0) {
                 folder = _folderStack.Last();
             } else {
-                folder = await StorageHelper.GetReceiveStorageFolderAsync();
+                folder = await _storageHelper.GetReceiveStorageFolderAsync();
             }
 
             try {
@@ -157,7 +165,7 @@ namespace UniversalSend.Views {
 
         private async void HomeButton_Click(object sender, RoutedEventArgs e) {
             _folderStack.Clear();
-            await UpdateViewAsync(await StorageHelper.GetReceiveStorageFolderAsync());
+            await UpdateViewAsync(await _storageHelper.GetReceiveStorageFolderAsync());
         }
 
         private void ListViewFlyout_Copy_Click(object sender, RoutedEventArgs e) {
@@ -423,7 +431,7 @@ namespace UniversalSend.Views {
         private void ViewModeButton_Click(object sender, RoutedEventArgs e) {
             UpdateViewMode();
             Debug.WriteLine(_currentViewMode.ToString());
-            Settings.SetSetting(Settings.ExplorerPage_ViewMode, _currentViewMode.ToString());
+            _settings.SetSetting(Constants.ExplorerPage_ViewMode, _currentViewMode.ToString());
         }
 
         #endregion Private Methods

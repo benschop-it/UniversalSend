@@ -120,9 +120,45 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\AbstractLogger.cs" />
+    <Compile Include="Common\LogManager.cs" />
+    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Interfaces\ISystemHelper.cs" />
+    <Compile Include="Interfaces\INetworkHelper.cs" />
+    <Compile Include="Interfaces\IFavorite.cs" />
+    <Compile Include="Interfaces\IHistory.cs" />
+    <Compile Include="Interfaces\IDeviceManager.cs" />
+    <Compile Include="Interfaces\IStorageHelper.cs" />
+    <Compile Include="Interfaces\IRegister.cs" />
+    <Compile Include="Interfaces\ISettings.cs" />
+    <Compile Include="Managers\FileResponseDataManager.cs" />
+    <Compile Include="Interfaces\IRegisterData.cs" />
+    <Compile Include="Interfaces\IRegisterResponseDataManager.cs" />
+    <Compile Include="Interfaces\IRegisterDataManager.cs" />
+    <Compile Include="Interfaces\ISendTaskManager.cs" />
+    <Compile Include="Interfaces\IHistoryManager.cs" />
+    <Compile Include="Interfaces\IFavoriteManager.cs" />
+    <Compile Include="Interfaces\ISendManager.cs" />
+    <Compile Include="Interfaces\IContentDialogManager.cs" />
+    <Compile Include="Managers\RegisterDataManager.cs" />
+    <Compile Include="Managers\RegisterResponseDataManager.cs" />
+    <Compile Include="Managers\UniversalSendFileManager.cs" />
+    <Compile Include="Interfaces\IUniversalSendFileManager.cs" />
+    <Compile Include="Interfaces\IRegisterResponseData.cs" />
+    <Compile Include="Interfaces\IRegisterRequestData.cs" />
+    <Compile Include="Interfaces\IDevice.cs" />
+    <Compile Include="Interfaces\IUniversalSendFile.cs" />
+    <Compile Include="Interfaces\IInfoDataManager.cs" />
+    <Compile Include="Interfaces\ITokenFactory.cs" />
+    <Compile Include="Managers\InfoDataManager.cs" />
+    <Compile Include="Interfaces\IInfoData.cs" />
+    <Compile Include="Interfaces\IFileRequestData.cs" />
+    <Compile Include="Interfaces\ILogFactory.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\IServiceHttpServer.cs" />
     <Compile Include="Managers\ContentDialogManager.cs" />
     <Compile Include="Data\Device.cs" />
-    <Compile Include="Data\DeviceManager.cs" />
+    <Compile Include="Managers\DeviceManager.cs" />
     <Compile Include="Data\UniversalSendFile.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Favorite.cs" />
@@ -141,6 +177,7 @@
     <Compile Include="HttpData\SendResponseData.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
+    <Compile Include="Interfaces\IReceiveManager.cs" />
     <Compile Include="ProgramData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\ReceiveManager.cs" />
@@ -150,9 +187,13 @@
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\SystemHelper.cs" />
+    <Compile Include="Interfaces\IReceiveTask.cs" />
+    <Compile Include="Interfaces\IReceiveTaskManager.cs" />
+    <Compile Include="Interfaces\ISendTask.cs" />
     <Compile Include="Tasks\ReceiveTask.cs" />
+    <Compile Include="Managers\ReceiveTaskManager.cs" />
     <Compile Include="Tasks\SendTask.cs" />
-    <Compile Include="Tasks\SendTaskManager.cs" />
+    <Compile Include="Managers\SendTaskManager.cs" />
     <Compile Include="TokenFactory.cs" />
     <EmbeddedResource Include="Properties\UniversalSend.Models.rd.xml" />
   </ItemGroup>

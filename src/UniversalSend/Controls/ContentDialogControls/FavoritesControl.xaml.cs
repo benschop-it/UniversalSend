@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
-using UniversalSend.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using UniversalSend.Misc;
 using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using Windows.UI.Xaml;
@@ -10,11 +12,17 @@ namespace UniversalSend.Controls.ContentDialogControls {
 
     public sealed partial class FavoritesControl : UserControl {
 
+        private IFavoriteManager _favoriteManager => App.Services.GetRequiredService<IFavoriteManager>();
+        private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
+        private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
+        private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
+        private IContentDialogManager _contentDialogManager => App.Services.GetRequiredService<IContentDialogManager>();
+
         #region Public Constructors
 
         public FavoritesControl() {
             InitializeComponent();
-            FavoritesListView.ItemsSource = FavoriteManager.Favorites;
+            FavoritesListView.ItemsSource = _favoriteManager.Favorites;
         }
 
         #endregion Public Constructors
@@ -22,38 +30,38 @@ namespace UniversalSend.Controls.ContentDialogControls {
         #region Private Methods
 
         private async void AddButton_Click(object sender, RoutedEventArgs e) {
-            await ProgramData.ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl());
+            await _contentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl());
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            ProgramData.ContentDialogManager.HideContentDialog();
+            _contentDialogManager.HideContentDialog();
         }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e) {
-            Favorite favorite = ((Button)sender).DataContext as Favorite;
-            await ProgramData.ContentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(favorite));
+            IFavorite favorite = ((Button)sender).DataContext as IFavorite;
+            await _contentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl(favorite));
         }
 
         private async void FavoritesListView_ItemClick(object sender, ItemClickEventArgs e) {
-            await ListViewItemClickAsync((Favorite)e.ClickedItem);
+            await ListViewItemClickAsync((IFavorite)e.ClickedItem);
         }
 
-        private async Task ListViewItemClickAsync(Favorite item) {
-            if (SendTaskManager.SendTasks.Count == 0) {
+        private async Task ListViewItemClickAsync(IFavorite item) {
+            if (_sendTaskManager.SendTasks.Count == 0) {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
 
             FindDeviceProgressBar.Visibility = Visibility.Visible;
-            Device device = await DeviceManager.FindDeviceByIPAsync(item.IPAddr);
+            IDevice device = await _deviceManager.FindDeviceByIPAsync(item.IPAddr);
             FindDeviceProgressBar.Visibility = Visibility.Collapsed;
 
             if (device == null) {
                 MessageTextBlock.Visibility = Visibility.Visible;
                 MessageTextBlock.Text = $"Device not found: {item.DeviceName} ({item.IPAddr})";
             } else {
-                SendManager.SendPreparedEvent(device);
-                ProgramData.ContentDialogManager.HideContentDialog();
+                _sendManager.SendPreparedEvent(device);
+                _contentDialogManager.HideContentDialog();
             }
         }
 

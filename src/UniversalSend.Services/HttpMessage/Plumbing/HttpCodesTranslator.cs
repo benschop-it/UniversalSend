@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Services.HttpMessage.Plumbing {
 
-    public class HttpCodesTranslator {
+    internal class HttpCodesTranslator {
         public static HttpCodesTranslator Default { get; }
 
         // From http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html

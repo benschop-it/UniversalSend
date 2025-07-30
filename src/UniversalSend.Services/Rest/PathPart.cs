@@ -1,6 +1,6 @@
 namespace UniversalSend.Services.Rest {
 
-    public class PathPart {
+    internal class PathPart {
         public PathPartType PartType { get; }
         public string Value { get; }
 

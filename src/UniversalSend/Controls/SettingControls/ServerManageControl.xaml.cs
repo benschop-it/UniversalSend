@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using UniversalSend.Models;
-using UniversalSend.Services;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Strings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Controls.SettingControls {
 
     public sealed partial class ServerManageControl : UserControl {
+
+        private readonly ISettings _settings = App.Services.GetRequiredService<ISettings>();
+        private readonly IServiceHttpServer _serviceHttpServer = App.Services.GetRequiredService<IServiceHttpServer>();
 
         #region Public Constructors
 
@@ -19,22 +24,18 @@ namespace UniversalSend.Controls.SettingControls {
         #region Private Methods
 
         private async void RestartButton_Click(object sender, RoutedEventArgs e) {
-            ServiceHttpServer server = ProgramData.ServiceServer as ServiceHttpServer;
+            _serviceHttpServer.StopHttpServer();
 
-            server.StopHttpServer();
+            var port = Convert.ToInt32(_settings.GetSettingContentAsString(Constants.Network_Port));
 
-            var port = Convert.ToInt32(Settings.GetSettingContentAsString(Settings.Network_Port));
-
-            if (await server.StartHttpServerAsync(port)) {
+            if (await _serviceHttpServer.StartHttpServerAsync(port)) {
                 StopButton.IsEnabled = true;
                 RestartButtonIcon.Glyph = "\uE72C";
             }
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e) {
-            ServiceHttpServer server = ProgramData.ServiceServer as ServiceHttpServer;
-
-            server.StopHttpServer();
+            _serviceHttpServer.StopHttpServer();
             StopButton.IsEnabled = false;
             RestartButtonIcon.Glyph = "\uE768";
         }

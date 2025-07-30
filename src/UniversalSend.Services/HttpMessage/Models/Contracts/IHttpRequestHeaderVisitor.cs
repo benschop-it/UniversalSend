@@ -3,7 +3,7 @@ using UniversalSend.Services.HttpMessage.Headers.Request;
 
 namespace UniversalSend.Services.HttpMessage.Models.Contracts {
 
-    public interface IHttpRequestHeaderVisitor<T> {
+    internal interface IHttpRequestHeaderVisitor<T> {
 
         void Visit(UntypedRequestHeader uh, T arg);
 

@@ -1,4 +1,5 @@
 ﻿using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Controls {
@@ -7,7 +8,7 @@ namespace UniversalSend.Controls {
 
         #region Public Constructors
 
-        public DeviceItemControl(Device device) {
+        public DeviceItemControl(IDevice device) {
             InitializeComponent();
             Device = device;
 
@@ -18,7 +19,7 @@ namespace UniversalSend.Controls {
 
         #region Private Properties
 
-        private Device Device { get; set; }
+        private IDevice Device { get; set; }
 
         #endregion Private Properties
     }

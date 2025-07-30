@@ -1,6 +1,6 @@
 namespace UniversalSend.Services.Http {
 
-    public enum ContentCoding {
+    internal enum ContentCoding {
         None,
         Gzip,
         Deflate

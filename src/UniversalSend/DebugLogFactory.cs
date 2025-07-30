@@ -1,4 +1,4 @@
-﻿using UniversalSend.Services.Logging;
+﻿using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend {
 

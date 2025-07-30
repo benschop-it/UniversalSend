@@ -4,7 +4,7 @@ using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class AccessControlRequestMethodHeader : HttpRequestHeaderBase {
+    internal class AccessControlRequestMethodHeader : HttpRequestHeaderBase {
         internal static string NAME = "Access-Control-Request-Method";
 
         public HttpMethod Method { get; }

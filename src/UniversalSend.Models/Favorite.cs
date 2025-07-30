@@ -1,6 +1,8 @@
-﻿namespace UniversalSend.Models {
+﻿using UniversalSend.Models.Interfaces;
 
-    public class Favorite {
+namespace UniversalSend.Models {
+
+    public class Favorite : IFavorite {
 
         #region Public Constructors
 

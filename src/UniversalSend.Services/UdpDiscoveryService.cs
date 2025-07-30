@@ -7,21 +7,39 @@ using System.Threading.Tasks;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.HttpData;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Strings;
 using Windows.Networking;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 
 namespace UniversalSend.Services {
 
-    public class UdpDiscoveryService {
+    internal class UdpDiscoveryService {
 
         #region Private Fields
 
         private const string MULTICAST_GROUP = "224.0.0.167";
-
         private DatagramSocket _udpSocket;
+        private readonly IRegisterResponseDataManager _registerResponseDataManager;
+        private readonly IDeviceManager _deviceManager;
+        private readonly IRegister _register;
+        private ISettings _settings;
 
         #endregion Private Fields
+
+        public UdpDiscoveryService(
+            IRegisterResponseDataManager registerResponseDataManager,
+            IDeviceManager deviceManager,
+            IRegister register,
+            ISettings settings
+
+        ) {
+            _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
+            _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            _register = register ?? throw new ArgumentNullException(nameof(register));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
 
         #region Public Methods
 
@@ -29,8 +47,8 @@ namespace UniversalSend.Services {
             _udpSocket = new DatagramSocket();
             _udpSocket.MessageReceived += OnUdpMessageReceived;
 
-            var port = Settings.GetSettingContentAsString("Network_Port");
-            var multicast = Settings.GetSettingContentAsString("Network_MulticastAddress");
+            var port = _settings.GetSettingContentAsString(Constants.Network_Port);
+            var multicast = _settings.GetSettingContentAsString("Network_MulticastAddress");
 
             // Must bind to a specific port before joining multicast
             await _udpSocket.BindServiceNameAsync(port);
@@ -50,17 +68,11 @@ namespace UniversalSend.Services {
         }
 
         public async Task SendAnnouncementAsync() {
-            var payload = new RegisterResponseData {
-                Alias = ProgramData.LocalDevice.Alias,
-                DeviceModel = ProgramData.LocalDevice.DeviceModel,
-                DeviceType = ProgramData.LocalDevice.DeviceType,
-                Fingerprint = ProgramData.LocalDevice.Fingerprint,
-                Announcement = true
-            };
+            var payload = _registerResponseDataManager.GetRegisterReponseData(true);
 
             string json = JsonConvert.SerializeObject(payload);
-            var port = Settings.GetSettingContentAsString("Network_Port");
-            var multicast = Settings.GetSettingContentAsString("Network_MulticastAddress");
+            var port = _settings.GetSettingContentAsString(Constants.Network_Port);
+            var multicast = _settings.GetSettingContentAsString(Constants.Network_MulticastAddress);
 
             using (var socket = new DatagramSocket()) {
                 try {
@@ -88,11 +100,10 @@ namespace UniversalSend.Services {
                 await reader.LoadAsync(1024);
                 string message = reader.ReadString(reader.UnconsumedBufferLength);
 
-                var payload = JsonConvert.DeserializeObject<RegisterResponseData>(message);
-
-                if (payload.Fingerprint == ProgramData.LocalDevice.Fingerprint) {
+                IRegisterResponseData payload = _registerResponseDataManager.DeserializeRegisterResponseData(message);
+                if (payload == null) {
                     Debug.WriteLine("Ignore self!");
-                    return; // Ignore self
+                    return;
                 }
 
                 Debug.WriteLine($"UDP message received: {payload.Announcement}, {payload.Alias}, {payload.DeviceModel}, {payload.DeviceType}, {payload.Fingerprint}");
@@ -103,29 +114,14 @@ namespace UniversalSend.Services {
                     await RegisterViaHttpAsync(args.RemoteAddress.ToString(), payload.Fingerprint);
                 } else {
                     Debug.WriteLine("Register new device, no announcement!");
-
-                    Device device = new Device();
-                    device.IP = args.RemoteAddress.CanonicalName;
-                    device.Port = ProgramData.LocalDevice.Port;
-                    device.Alias = payload.Alias;
-                    device.DeviceModel = payload.DeviceModel;
-                    device.DeviceType = payload.DeviceType;
-                    device.Fingerprint = payload.Fingerprint;
-
-                    Register.NewDeviceRegisterV1Event(device);
+                    IDevice device = _deviceManager.GetDeviceFromResponseData(payload, args.RemoteAddress.CanonicalName);
+                    _register.NewDeviceRegisterV1Event(device);
                 }
             }
         }
 
         private async Task RegisterViaHttpAsync(string ip, string remoteFingerprint) {
-            var payload = new RegisterResponseData {
-                Alias = ProgramData.LocalDevice.Alias,
-                DeviceModel = ProgramData.LocalDevice.DeviceModel,
-                DeviceType = ProgramData.LocalDevice.DeviceType,
-                Fingerprint = ProgramData.LocalDevice.Fingerprint,
-                Announcement = false
-            };
-
+            IRegisterResponseData payload = _registerResponseDataManager.GetRegisterReponseData(false);
             var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
             try {

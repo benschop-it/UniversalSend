@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace UniversalSend.Services.Http {
 
-    public class ContentEncoderFactory {
+    internal class ContentEncoderFactory {
 
         internal IContentEncoder GetEncoder(IEnumerable<string> acceptEncodings) {
             var firstSupportedEncoding = GetSupportedAcceptEncoding(acceptEncodings);

@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Services.HttpMessage.Headers.Response {
 
-    public class ContentTypeHeader : HttpHeaderBase {
+    internal class ContentTypeHeader : HttpHeaderBase {
         private const string NAME = "Content-Type";
         private const string CHARSET_KEY = "charset";
 

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using UniversalSend.Models;
+using UniversalSend.Models.Interfaces;
+using UniversalSend.Strings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
@@ -9,6 +12,8 @@ using Windows.UI.Xaml.Controls;
 namespace UniversalSend.Controls.ContentDialogControls {
 
     public sealed partial class PickReceiveFolderControl : UserControl {
+        private ISettings _settings => App.Services.GetRequiredService<ISettings>();
+        private IContentDialogManager _contentDialogManager => App.Services.GetRequiredService<IContentDialogManager>();
 
         #region Public Constructors
 
@@ -33,8 +38,8 @@ namespace UniversalSend.Controls.ContentDialogControls {
             StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null) {
                 string folderToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
-                Settings.SetSetting(Settings.Receive_SaveToFolder, folderToken);
-                ProgramData.ContentDialogManager.HideContentDialog();
+                _settings.SetSetting(Constants.Receive_SaveToFolder, folderToken);
+                _contentDialogManager.HideContentDialog();
             }
         }
 

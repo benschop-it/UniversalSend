@@ -5,7 +5,7 @@ using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Rest {
 
-    public class RestRouteHandler : IRouteHandler {
+    internal class RestRouteHandler : IRouteHandler {
         private readonly RestControllerRequestHandler _requestHandler;
         private readonly RestToHttpResponseConverter _restToHttpConverter;
         private readonly RestServerRequestFactory _restServerRequestFactory;

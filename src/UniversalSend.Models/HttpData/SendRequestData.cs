@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UniversalSend.Models.Interfaces;
 using Windows.Storage;
 
 namespace UniversalSend.Models.HttpData {
@@ -10,15 +11,15 @@ namespace UniversalSend.Models.HttpData {
         #region Public Properties
 
         [JsonProperty("files")]
-        public Dictionary<string, FileRequestData> Files { get; set; }
+        public Dictionary<string, IFileRequestData> Files { get; set; }
 
         [JsonProperty("info")]
-        public InfoData Info { get; set; }
+        public IInfoData Info { get; set; }
 
         #endregion Public Properties
     }
 
-    public class SendRequestDataManager {
+    internal class SendRequestDataManager {
 
         #region Public Methods
 

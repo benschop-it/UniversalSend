@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Services.HttpMessage.Models.Contracts {
 
-    public interface IHttpRequestHeader : IHttpHeader {
+    internal interface IHttpRequestHeader : IHttpHeader {
 
         void Visit<T>(IHttpRequestHeaderVisitor<T> v, T arg);
     }

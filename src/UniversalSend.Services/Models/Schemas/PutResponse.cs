@@ -4,7 +4,7 @@ using UniversalSend.Services.Rest.Models.Contracts;
 
 namespace UniversalSend.Services.Models.Schemas {
 
-    public class PutResponse : RestResponse, IPutResponse {
+    internal class PutResponse : RestResponse, IPutResponse {
 
         public enum ResponseStatus : int {
             OK = 200,

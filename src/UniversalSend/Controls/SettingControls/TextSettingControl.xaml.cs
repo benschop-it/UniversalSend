@@ -1,10 +1,14 @@
-﻿using UniversalSend.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using UniversalSend.Models;
+using UniversalSend.Models.Interfaces;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Controls.SettingControls {
 
     public sealed partial class TextSettingControl : UserControl {
+
+        private readonly ISettings _settings = App.Services.GetRequiredService<ISettings>();
 
         #region Public Constructors
 
@@ -25,7 +29,7 @@ namespace UniversalSend.Controls.SettingControls {
 
         private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             if (!string.IsNullOrEmpty(SettingKey)) {
-                Settings.SetSetting(SettingKey, MainTextBox.Text);
+                _settings.SetSetting(SettingKey, MainTextBox.Text);
             }
         }
 
@@ -34,7 +38,7 @@ namespace UniversalSend.Controls.SettingControls {
                 return;
             }
 
-            string settingValue = Settings.GetSettingContentAsString(SettingKey);
+            string settingValue = _settings.GetSettingContentAsString(SettingKey);
 
             if (string.IsNullOrEmpty(settingValue)) {
                 MainTextBox.Text = "Unavailable";

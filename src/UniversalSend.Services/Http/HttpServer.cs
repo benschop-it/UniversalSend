@@ -6,16 +6,17 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
-using UniversalSend.Services.Logging;
 using Windows.Networking.Sockets;
 
 namespace UniversalSend.Services.Http {
 
-    public class HttpServer : IDisposable {
+    internal class HttpServer : IDisposable {
         private readonly int _port;
         private readonly StreamSocketListener _listener;
         private readonly SortedSet<RouteRegistration> _routes;

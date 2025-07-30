@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Models.HttpData {
 
-    public class FromContentFileData {
+    internal class FromContentFileData {
 
         #region Public Properties
 

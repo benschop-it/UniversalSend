@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
-using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 using Windows.Storage;
 
 namespace UniversalSend.Models.HttpData {
 
-    public class FileRequestData {
+    internal class FileRequestData : IFileRequestData {
 
         #region Public Properties
 
@@ -28,11 +28,11 @@ namespace UniversalSend.Models.HttpData {
         #endregion Public Properties
     }
 
-    public class FileRequestDataManager {
+    internal class FileRequestDataManager {
 
         #region Public Methods
 
-        public static async Task<FileRequestData> CreateFromStorageFileAsync(StorageFile storageFile) {
+        public static async Task<FileRequestData> CreateFromStorageFileAsync(IStorageFile storageFile) {
             FileRequestData fileRequestData = new FileRequestData();
             fileRequestData.FileType = storageFile.FileType;
             fileRequestData.Size = (long)(await storageFile.GetBasicPropertiesAsync()).Size;
@@ -41,7 +41,7 @@ namespace UniversalSend.Models.HttpData {
             return fileRequestData;
         }
 
-        public static FileRequestData CreateFromUniversalSendFile(UniversalSendFile universalSendFile) {
+        public static FileRequestData CreateFromUniversalSendFile(IUniversalSendFile universalSendFile) {
             FileRequestData fileRequestData = new FileRequestData();
             fileRequestData.FileType = universalSendFile.FileType;
             fileRequestData.FileName = universalSendFile.FileName;

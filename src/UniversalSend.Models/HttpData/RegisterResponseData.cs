@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    public class RegisterResponseData {
+    internal class RegisterResponseData : IRegisterResponseData {
 
         #region Public Properties
 

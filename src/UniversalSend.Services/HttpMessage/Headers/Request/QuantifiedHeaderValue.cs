@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
-    public class QuantifiedHeaderValue {
+    internal class QuantifiedHeaderValue {
         private static string QUALITY_KEY = "q";
 
         internal string HeaderValue { get; }

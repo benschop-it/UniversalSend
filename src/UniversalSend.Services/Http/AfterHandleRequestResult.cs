@@ -2,7 +2,7 @@ using UniversalSend.Services.HttpMessage;
 
 namespace UniversalSend.Services.Http {
 
-    public class AfterHandleRequestResult {
+    internal class AfterHandleRequestResult {
         public HttpServerResponse Response { get; }
 
         public AfterHandleRequestResult(HttpServerResponse response) {

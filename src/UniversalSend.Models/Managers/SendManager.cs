@@ -1,61 +1,62 @@
 ﻿using System;
 using System.Diagnostics;
 using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
-    public class SendManager {
+    internal class SendManager : ISendManager {
 
         #region Public Events
 
         // Send task was canceled
-        public static event EventHandler SendCanceled;
+        public event EventHandler SendCanceled;
 
         // Send task created
-        public static event EventHandler SendCreated;
+        public event EventHandler SendCreated;
 
         // Ready to send
-        public static event EventHandler SendPrepared;
+        public event EventHandler SendPrepared;
 
         // Send request has been sent
-        public static event EventHandler SendResuestSended;
+        public event EventHandler SendResuestSended;
 
         // Sending started
-        public static event EventHandler SendStarted;
+        public event EventHandler SendStarted;
 
         // Send state changed
-        public static event EventHandler SendStateChanged;
+        public event EventHandler SendStateChanged;
 
         #endregion Public Events
 
         #region Public Methods
 
-        public static void SendCanceledEvent() {
+        public void SendCanceledEvent() {
             Debug.WriteLine("SendCanceledEvent");
             SendCanceled?.Invoke(null, EventArgs.Empty);
         }
 
-        public static void SendCreatedEvent() {
+        public void SendCreatedEvent() {
             Debug.WriteLine("SendCreatedEvent");
             SendCreated?.Invoke(null, EventArgs.Empty);
         }
 
-        public static void SendPreparedEvent(Device device) {
+        public void SendPreparedEvent(IDevice device) {
             Debug.WriteLine("SendPreparedEvent");
             SendPrepared?.Invoke(device, EventArgs.Empty);
         }
 
-        public static void SendRequestSendedEvent() {
+        public void SendRequestSendedEvent() {
             Debug.WriteLine("SendRequestSendedEvent");
             SendResuestSended?.Invoke(null, EventArgs.Empty);
         }
 
-        public static void SendStartedEvent() {
+        public void SendStartedEvent() {
             Debug.WriteLine("SendStartedEvent");
             SendStarted?.Invoke(null, EventArgs.Empty);
         }
 
-        public static void SendStateChangedEvent() {
+        public void SendStateChangedEvent() {
             Debug.WriteLine("SendStateChangedEvent");
             SendStateChanged?.Invoke(null, EventArgs.Empty);
         }

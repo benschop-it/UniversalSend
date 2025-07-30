@@ -1,5 +1,5 @@
 ﻿using System;
-using UniversalSend.Services.Logging;
+using UniversalSend.Models.Common;
 
 namespace UniversalSend {
 

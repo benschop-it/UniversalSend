@@ -10,7 +10,7 @@ using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.HttpMessage {
 
-    public class MutableHttpServerRequest : IHttpServerRequest {
+    internal class MutableHttpServerRequest : IHttpServerRequest {
         private readonly List<IHttpRequestHeader> _headers;
 
         internal MutableHttpServerRequest() {

@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    public class RegisterRequestData {
+    internal class RegisterRequestData : IRegisterRequestData {
 
         #region Public Properties
 
@@ -22,7 +23,7 @@ namespace UniversalSend.Models.HttpData {
         #endregion Public Properties
     }
 
-    public class RegisterRequestDataManager {
+    internal class RegisterRequestDataManager {
 
         #region Public Methods
 

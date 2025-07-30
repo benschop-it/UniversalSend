@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UniversalSend.Models {
 
-    public class JsonHelper {
+    internal class JsonHelper {
 
         #region Public Methods
 
