@@ -3,7 +3,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
-    public class History : IHistory {
+    internal class History : IHistory {
 
         #region Public Constructors
 

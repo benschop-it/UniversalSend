@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:UniversalSend.Models"
+    xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     xmlns:helpers="using:UniversalSend.Models.Helpers"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -36,7 +36,7 @@
         </CommandBar>
         <ListView Grid.Row="2" Name="MainListView" IsItemClickEnabled="True" ItemClick="MainListView_ItemClick" RightTapped="MainListView_RightTapped">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:History">
+                <DataTemplate x:DataType="interfaces:IHistory">
                     <Grid Height="40">
                         <Grid.RowDefinitions>
                             <RowDefinition />

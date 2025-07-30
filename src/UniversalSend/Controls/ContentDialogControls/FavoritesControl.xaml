@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:UniversalSend.Models"
+    xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -22,7 +23,7 @@
 
         <ListView Grid.Row="1" Name="FavoritesListView" IsItemClickEnabled="True" Margin="0,8,0,0" ItemClick="FavoritesListView_ItemClick">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:Favorite">
+                <DataTemplate x:DataType="interfaces:IFavorite">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />

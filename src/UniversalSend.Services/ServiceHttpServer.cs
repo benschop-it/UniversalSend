@@ -33,7 +33,6 @@ namespace UniversalSend.Services {
 
         #region Private Fields
 
-        private bool _isRunning = false;
         private UdpDiscoveryService _udpDiscovery;
 
         #endregion Private Fields
@@ -80,7 +79,7 @@ namespace UniversalSend.Services {
             }
 
             Debug.WriteLine($"HTTP server started on port {port}");
-            return _isRunning = true;
+            return true;
         }
 
         public void StopHttpServer() {
@@ -88,7 +87,6 @@ namespace UniversalSend.Services {
             _udpDiscovery = null;
 
             HttpServer.StopServer();
-            _isRunning = false;
             Debug.WriteLine($"HTTP server has stopped");
         }
 

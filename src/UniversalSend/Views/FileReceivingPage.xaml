@@ -5,7 +5,7 @@
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tasks="using:UniversalSend.Models.Tasks"
+    xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     mc:Ignorable="d"
     xmlns:helpers="using:UniversalSend.Models.Helpers"
     Loaded="Page_Loaded"
@@ -22,7 +22,7 @@
         <TextBlock Name="PageHeader" Margin="24" Text="Receiving files..." />
         <ListView Margin="24,0,24,0" Name="FileReceivingListView" Grid.Row="1">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="tasks:ReceiveTask">
+                <DataTemplate x:DataType="interfaces:IReceiveTask">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />

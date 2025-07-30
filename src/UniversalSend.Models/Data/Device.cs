@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Models.Data {
 
-    public class Device : IDevice {
+    internal class Device : IDevice {
 
         #region Public Properties
 

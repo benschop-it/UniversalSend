@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:UniversalSend.Models.Data"
+    xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
@@ -80,7 +81,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="data:Device">
+                <DataTemplate x:DataType="interfaces:IDevice">
                     <Grid Padding="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />

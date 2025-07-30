@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:UniversalSend.Models.Helpers"
-    xmlns:tasks="using:UniversalSend.Models.Tasks"
+    xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -40,7 +40,7 @@
             <TextBlock Name="PageHeader" Margin="24" Text="Sending files..." />
             <ListView Margin="24,0,24,0" Name="FileSendingListView" Grid.Row="1">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="tasks:SendTask">
+                    <DataTemplate x:DataType="interfaces:ISendTask">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
