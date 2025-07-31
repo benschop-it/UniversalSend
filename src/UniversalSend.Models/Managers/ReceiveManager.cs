@@ -6,7 +6,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
-    internal class ReceiveManager : IReceiveManager {
+    public class ReceiveManager : IReceiveManager {
 
         private readonly IReceiveTaskManager _receiveTaskManager;
 

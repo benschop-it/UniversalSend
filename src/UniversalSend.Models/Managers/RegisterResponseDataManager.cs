@@ -6,7 +6,7 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
-    internal class RegisterResponseDataManager : IRegisterResponseDataManager {
+    public class RegisterResponseDataManager : IRegisterResponseDataManager {
         public IRegisterResponseData DeserializeRegisterResponseData(string json) {
             var payload = JsonConvert.DeserializeObject<RegisterResponseData>(json);
             if (payload.Fingerprint == ProgramData.LocalDevice.Fingerprint) {

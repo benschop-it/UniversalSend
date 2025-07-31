@@ -4,7 +4,7 @@ using Windows.Storage;
 
 namespace UniversalSend.Models.Tasks {
 
-    internal class SendTask : ISendTask {
+    public class SendTask : ISendTask {
 
         #region Public Properties
 

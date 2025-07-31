@@ -1,9 +1,10 @@
 ﻿using System;
+using UniversalSend.Models.Data;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
-    internal class History : IHistory {
+    public class History : IHistory {
 
         #region Public Constructors
 
@@ -22,6 +23,31 @@ namespace UniversalSend.Models {
         public IDevice Device { get; set; }
 
         public IUniversalSendFile File { get; set; }
+
+        public string FutureAccessListToken { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public class ConcreteHistory {
+
+        #region Public Constructors
+
+        public ConcreteHistory(UniversalSendFile file, string futureAccessListToken, Device device) {
+            File = file;
+            FutureAccessListToken = futureAccessListToken;
+            Device = device;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public DateTime DateTime { get; set; } = DateTime.Now;
+
+        public Device Device { get; set; }
+
+        public UniversalSendFile File { get; set; }
 
         public string FutureAccessListToken { get; set; }
 

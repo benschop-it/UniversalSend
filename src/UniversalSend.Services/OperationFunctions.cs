@@ -10,12 +10,13 @@ using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Services.HttpMessage;
+using UniversalSend.Services.Interfaces;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
 namespace UniversalSend.Services {
 
-    internal class OperationFunctions  {
+    public class OperationFunctions : IOperationFunctions {
 
         private IReceiveManager _receiveManager;
         private IReceiveTaskManager _receiveTaskManager;
@@ -40,8 +41,8 @@ namespace UniversalSend.Services {
         #region Public Methods
 
         // Handles registration request from remote device
-        public object RegisterRequestFunc(MutableHttpServerRequest mutableHttpServerRequest) {
-            var headerList = mutableHttpServerRequest.Headers.ToList();
+        public object RegisterRequestFunc(IMutableHttpServerRequest mutableHttpServerRequest) {
+            var headerList = ((MutableHttpServerRequest)mutableHttpServerRequest).Headers.ToList();
             var item = headerList.Find(x => x.Name.Equals("host"));
             if (item == null) {
                 return null;
@@ -67,7 +68,7 @@ namespace UniversalSend.Services {
         }
 
         // Handles incoming file from remote device
-        public async Task<object> SendRequestFuncAsync(MutableHttpServerRequest mutableHttpServerRequest) {
+        public async Task<object> SendRequestFuncAsync(IMutableHttpServerRequest mutableHttpServerRequest) {
             Debug.WriteLine($"SendRequestFuncAsync {mutableHttpServerRequest.Uri.ToString()}");
 
             Dictionary<string, string> queryParameters = StringHelper.GetURLQueryParameters(mutableHttpServerRequest.Uri.ToString());
@@ -84,7 +85,7 @@ namespace UniversalSend.Services {
             if (task != null) {
                 _receiveManager.SendDataReceivedEvent(task);
                 Debug.WriteLine("Writing data to file");
-                var headerList = mutableHttpServerRequest.Headers.ToList();
+                var headerList = ((MutableHttpServerRequest)mutableHttpServerRequest).Headers.ToList();
                 var item = headerList.Find(x => x.Name.Equals("host"));
                 if (item == null) {
                     return null;

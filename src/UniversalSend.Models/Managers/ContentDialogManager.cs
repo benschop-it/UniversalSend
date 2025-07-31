@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Models.Managers {
 
-    internal class ContentDialogManager : IContentDialogManager {
+    public class ContentDialogManager : IContentDialogManager {
 
         #region Private Properties
 

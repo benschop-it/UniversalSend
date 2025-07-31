@@ -5,7 +5,7 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
-    internal class UniversalSendFileManager : IUniversalSendFileManager {
+    public class UniversalSendFileManager : IUniversalSendFileManager {
 
         #region Public Methods
 

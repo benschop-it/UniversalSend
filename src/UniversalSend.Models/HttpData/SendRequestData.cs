@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Managers;
 using Windows.Storage;
 
 namespace UniversalSend.Models.HttpData {

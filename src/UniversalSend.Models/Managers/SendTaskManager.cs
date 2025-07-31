@@ -12,7 +12,7 @@ using Windows.Storage;
 
 namespace UniversalSend.Models.Managers {
 
-    internal class SendTaskManager : ISendTaskManager {
+    public class SendTaskManager : ISendTaskManager {
 
         private IUniversalSendFileManager _universalSendFileManager;
         private IInfoDataManager _infoDataManager;

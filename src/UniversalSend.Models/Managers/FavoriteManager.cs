@@ -28,7 +28,10 @@ namespace UniversalSend.Models.Managers {
                 return;
             }
 
-            Favorites = JsonConvert.DeserializeObject<List<IFavorite>>(str);
+            var concreteFavorites = JsonConvert.DeserializeObject<List<Favorite>>(str);
+            foreach (var concreteFavorite in concreteFavorites) {
+                Favorites.Add(concreteFavorite);
+            }
         }
 
         public void SaveFavoritesData() {

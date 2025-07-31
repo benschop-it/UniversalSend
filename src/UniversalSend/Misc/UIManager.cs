@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 
 namespace UniversalSend.Misc {
 
-    internal class UIManager : IUIManager {
+    public class UIManager : IUIManager {
 
         private ISystemHelper _systemHelper;
 

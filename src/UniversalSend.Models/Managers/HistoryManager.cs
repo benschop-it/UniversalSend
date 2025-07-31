@@ -9,7 +9,7 @@ using Windows.Storage.AccessCache;
 
 namespace UniversalSend.Models.Managers {
 
-    internal class HistoryManager : IHistoryManager {
+    public class HistoryManager : IHistoryManager {
 
         private ISettings _settings;
 
@@ -41,9 +41,13 @@ namespace UniversalSend.Models.Managers {
                 return;
             }
 
-            List<History> list = JsonConvert.DeserializeObject<List<History>>(str);
+            List<ConcreteHistory> list = JsonConvert.DeserializeObject<List<ConcreteHistory>>(str);
             if (list != null) {
-                HistoriesList = list?.Cast<IHistory>().ToList();
+                foreach (ConcreteHistory conreteHistory in list) {
+                    History h = new History(conreteHistory.File, conreteHistory.FutureAccessListToken, conreteHistory.Device);
+                    HistoriesList.Add(h);
+                }
+                //HistoriesList = list?.Cast<IHistory>().ToList();
             }
         }
 

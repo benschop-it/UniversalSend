@@ -10,9 +10,10 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
-    internal class DeviceManager : IDeviceManager {
+    public class DeviceManager : IDeviceManager {
 
         private INetworkHelper _networkHelper;
+        private IRegisterRequestDataManager _registerRequestDataManager;
 
         #region Public Events
 
@@ -20,8 +21,9 @@ namespace UniversalSend.Models.Managers {
 
         #endregion Public Events
 
-        public DeviceManager(INetworkHelper networkHelper) {
+        public DeviceManager(INetworkHelper networkHelper, IRegisterRequestDataManager registerRequestDataManager) {
             _networkHelper = networkHelper ?? throw new ArgumentNullException(nameof(networkHelper));
+            _registerRequestDataManager = registerRequestDataManager ?? throw new ArgumentNullException(nameof(registerRequestDataManager));
         }
 
         #region Public Properties
@@ -70,11 +72,11 @@ namespace UniversalSend.Models.Managers {
         }
 
         public async Task<IDevice> FindDeviceByIPAsync(string IP) {
-            Debug.WriteLine($"URL:http://{IP}:53317/api/localsend/v1/register\nJson:{JsonConvert.SerializeObject(RegisterRequestDataManager.CreateFromDevice(ProgramData.LocalDevice))}");
+            Debug.WriteLine($"URL:http://{IP}:53317/api/localsend/v1/register\nJson:{JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice))}");
 
             string responseString = await HttpClientHelper.PostJsonAsync(
                 $"http://{IP}:53317/api/localsend/v1/register",
-                JsonConvert.SerializeObject(RegisterRequestDataManager.CreateFromDevice(ProgramData.LocalDevice))
+                JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice))
             );
 
             try {

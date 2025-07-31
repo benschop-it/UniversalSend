@@ -12,6 +12,7 @@ using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
+using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using Windows.Networking.Sockets;
 
 namespace UniversalSend.Services.Http {
@@ -64,7 +65,7 @@ namespace UniversalSend.Services.Http {
 
                 try {
                     using (var inputStream = args.Socket.InputStream) {
-                        var request = await MutableHttpServerRequest.Parse(inputStream);
+                        var request = await HttpRequestParser.Default.ParseRequestStream(inputStream);
 
                         requestLog.AppendLine("[HttpServer.ProcessRequestAsync] [Request]");
                         requestLog.AppendLine($"    Uri = {request.Uri}");

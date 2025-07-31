@@ -123,6 +123,9 @@
     <Compile Include="Common\AbstractLogger.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Interfaces\IRegisterRequestDataManager.cs" />
+    <Compile Include="Managers\RegisterRequestDataManager.cs" />
+    <Compile Include="Managers\FileRequestDataManager.cs" />
     <Compile Include="Interfaces\ISystemHelper.cs" />
     <Compile Include="Interfaces\INetworkHelper.cs" />
     <Compile Include="Interfaces\IFavorite.cs" />

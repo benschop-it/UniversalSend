@@ -3,7 +3,7 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
-    internal class InfoDataManager : IInfoDataManager {
+    public class InfoDataManager : IInfoDataManager {
 
         #region Public Methods
 

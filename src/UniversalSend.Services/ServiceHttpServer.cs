@@ -1,34 +1,51 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Models.Data;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Controllers;
 using UniversalSend.Services.Http;
 using UniversalSend.Services.HttpMessage;
+using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Rest;
 
 namespace UniversalSend.Services {
 
-    internal class ServiceHttpServer : IServiceHttpServer {
+    public class ServiceHttpServer : IServiceHttpServer {
 
-        private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IRegister _register;
         private readonly ISettings _settings;
-        private OperationFunctions _operationFunctions;
+        private readonly IOperationFunctions _operationFunctions;
+        private IInfoDataManager _infoDataManager;
+        private IReceiveManager _receiveManager;
+        private ITokenFactory _tokenFactory;
+        private IUniversalSendFileManager _universalSendFileManager;
+        private IReceiveTaskManager _receiveTaskManager;
+        private IRegisterResponseDataManager _registerResponseDataManager;
 
         public ServiceHttpServer(
-            IRegisterResponseDataManager registerResponseDataManager,
             IDeviceManager deviceManager,
             IRegister register,
             ISettings settings,
-            OperationFunctions operationFunctions
+            IOperationFunctions operationFunctions,
+            IInfoDataManager infoDataManager,
+            IReceiveManager receiveManager,
+            ITokenFactory tokenFactory,
+            IUniversalSendFileManager universalSendFileManager,
+            IReceiveTaskManager receiveTaskManager,
+            IRegisterResponseDataManager registerResponseDataManager
         ) {
-            _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _register = register ?? throw new ArgumentNullException(nameof(register));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _operationFunctions = operationFunctions ?? throw new ArgumentNullException(nameof(operationFunctions));    
+            _operationFunctions = operationFunctions ?? throw new ArgumentNullException(nameof(operationFunctions));
+            _infoDataManager = infoDataManager ?? throw new ArgumentNullException(nameof(infoDataManager));
+            _receiveManager = receiveManager ?? throw new ArgumentNullException(nameof(receiveManager));
+            _tokenFactory = tokenFactory ?? throw new ArgumentNullException(nameof(tokenFactory));
+            _universalSendFileManager = universalSendFileManager ?? throw new ArgumentNullException(nameof(universalSendFileManager));
+            _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
+            _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
         }
 
         #region Private Fields
@@ -52,7 +69,21 @@ namespace UniversalSend.Services {
             await _udpDiscovery.StartUdpListenerAsync();
 
             RestRouteHandler restRouteHandler = new RestRouteHandler();
-            restRouteHandler.RegisterController<V1RequestController>(); // Register controller
+            //restRouteHandler.RegisterController<V1RequestController>(); // Register controller
+
+            restRouteHandler.RegisterController<V1RequestController>(() =>
+            {
+                return new object[]
+                {
+                    _infoDataManager,
+                    _receiveManager,
+                    _tokenFactory,
+                    _universalSendFileManager,
+                    _receiveTaskManager,
+                    _registerResponseDataManager
+                };
+            });
+
             //restRouteHandler.RegisterController<V2RequestController>(); // Register controller
             HttpServerConfiguration = new HttpServerConfiguration();
             HttpServerConfiguration.ListenOnPort(port).RegisterRoute("api/localsend/", restRouteHandler).EnableCors();

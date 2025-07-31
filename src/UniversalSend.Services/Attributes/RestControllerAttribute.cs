@@ -5,10 +5,19 @@ namespace UniversalSend.Services.Attributes {
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     internal sealed class RestControllerAttribute : Attribute {
-        public InstanceCreationType InstanceCreationType { get; }
+
+        #region Public Constructors
 
         public RestControllerAttribute(InstanceCreationType instanceCreation) {
             InstanceCreationType = instanceCreation;
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public InstanceCreationType InstanceCreationType { get; }
+
+        #endregion Public Properties
     }
 }

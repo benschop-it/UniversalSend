@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
-using UniversalSend.Models.Managers;
-using UniversalSend.Models.Tasks;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.Models.Schemas;
 using UniversalSend.Services.Rest.Models.Contracts;
@@ -17,12 +15,18 @@ namespace UniversalSend.Services.Controllers {
     [RestController(InstanceCreationType.PerCall)]
     internal class V1RequestController {
 
+        #region Private Fields
+
         private IInfoDataManager _infoDataManager;
         private IReceiveManager _receiveManager;
-        private ITokenFactory _tokenFactory;
-        private IUniversalSendFileManager _universalSendFileManager;
         private IReceiveTaskManager _receiveTaskManager;
         private IRegisterResponseDataManager _registerResponseDataManager;
+        private ITokenFactory _tokenFactory;
+        private IUniversalSendFileManager _universalSendFileManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public V1RequestController(
             IInfoDataManager infoDataManager,
@@ -39,6 +43,8 @@ namespace UniversalSend.Services.Controllers {
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
         }
+
+        #endregion Public Constructors
 
         #region Public Methods
 
@@ -104,5 +110,6 @@ namespace UniversalSend.Services.Controllers {
         }
 
         #endregion Public Methods
+
     }
 }

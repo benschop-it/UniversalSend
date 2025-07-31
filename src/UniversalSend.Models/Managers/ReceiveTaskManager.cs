@@ -7,7 +7,7 @@ using UniversalSend.Models.Tasks;
 using Windows.Storage;
 
 namespace UniversalSend.Models.Managers {
-    internal class ReceiveTaskManager : IReceiveTaskManager {
+    public class ReceiveTaskManager : IReceiveTaskManager {
 
         private IStorageHelper _storageHelper;
 

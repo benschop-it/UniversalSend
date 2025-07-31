@@ -3,7 +3,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Data {
 
-    internal class UniversalSendFile : IUniversalSendFile {
+    public class UniversalSendFile : IUniversalSendFile {
 
         #region Public Properties
 

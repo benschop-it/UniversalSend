@@ -3,7 +3,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    internal sealed class RegisterData : IRegisterData {
+    public sealed class RegisterData : IRegisterData {
 
         #region Public Properties
 

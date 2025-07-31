@@ -5,7 +5,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
-    internal class Register : IRegister {
+    public class Register : IRegister {
 
         private readonly IDeviceManager _deviceManager;
 

@@ -1,8 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using UniversalSend.Interfaces;
+using UniversalSend.Misc;
+using UniversalSend.Models;
 using UniversalSend.Models.Common;
+using UniversalSend.Models.Data;
+using UniversalSend.Models.Helpers;
+using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
+using UniversalSend.Models.Tasks;
+using UniversalSend.Services;
+using UniversalSend.Services.Interfaces;
 using UniversalSend.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -129,8 +138,39 @@ namespace UniversalSend {
             var services = new ServiceCollection();
 
             // Register your services
+            services.AddSingleton<IDeviceManager, DeviceManager>();
             services.AddSingleton<IFavoriteManager, FavoriteManager>();
-            //services.AddSingleton<IHistoryService, HistoryService>();
+            services.AddSingleton<IHistoryManager, HistoryManager>();
+            services.AddSingleton<IInfoDataManager, InfoDataManager>();
+            services.AddSingleton<INetworkHelper, NetworkHelper>();
+            services.AddSingleton<IReceiveManager, ReceiveManager>();
+            services.AddSingleton<IReceiveTaskManager, ReceiveTaskManager>();
+            services.AddSingleton<IRegister, Register>();
+            services.AddSingleton<IRegisterDataManager, RegisterDataManager>();
+            services.AddSingleton<IRegisterRequestDataManager, RegisterRequestDataManager>();
+            services.AddSingleton<IRegisterResponseDataManager, RegisterResponseDataManager>();
+            services.AddSingleton<ISendManager, SendManager>();
+            services.AddSingleton<ISendTaskManager, SendTaskManager>();
+            services.AddSingleton<ISettings, Settings>();
+            services.AddSingleton<IStorageHelper, StorageHelper>();
+            services.AddSingleton<ISystemHelper, SystemHelper>();
+            services.AddSingleton<ITokenFactory, TokenFactory>();
+            services.AddSingleton<IUniversalSendFileManager, UniversalSendFileManager>();
+            services.AddSingleton<IUIManager, UIManager>();
+            services.AddSingleton<IOperationFunctions, OperationFunctions>();
+
+            services.AddTransient<IContentDialogManager, ContentDialogManager>();
+            services.AddTransient<IDevice, Device>();
+            services.AddTransient<IFavorite, Favorite>();
+            services.AddTransient<IFileRequestData, FileRequestData>();
+            services.AddTransient<IHistory, History>();
+            services.AddTransient<IReceiveTask, ReceiveTask>();
+            services.AddTransient<IRegisterData, RegisterData>();
+            services.AddTransient<IRegisterRequestData, RegisterRequestData>();
+            services.AddTransient<IRegisterResponseData, RegisterResponseData>();
+            services.AddTransient<ISendTask, SendTask>();
+            services.AddTransient<IServiceHttpServer, ServiceHttpServer>();
+            services.AddTransient<IUniversalSendFile, UniversalSendFile>();
 
             Services = services.BuildServiceProvider();
         }

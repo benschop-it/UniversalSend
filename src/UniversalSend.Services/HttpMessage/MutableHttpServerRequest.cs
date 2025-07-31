@@ -6,11 +6,12 @@ using UniversalSend.Services.HttpMessage.Headers.Request;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
+using UniversalSend.Services.Interfaces;
 using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.HttpMessage {
 
-    internal class MutableHttpServerRequest : IHttpServerRequest {
+    internal class MutableHttpServerRequest : IHttpServerRequest, IMutableHttpServerRequest {
         private readonly List<IHttpRequestHeader> _headers;
 
         internal MutableHttpServerRequest() {
@@ -48,7 +49,7 @@ namespace UniversalSend.Services.HttpMessage {
             _headers.Add(header);
         }
 
-        public static async Task<MutableHttpServerRequest> Parse(IInputStream requestStream) {
+        public async Task<IMutableHttpServerRequest> Parse(IInputStream requestStream) {
             return await HttpRequestParser.Default.ParseRequestStream(requestStream);
         }
     }

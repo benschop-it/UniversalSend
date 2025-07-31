@@ -3,7 +3,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Tasks {
 
-    internal class ReceiveTask : IReceiveTask {
+    public class ReceiveTask : IReceiveTask {
 
         #region Public Properties
 

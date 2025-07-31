@@ -7,7 +7,7 @@ using Windows.Storage;
 
 namespace UniversalSend.Models {
 
-    internal class Settings : ISettings {
+    public class Settings : ISettings {
 
         #region Public Fields
 

@@ -3,7 +3,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
-    internal class TokenFactory : ITokenFactory {
+    public class TokenFactory : ITokenFactory {
 
         #region Public Methods
 

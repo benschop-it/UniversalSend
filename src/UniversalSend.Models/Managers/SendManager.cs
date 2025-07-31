@@ -5,7 +5,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
-    internal class SendManager : ISendManager {
+    public class SendManager : ISendManager {
 
         #region Public Events
 

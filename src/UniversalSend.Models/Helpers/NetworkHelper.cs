@@ -5,7 +5,7 @@ using Windows.Networking.Connectivity;
 
 namespace UniversalSend.Models.Helpers {
 
-    internal class NetworkHelper : INetworkHelper {
+    public class NetworkHelper : INetworkHelper {
 
         #region Public Methods
 

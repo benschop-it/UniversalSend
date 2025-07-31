@@ -12,7 +12,7 @@ using Windows.System;
 
 namespace UniversalSend.Models.Helpers {
 
-    internal class StorageHelper : IStorageHelper {
+    public class StorageHelper : IStorageHelper {
 
         private readonly ISystemHelper _systemHelper;
         private readonly ISettings _settings;
