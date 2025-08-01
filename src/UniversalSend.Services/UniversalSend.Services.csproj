@@ -126,6 +126,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="EncodingCache.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="HttpMessage\Headers\HttpHeaderBase.cs" />
     <Compile Include="HttpMessage\Headers\HttpRequestHeaderBase.cs" />
     <Compile Include="HttpMessage\Headers\Request\AcceptCharsetHeader.cs" />

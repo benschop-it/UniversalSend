@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Misc;
 using UniversalSend.Strings;
 using Windows.Storage.AccessCache;
 

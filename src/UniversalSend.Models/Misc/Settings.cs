@@ -7,7 +7,7 @@ using UniversalSend.Strings;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Storage;
 
-namespace UniversalSend.Models {
+namespace UniversalSend.Models.Misc {
 
     internal class Settings : ISettings {
 

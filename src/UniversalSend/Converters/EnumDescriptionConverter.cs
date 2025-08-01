@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml.Data;
 
-namespace UniversalSend.Models.Helpers {
+namespace UniversalSend.Converters {
 
     public class EnumDescriptionConverter : IValueConverter {
 

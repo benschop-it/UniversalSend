@@ -1,7 +1,7 @@
 ﻿using System;
 using UniversalSend.Models.Interfaces;
 
-namespace UniversalSend.Models {
+namespace UniversalSend.Models.Misc {
 
     internal class TokenFactory : ITokenFactory {
 

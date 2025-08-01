@@ -3,7 +3,7 @@ using System.Diagnostics;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Interfaces;
 
-namespace UniversalSend.Models {
+namespace UniversalSend.Models.Misc {
 
     internal class Register : IRegister {
 

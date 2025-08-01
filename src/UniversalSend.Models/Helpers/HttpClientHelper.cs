@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using UniversalSend.Models.Interfaces;
 using Windows.Data.Json;
 using Windows.Storage.Streams;
 

@@ -1,32 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using Windows.UI.Xaml.Data;
 
-namespace UniversalSend.Models.Helpers {
-
-    public class HistoryStringConverter : IValueConverter {
-
-        #region Public Methods
-
-        public object Convert(object value, Type targetType, object parameter, string language) {
-            if (value is History) {
-                History history = (History)value;
-                string deviceAlias = "Unknown Device";
-                if (history.Device != null) {
-                    deviceAlias = history.Device.Alias;
-                }
-                return $"{history.DateTime.ToString()} - {StringHelper.GetByteUnit(history.File.Size)} - {deviceAlias}";
-            }
-            return value.ToString();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language) {
-            throw new NotImplementedException();
-        }
-
-        #endregion Public Methods
-    }
+namespace UniversalSend.Misc {
 
     public class StringHelper {
 

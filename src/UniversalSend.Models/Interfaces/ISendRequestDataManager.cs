@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using UniversalSend.Models.Interfaces;
 using Windows.Storage;
 
-namespace UniversalSend.Models.HttpData {
+namespace UniversalSend.Models.Interfaces {
     public interface ISendRequestDataManager {
         Task<ISendRequestData> CreateSendRequestDataAsync(List<IStorageFile> storageFiles);
     }

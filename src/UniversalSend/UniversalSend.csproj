@@ -198,6 +198,8 @@
     <Compile Include="Controls\SettingsItemControl.xaml.cs">
       <DependentUpon>SettingsItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\EnumDescriptionConverter.cs" />
+    <Compile Include="Converters\HistoryStringConverter.cs" />
     <Compile Include="DebugLogFactory.cs" />
     <Compile Include="DebugLogger.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -208,6 +210,7 @@
     <Compile Include="Misc\LocalizeManager.cs" />
     <Compile Include="Misc\MessageDialogManager.cs" />
     <Compile Include="Misc\NavigateHelper.cs" />
+    <Compile Include="Misc\StringHelper.cs" />
     <Compile Include="Misc\Toast.cs" />
     <Compile Include="Misc\UIManager.cs" />
     <Compile Include="Misc\ViewStorageItem.cs" />

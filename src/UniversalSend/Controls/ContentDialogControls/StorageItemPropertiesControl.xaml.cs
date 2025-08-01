@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ItemControls;
 using UniversalSend.Misc;
-using UniversalSend.Models.Helpers;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml;

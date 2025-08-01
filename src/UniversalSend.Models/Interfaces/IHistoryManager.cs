@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using UniversalSend.Models.Interfaces;
 
-namespace UniversalSend.Models.Managers {
+namespace UniversalSend.Models.Interfaces {
     public interface IHistoryManager {
         List<IHistory> HistoriesList { get; set; }
 

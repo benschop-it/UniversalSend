@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using UniversalSend.Misc;
 using UniversalSend.Models;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using Windows.UI;

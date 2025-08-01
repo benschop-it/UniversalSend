@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ContentDialogControls;
 using UniversalSend.Misc;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Strings;

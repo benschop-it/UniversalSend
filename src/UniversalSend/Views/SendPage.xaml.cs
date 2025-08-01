@@ -9,7 +9,6 @@ using UniversalSend.Controls.SendPage;
 using UniversalSend.Interfaces;
 using UniversalSend.Misc;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;

@@ -7,11 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     mc:Ignorable="d"
-    xmlns:helpers="using:UniversalSend.Models.Helpers"
+    xmlns:converters="using:UniversalSend.Converters"
     Loaded="Page_Loaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <helpers:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>

@@ -1,7 +1,4 @@
-﻿using UniversalSend.Models.HttpData;
-using UniversalSend.Models.Interfaces;
-
-namespace UniversalSend.Models.Data {
+﻿namespace UniversalSend.Models.Interfaces {
     public interface IUniversalSendFileManager {
         IUniversalSendFile CreateUniversalSendFileFromText(string text);
         IUniversalSendFile GetUniversalSendFileFromFileRequestData(IFileRequestData fileRequestData);
