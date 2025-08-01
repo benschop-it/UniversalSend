@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage;
+using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Rest {
@@ -10,8 +11,8 @@ namespace UniversalSend.Services.Rest {
         private readonly RestToHttpResponseConverter _restToHttpConverter;
         private readonly RestServerRequestFactory _restServerRequestFactory;
 
-        public RestRouteHandler() {
-            _restServerRequestFactory = new RestServerRequestFactory();
+        public RestRouteHandler(IConfiguration configuration, IEncodingCache encodingCache) {
+            _restServerRequestFactory = new RestServerRequestFactory(configuration, encodingCache);
             _requestHandler = new RestControllerRequestHandler();
             _restToHttpConverter = new RestToHttpResponseConverter();
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
@@ -45,7 +47,7 @@ namespace UniversalSend.Models.Managers {
             if (folder == null) {
                 storageFile = await _storageHelper.CreateFileInDownloadsFolderAsync(receiveTask.File.FileName);
             } else {
-                storageFile = await folder.CreateFileAsync(receiveTask.File.FileName);
+                storageFile = await folder.CreateFileAsync(receiveTask.File.FileName, CreationCollisionOption.GenerateUniqueName);
             }
             await _storageHelper.WriteBytesToFileAsync(storageFile, receiveTask.FileContent);
             return storageFile;

@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 using UniversalSend.Services.Controllers;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Plumbing;
+using UniversalSend.Services.Interfaces;
 using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
-    internal class HttpRequestParser {
+    public class HttpRequestParser : IHttpRequestParser {
         private const uint BUFFER_SIZE = 8192;
 
-        internal static HttpRequestParser Default { get; }
-
-        static HttpRequestParser() {
-            Default = new HttpRequestParser();
+        public HttpRequestParser() {
         }
 
         private IEnumerable<IHttpRequestPartParser> GetPipeline() {
@@ -30,9 +28,9 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
             };
         }
 
-        internal async Task<MutableHttpServerRequest> ParseRequestStream(IInputStream requestStream) {
+        internal async Task<IMutableHttpServerRequest> ParseRequestStream(IInputStream requestStream) {
             var httpStream = new HttpRequestStream(requestStream);
-            var request = new MutableHttpServerRequest();
+            var request = new MutableHttpServerRequest(this);
 
             try {
                 var stream = await httpStream.ReadAsync(BUFFER_SIZE, InputStreamOptions.Partial);
@@ -77,6 +75,10 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
             }
 
             return request;
+        }
+
+        Task<IMutableHttpServerRequest> IHttpRequestParser.ParseRequestStream(IInputStream requestStream) {
+            return ParseRequestStream(requestStream);
         }
     }
 }

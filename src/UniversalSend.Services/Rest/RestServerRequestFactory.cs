@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Linq;
 using UniversalSend.Services.HttpMessage;
+using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services.Rest {
 
     internal class RestServerRequestFactory {
+        private readonly IConfiguration _configuration;
+        private readonly IEncodingCache _encodingCache;
+
+        public RestServerRequestFactory(IConfiguration configuration, IEncodingCache encodingCache) {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
+        }
 
         public RestServerRequest Create(IHttpServerRequest httpRequest) {
             var acceptMediaType = GetAcceptMediaType(httpRequest);
@@ -20,17 +28,17 @@ namespace UniversalSend.Services.Rest {
                 httpRequest,
                 acceptCharset,
                 acceptMediaType,
-                EncodingCache.Default.GetEncoding(acceptCharset),
+                _encodingCache.GetEncoding(acceptCharset),
                 contentMediaType,
                 contentCharset,
-                EncodingCache.Default.GetEncoding(contentCharset)
+                _encodingCache.GetEncoding(contentCharset)
             );
         }
 
         private MediaType GetContentMediaType(IHttpServerRequest httpRequest) {
             var contentMediaType = GetMediaType(httpRequest.ContentType ?? string.Empty); // guard against nulls
             if (contentMediaType == MediaType.Unsupported)
-                return Configuration.Default.DefaultContentType;
+                return _configuration.DefaultContentType;
 
             return contentMediaType;
         }
@@ -49,12 +57,12 @@ namespace UniversalSend.Services.Rest {
 
         private string GetContentCharset(IHttpServerRequest httpRequest, MediaType contentMediaType) {
             var requestContentCharset = httpRequest.ContentTypeCharset;
-            var encoding = EncodingCache.Default.GetEncoding(requestContentCharset);
+            var encoding = _encodingCache.GetEncoding(requestContentCharset);
             if (encoding == null) {
                 if (contentMediaType == MediaType.JSON) {
-                    requestContentCharset = Configuration.Default.DefaultJSONCharset;
+                    requestContentCharset = _configuration.DefaultJSONCharset;
                 } else if (contentMediaType == MediaType.XML) {
-                    requestContentCharset = Configuration.Default.DefaultXMLCharset;
+                    requestContentCharset = _configuration.DefaultXMLCharset;
                 } else {
                     throw new NotImplementedException("Content media type is not supported.");
                 }
@@ -69,7 +77,7 @@ namespace UniversalSend.Services.Rest {
                                     .FirstOrDefault(a => a != MediaType.Unsupported);
 
             if (preferredType == MediaType.Unsupported)
-                preferredType = Configuration.Default.DefaultAcceptType;
+                preferredType = _configuration.DefaultAcceptType;
 
             return preferredType;
         }
@@ -78,7 +86,7 @@ namespace UniversalSend.Services.Rest {
             string firstAvailableEncoding = null;
 
             foreach (var requestedCharset in httpRequest.AcceptCharsets) {
-                var encoding = EncodingCache.Default.GetEncoding(requestedCharset);
+                var encoding = _encodingCache.GetEncoding(requestedCharset);
                 firstAvailableEncoding = requestedCharset;
 
                 if (encoding != null)
@@ -87,9 +95,9 @@ namespace UniversalSend.Services.Rest {
 
             if (string.IsNullOrEmpty(firstAvailableEncoding)) {
                 if (acceptMediaType == MediaType.JSON) {
-                    firstAvailableEncoding = Configuration.Default.DefaultJSONCharset;
+                    firstAvailableEncoding = _configuration.DefaultJSONCharset;
                 } else if (acceptMediaType == MediaType.XML) {
-                    firstAvailableEncoding = Configuration.Default.DefaultXMLCharset;
+                    firstAvailableEncoding = _configuration.DefaultXMLCharset;
                 } else {
                     throw new NotImplementedException("Accept media type is not supported.");
                 }

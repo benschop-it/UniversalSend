@@ -13,9 +13,11 @@ namespace UniversalSend.Services.HttpMessage {
 
     internal class MutableHttpServerRequest : IHttpServerRequest, IMutableHttpServerRequest {
         private readonly List<IHttpRequestHeader> _headers;
+        private readonly HttpRequestParser _httpRequestParser;
 
-        internal MutableHttpServerRequest() {
+        internal MutableHttpServerRequest(HttpRequestParser httpRequestParser) {
             _headers = new List<IHttpRequestHeader>();
+            _httpRequestParser = httpRequestParser;
 
             AcceptCharsets = Enumerable.Empty<string>();
             AcceptMediaTypes = Enumerable.Empty<string>();
@@ -50,7 +52,7 @@ namespace UniversalSend.Services.HttpMessage {
         }
 
         public async Task<IMutableHttpServerRequest> Parse(IInputStream requestStream) {
-            return await HttpRequestParser.Default.ParseRequestStream(requestStream);
+            return await _httpRequestParser.ParseRequestStream(requestStream);
         }
     }
 }

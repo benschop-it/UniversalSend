@@ -11,6 +11,7 @@ using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Services;
+using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using UniversalSend.Services.Interfaces;
 using UniversalSend.Views;
 using Windows.ApplicationModel;
@@ -159,6 +160,9 @@ namespace UniversalSend {
             services.AddSingleton<IUIManager, UIManager>();
             services.AddSingleton<IOperationFunctions, OperationFunctions>();
             services.AddSingleton<ISendRequestDataManager, SendRequestDataManager>();
+            services.AddSingleton<IHttpRequestParser, HttpRequestParser>();
+            services.AddSingleton<IConfiguration, Configuration>();
+            services.AddSingleton<IEncodingCache, EncodingCache>();
 
             services.AddTransient<IContentDialogManager, ContentDialogManager>();
             services.AddTransient<IDevice, Device>();

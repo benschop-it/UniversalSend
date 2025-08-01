@@ -23,6 +23,9 @@ namespace UniversalSend.Services {
         private IUniversalSendFileManager _universalSendFileManager;
         private IReceiveTaskManager _receiveTaskManager;
         private IRegisterResponseDataManager _registerResponseDataManager;
+        private readonly IHttpRequestParser _httpRequestParser;
+        private readonly IConfiguration _configuration;
+        private readonly IEncodingCache _encodingCache;
 
         public ServiceHttpServer(
             IDeviceManager deviceManager,
@@ -34,7 +37,10 @@ namespace UniversalSend.Services {
             ITokenFactory tokenFactory,
             IUniversalSendFileManager universalSendFileManager,
             IReceiveTaskManager receiveTaskManager,
-            IRegisterResponseDataManager registerResponseDataManager
+            IRegisterResponseDataManager registerResponseDataManager,
+            IHttpRequestParser httpRequestParser,
+            IConfiguration configuration,
+            IEncodingCache encodingCache
         ) {
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _register = register ?? throw new ArgumentNullException(nameof(register));
@@ -46,6 +52,9 @@ namespace UniversalSend.Services {
             _universalSendFileManager = universalSendFileManager ?? throw new ArgumentNullException(nameof(universalSendFileManager));
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
+            _httpRequestParser = httpRequestParser ?? throw new ArgumentNullException(nameof(httpRequestParser));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
         }
 
         #region Private Fields
@@ -68,7 +77,7 @@ namespace UniversalSend.Services {
             _udpDiscovery = new UdpDiscoveryService(_registerResponseDataManager, _deviceManager, _register, _settings);
             await _udpDiscovery.StartUdpListenerAsync();
 
-            RestRouteHandler restRouteHandler = new RestRouteHandler();
+            RestRouteHandler restRouteHandler = new RestRouteHandler(_configuration, _encodingCache);
 
             restRouteHandler.RegisterController<V1RequestController>(() =>
             {
@@ -87,7 +96,7 @@ namespace UniversalSend.Services {
             HttpServerConfiguration = new HttpServerConfiguration();
             HttpServerConfiguration.ListenOnPort(port).RegisterRoute("api/localsend/", restRouteHandler).EnableCors();
 
-            HttpServer = new HttpServer(HttpServerConfiguration);
+            HttpServer = new HttpServer(HttpServerConfiguration, _httpRequestParser);
             try {
                 await HttpServer.StartServerAsync();
             } catch {

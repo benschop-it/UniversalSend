@@ -108,13 +108,15 @@ namespace UniversalSend.Services {
 
         private async Task WriteFileAsync(IReceiveTask task, string ip) {
             IStorageFile file = await _receiveTaskManager.WriteReceiveTaskToFileAsync(task);
-            var history = _historyManager.CreateHistory(
-                task.File,
-                StorageApplicationPermissions.FutureAccessList.Add(file),
-                _deviceManager.CreateDeviceFromInfoData(task.Sender)
-            );
+            if (file != null) {
+                var history = _historyManager.CreateHistory(
+                    task.File,
+                    StorageApplicationPermissions.FutureAccessList.Add(file),
+                    _deviceManager.CreateDeviceFromInfoData(task.Sender)
+                );
 
-            _historyManager.AddHistoriesList(history);
+                _historyManager.AddHistoriesList(history);
+            }
         }
 
         #endregion Private Methods

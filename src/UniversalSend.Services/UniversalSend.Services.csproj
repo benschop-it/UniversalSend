@@ -157,6 +157,9 @@
     <Compile Include="HttpMessage\Headers\UntypedResponseHeader.cs" />
     <Compile Include="HttpMessage\HttpServerRequest.cs" />
     <Compile Include="HttpMessage\HttpServerResponse.cs" />
+    <Compile Include="IEncodingCache.cs" />
+    <Compile Include="Interfaces\IConfiguration.cs" />
+    <Compile Include="Interfaces\IHttpRequestParser.cs" />
     <Compile Include="Interfaces\IMutableHttpServerRequest.cs" />
     <Compile Include="Interfaces\IOperationFunctions.cs" />
     <Compile Include="Rest\Models\Contracts\IContentRestResponse.cs" />

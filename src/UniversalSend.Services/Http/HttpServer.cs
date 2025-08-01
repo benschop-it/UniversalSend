@@ -13,6 +13,7 @@ using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
+using UniversalSend.Services.Interfaces;
 using Windows.Networking.Sockets;
 
 namespace UniversalSend.Services.Http {
@@ -24,8 +25,9 @@ namespace UniversalSend.Services.Http {
         private readonly ContentEncoderFactory _contentEncoderFactory;
         private readonly ILogger _log;
         private readonly List<IHttpMessageInspector> _messageInspectors;
+        private readonly IHttpRequestParser _httpRequestParser;
 
-        public HttpServer(HttpServerConfiguration configuration) {
+        public HttpServer(HttpServerConfiguration configuration, IHttpRequestParser httpRequestParser) {
             _log = LogManager.GetLogger<HttpServer>();
             _port = configuration.ServerPort;
             _listener = new StreamSocketListener();
@@ -38,11 +40,7 @@ namespace UniversalSend.Services.Http {
                 _messageInspectors.Add(new CorsMessageInspector(configuration.CorsConfiguration.AllowedOrigins));
 
             _routes = new SortedSet<RouteRegistration>(configuration.Routes);
-        }
-
-        [Obsolete("Use constructor that takes a httpServerConfiguration")]
-        public HttpServer(int serverPort)
-            : this(new HttpServerConfiguration().ListenOnPort(serverPort)) {
+            _httpRequestParser = httpRequestParser ?? throw new ArgumentNullException(nameof(httpRequestParser));
         }
 
         public async Task StartServerAsync() {
@@ -65,7 +63,7 @@ namespace UniversalSend.Services.Http {
 
                 try {
                     using (var inputStream = args.Socket.InputStream) {
-                        var request = await HttpRequestParser.Default.ParseRequestStream(inputStream);
+                        MutableHttpServerRequest request = await _httpRequestParser.ParseRequestStream(inputStream) as MutableHttpServerRequest;
 
                         requestLog.AppendLine("[HttpServer.ProcessRequestAsync] [Request]");
                         requestLog.AppendLine($"    Uri = {request.Uri}");

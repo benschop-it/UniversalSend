@@ -181,7 +181,6 @@
     <Compile Include="HttpData\RegisterResponseData.cs" />
     <Compile Include="HttpData\SendRequestData.cs" />
     <Compile Include="HttpData\SendResponseData.cs" />
-    <Compile Include="JsonHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Interfaces\IReceiveManager.cs" />
     <Compile Include="ProgramData.cs" />

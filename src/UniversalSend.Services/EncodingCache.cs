@@ -4,22 +4,16 @@ using System.Text;
 
 namespace UniversalSend.Services {
 
-    internal class EncodingCache {
-        internal static EncodingCache Default;
-
-        static EncodingCache() {
-            Default = new EncodingCache();
-        }
-
+    public class EncodingCache : IEncodingCache {
         private Dictionary<string, Encoding> _cache;
         private object _cacheLock;
 
-        internal EncodingCache() {
+        public EncodingCache() {
             _cache = new Dictionary<string, Encoding>(StringComparer.OrdinalIgnoreCase);
             _cacheLock = new object();
         }
 
-        internal Encoding GetEncoding(string charset) {
+        public Encoding GetEncoding(string charset) {
             if (string.IsNullOrEmpty(charset)) {
                 return null;
             }
