@@ -3,7 +3,7 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
-    public class RegisterRequestDataManager : IRegisterRequestDataManager {
+    internal class RegisterRequestDataManager : IRegisterRequestDataManager {
 
         #region Public Methods
 

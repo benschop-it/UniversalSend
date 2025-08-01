@@ -1,5 +1,6 @@
 ﻿using System;
 using UniversalSend.Models.Data;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
@@ -7,7 +8,7 @@ namespace UniversalSend.Models {
 
         #region Public Properties
 
-        public static Device LocalDevice { get; set; } = new Device {
+        public static IDevice LocalDevice { get; set; } = new Device {
             //Alias = $"WindowsPhone (UWP)",
             ProtocolVersion = "v1",
             //DeviceModel = "Microsoft",

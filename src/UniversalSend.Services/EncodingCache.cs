@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniversalSend.Services {
 
-    public class EncodingCache : IEncodingCache {
+    internal class EncodingCache : IEncodingCache {
         private Dictionary<string, Encoding> _cache;
         private object _cacheLock;
 

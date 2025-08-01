@@ -5,6 +5,7 @@ using UniversalSend.Services.HttpMessage.Headers;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
+using UniversalSend.Services.HttpMessage.Plumbing;
 using UniversalSend.Services.HttpMessage.ServerResponseParsers;
 
 namespace UniversalSend.Services.HttpMessage {
@@ -22,7 +23,13 @@ namespace UniversalSend.Services.HttpMessage {
         // Content
         public byte[] Content { get; set; }
 
+        private static HttpCodesTranslator _httpCodesTranslator = new HttpCodesTranslator();
+        private static HttpServerResponseParser _httpServerResponseParser;
+
         private HttpServerResponse(Version httpVersion, HttpResponseStatus status) {
+            if (_httpServerResponseParser == null) {
+                _httpServerResponseParser = new HttpServerResponseParser(_httpCodesTranslator);
+            }
             _headers = new List<IHttpHeader>();
 
             HttpVersion = httpVersion;
@@ -137,7 +144,7 @@ namespace UniversalSend.Services.HttpMessage {
         }
 
         public byte[] ToBytes() {
-            return HttpServerResponseParser.Default.ConvertToBytes(this);
+            return _httpServerResponseParser.ConvertToBytes(this);
         }
 
         public override string ToString() {
@@ -146,7 +153,7 @@ namespace UniversalSend.Services.HttpMessage {
             // this method is that it uses Encoding to decode the content which is a fairly complicated process. For debugging
             // purposes I'm using UTF-8 which is working most of the time. In real life you want to use the charset provided, or
             // some default encoding as explained in the HTTP specs.
-            return HttpServerResponseParser.Default.ConvertToString(this);
+            return _httpServerResponseParser.ConvertToString(this);
 #else
             return $"{HttpVersion} {ResponseStatus} including {Headers.Count()} headers.";
 #endif

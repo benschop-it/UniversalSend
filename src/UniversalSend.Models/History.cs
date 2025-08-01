@@ -4,7 +4,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models {
 
-    public class History : IHistory {
+    internal class History : IHistory {
 
         #region Public Constructors
 
@@ -29,7 +29,7 @@ namespace UniversalSend.Models {
         #endregion Public Properties
     }
 
-    public class ConcreteHistory {
+    internal class ConcreteHistory {
 
         #region Public Constructors
 

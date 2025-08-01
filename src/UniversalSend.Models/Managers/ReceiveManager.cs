@@ -6,7 +6,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
-    public class ReceiveManager : IReceiveManager {
+    internal class ReceiveManager : IReceiveManager {
 
         private readonly IReceiveTaskManager _receiveTaskManager;
 
@@ -64,7 +64,7 @@ namespace UniversalSend.Models.Managers {
             SendDataReceived?.Invoke(receiveTask, EventArgs.Empty);
         }
 
-        public void SendRequestEvent(SendRequestData sendRequestData) {
+        public void SendRequestEvent(ISendRequestData sendRequestData) {
             Debug.WriteLine("SendRequestEvent");
             SendRequestReceived?.Invoke(sendRequestData, EventArgs.Empty);
         }

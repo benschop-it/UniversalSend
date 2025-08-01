@@ -9,7 +9,7 @@ using Windows.Storage.AccessCache;
 
 namespace UniversalSend.Models.Managers {
 
-    public class HistoryManager : IHistoryManager {
+    internal class HistoryManager : IHistoryManager {
 
         private ISettings _settings;
 

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using UniversalSend.Models.HttpData;
+using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
-    internal class FileResponseDataManager {
+    internal class FileResponseDataManager : IFileResponseDataManager {
 
         #region Public Methods
 
-        public static FileResponseData CreateFromDictionary(Dictionary<string, string> keyValuePairs) {
+        public FileResponseData CreateFromDictionary(Dictionary<string, string> keyValuePairs) {
             FileResponseData fileResponseData = new FileResponseData();
             foreach (var item in keyValuePairs) {
                 fileResponseData.Add(item.Key, item.Value);

@@ -123,10 +123,13 @@
     <Compile Include="Common\AbstractLogger.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Helpers\IHttpClientHelper.cs" />
     <Compile Include="Interfaces\ISendRequestDataManager.cs" />
     <Compile Include="Interfaces\ISendRequestData.cs" />
     <Compile Include="HttpData\SendRequestDataManager.cs" />
     <Compile Include="Interfaces\IRegisterRequestDataManager.cs" />
+    <Compile Include="Interfaces\IFileRequestDataManager.cs" />
+    <Compile Include="Interfaces\IFileResponseDataManager.cs" />
     <Compile Include="Managers\RegisterRequestDataManager.cs" />
     <Compile Include="Managers\FileRequestDataManager.cs" />
     <Compile Include="Interfaces\ISystemHelper.cs" />
@@ -161,7 +164,6 @@
     <Compile Include="Interfaces\IFileRequestData.cs" />
     <Compile Include="Interfaces\ILogFactory.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
-    <Compile Include="Interfaces\IServiceHttpServer.cs" />
     <Compile Include="Managers\ContentDialogManager.cs" />
     <Compile Include="Data\Device.cs" />
     <Compile Include="Managers\DeviceManager.cs" />
@@ -188,6 +190,7 @@
     <Compile Include="Managers\ReceiveManager.cs" />
     <Compile Include="Register.cs" />
     <Compile Include="Managers\SendManager.cs" />
+    <Compile Include="RegisterServices.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
@@ -203,6 +206,9 @@
     <EmbeddedResource Include="Properties\UniversalSend.Models.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>1.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.4.7</Version>
     </PackageReference>

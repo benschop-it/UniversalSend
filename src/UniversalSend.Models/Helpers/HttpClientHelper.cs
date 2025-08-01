@@ -10,18 +10,18 @@ using Windows.Storage.Streams;
 
 namespace UniversalSend.Models.Helpers {
 
-    public static class HttpClientHelper {
+    internal class HttpClientHelper : IHttpClientHelper {
 
         #region Private Fields
 
         // Static HttpClient instance to avoid frequent creation
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        static HttpClientHelper() {
+        public HttpClientHelper() {
             // Set default timeout
             //_httpClient.Timeout = TimeSpan.FromSeconds(30);
             // Set default request headers
@@ -35,7 +35,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a DELETE request
         /// </summary>
-        public static async Task<bool> DeleteAsync(string url, Dictionary<string, string> headers = null) {
+        public async Task<bool> DeleteAsync(string url, Dictionary<string, string> headers = null) {
             try {
                 ApplyHeaders(headers);
                 var response = await _httpClient.DeleteAsync(url);
@@ -49,7 +49,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a GET request and return JsonArray result
         /// </summary>
-        public static async Task<JsonArray> GetJsonArrayAsync(string url, Dictionary<string, string> headers = null) {
+        public async Task<JsonArray> GetJsonArrayAsync(string url, Dictionary<string, string> headers = null) {
             var jsonString = await GetStringAsync(url, headers);
             if (JsonArray.TryParse(jsonString, out JsonArray jsonArray)) {
                 return jsonArray;
@@ -60,7 +60,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a GET request and return JsonObject result
         /// </summary>
-        public static async Task<JsonObject> GetJsonObjectAsync(string url, Dictionary<string, string> headers = null) {
+        public async Task<JsonObject> GetJsonObjectAsync(string url, Dictionary<string, string> headers = null) {
             var jsonString = await GetStringAsync(url, headers);
             if (JsonObject.TryParse(jsonString, out JsonObject jsonObject)) {
                 return jsonObject;
@@ -71,7 +71,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a GET request and return stream result
         /// </summary>
-        public static async Task<IRandomAccessStream> GetStreamAsync(string url, Dictionary<string, string> headers = null) {
+        public async Task<IRandomAccessStream> GetStreamAsync(string url, Dictionary<string, string> headers = null) {
             try {
                 ApplyHeaders(headers);
                 var response = await _httpClient.GetAsync(url);
@@ -87,7 +87,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a GET request and return string result
         /// </summary>
-        public static async Task<string> GetStringAsync(string url, Dictionary<string, string> headers = null) {
+        public async Task<string> GetStringAsync(string url, Dictionary<string, string> headers = null) {
             try {
                 ApplyHeaders(headers);
                 var response = await _httpClient.GetAsync(url);
@@ -100,7 +100,7 @@ namespace UniversalSend.Models.Helpers {
             }
         }
 
-        public static async Task<string> PostBinaryAsync(
+        public async Task<string> PostBinaryAsync(
             string url,
             byte[] binaryData,
             string contentType = "application/octet-stream",
@@ -114,7 +114,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a form POST request and return string result
         /// </summary>
-        public static async Task<string> PostFormAsync(
+        public async Task<string> PostFormAsync(
             string url,
             Dictionary<string, string> formData,
             Dictionary<string, string> headers = null
@@ -126,7 +126,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a JSON POST request and return string result
         /// </summary>
-        public static async Task<string> PostJsonAsync(
+        public async Task<string> PostJsonAsync(
             string url,
             string jsonContent,
             Dictionary<string, string> headers = null
@@ -138,7 +138,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a POST request and return string result
         /// </summary>
-        public static async Task<string> PostStringAsync(
+        public async Task<string> PostStringAsync(
             string url,
             HttpContent content,
             Dictionary<string, string> headers = null
@@ -157,7 +157,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a JSON PUT request and return string result
         /// </summary>
-        public static async Task<string> PutJsonAsync(string url, string jsonContent, Dictionary<string, string> headers = null) {
+        public async Task<string> PutJsonAsync(string url, string jsonContent, Dictionary<string, string> headers = null) {
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             return await PutStringAsync(url, content, headers);
         }
@@ -165,7 +165,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Send a PUT request and return string result
         /// </summary>
-        public static async Task<string> PutStringAsync(string url, HttpContent content, Dictionary<string, string> headers = null) {
+        public async Task<string> PutStringAsync(string url, HttpContent content, Dictionary<string, string> headers = null) {
             try {
                 ApplyHeaders(headers);
                 var response = await _httpClient.PutAsync(url, content);
@@ -180,14 +180,14 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Set base URL
         /// </summary>
-        public static void SetBaseAddress(string baseAddress) {
+        public void SetBaseAddress(string baseAddress) {
             _httpClient.BaseAddress = new Uri(baseAddress);
         }
 
         /// <summary>
         /// Set timeout (in seconds)
         /// </summary>
-        public static void SetTimeout(int seconds) {
+        public void SetTimeout(int seconds) {
             _httpClient.Timeout = TimeSpan.FromSeconds(seconds);
         }
 
@@ -198,7 +198,7 @@ namespace UniversalSend.Models.Helpers {
         /// <summary>
         /// Apply custom headers
         /// </summary>
-        private static void ApplyHeaders(Dictionary<string, string> headers) {
+        private void ApplyHeaders(Dictionary<string, string> headers) {
             // Clear previous custom headers
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

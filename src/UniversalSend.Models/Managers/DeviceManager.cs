@@ -10,10 +10,11 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
-    public class DeviceManager : IDeviceManager {
+    internal class DeviceManager : IDeviceManager {
 
         private INetworkHelper _networkHelper;
         private IRegisterRequestDataManager _registerRequestDataManager;
+        private IHttpClientHelper _httpClientHelper;
 
         #region Public Events
 
@@ -21,8 +22,13 @@ namespace UniversalSend.Models.Managers {
 
         #endregion Public Events
 
-        public DeviceManager(INetworkHelper networkHelper, IRegisterRequestDataManager registerRequestDataManager) {
+        public DeviceManager(
+            INetworkHelper networkHelper,
+            IRegisterRequestDataManager registerRequestDataManager,
+            IHttpClientHelper httpClientHelper
+        ) {
             _networkHelper = networkHelper ?? throw new ArgumentNullException(nameof(networkHelper));
+            _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _registerRequestDataManager = registerRequestDataManager ?? throw new ArgumentNullException(nameof(registerRequestDataManager));
         }
 
@@ -76,7 +82,7 @@ namespace UniversalSend.Models.Managers {
 
             Debug.WriteLine($"URL:http://{IP}:53317/api/localsend/v1/register\nJson:{serializedDevice}");
 
-            string responseString = await HttpClientHelper.PostJsonAsync($"http://{IP}:53317/api/localsend/v1/register", serializedDevice);
+            string responseString = await _httpClientHelper.PostJsonAsync($"http://{IP}:53317/api/localsend/v1/register", serializedDevice);
 
             Debug.WriteLine($"responseString: {responseString}");
 

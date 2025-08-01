@@ -2,7 +2,7 @@
 
 namespace UniversalSend.Models {
 
-    public class Favorite : IFavorite {
+    internal class Favorite : IFavorite {
 
         #region Public Constructors
 

@@ -3,7 +3,7 @@ using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services {
 
-    public class Configuration : IConfiguration {
+    internal class Configuration : IConfiguration {
         public Configuration() {
             DefaultAcceptType = MediaType.JSON;
             DefaultContentType = MediaType.JSON;

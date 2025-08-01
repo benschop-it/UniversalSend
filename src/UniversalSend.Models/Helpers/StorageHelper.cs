@@ -12,7 +12,7 @@ using Windows.System;
 
 namespace UniversalSend.Models.Helpers {
 
-    public class StorageHelper : IStorageHelper {
+    internal class StorageHelper : IStorageHelper {
 
         private readonly ISystemHelper _systemHelper;
         private readonly ISettings _settings;
@@ -62,7 +62,6 @@ namespace UniversalSend.Models.Helpers {
             return await CreateFileAsync(folder, fileName);
         }
 
-        //public static StorageFolder DefaultSaveFolder = DownloadsFolder.
         public async Task<List<StorageFile>> GetFilesInFolder(StorageFolder folder) {
             var items = await folder.GetItemsAsync();
             List<StorageFile> files = new List<StorageFile>();

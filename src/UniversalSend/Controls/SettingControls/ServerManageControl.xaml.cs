@@ -2,6 +2,7 @@
 using System;
 using UniversalSend.Models;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Services.Interfaces;
 using UniversalSend.Strings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

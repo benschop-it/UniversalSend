@@ -12,6 +12,7 @@ using UniversalSend.Services;
 using Microsoft.Extensions.DependencyInjection;
 using UniversalSend.Strings;
 using UniversalSend.Misc;
+using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Views {
 

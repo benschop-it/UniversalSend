@@ -6,7 +6,7 @@ using UniversalSend.Strings;
 
 namespace UniversalSend.Models.Managers {
 
-    public class FavoriteManager : IFavoriteManager {
+    internal class FavoriteManager : IFavoriteManager {
 
         private ISettings _settings;
 

@@ -3,7 +3,7 @@ using Windows.System.Profile;
 
 namespace UniversalSend.Models.Helpers {
 
-    public class SystemHelper : ISystemHelper {
+    internal class SystemHelper : ISystemHelper {
 
         public DeviceFormFactorType GetDeviceFormFactorType() {
             switch (AnalyticsInfo.VersionInfo.DeviceFamily) {

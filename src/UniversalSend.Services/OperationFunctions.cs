@@ -9,7 +9,6 @@ using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
-using UniversalSend.Models.Tasks;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.Interfaces;
 using Windows.Storage;
@@ -17,7 +16,7 @@ using Windows.Storage.AccessCache;
 
 namespace UniversalSend.Services {
 
-    public class OperationFunctions : IOperationFunctions {
+    internal class OperationFunctions : IOperationFunctions {
 
         private IReceiveManager _receiveManager;
         private IReceiveTaskManager _receiveTaskManager;

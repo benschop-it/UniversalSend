@@ -27,7 +27,10 @@ namespace UniversalSend.Services.Http {
         private readonly List<IHttpMessageInspector> _messageInspectors;
         private readonly IHttpRequestParser _httpRequestParser;
 
-        public HttpServer(HttpServerConfiguration configuration, IHttpRequestParser httpRequestParser) {
+        public HttpServer(
+            HttpServerConfiguration configuration, 
+            IHttpRequestParser httpRequestParser
+        ) {
             _log = LogManager.GetLogger<HttpServer>();
             _port = configuration.ServerPort;
             _listener = new StreamSocketListener();

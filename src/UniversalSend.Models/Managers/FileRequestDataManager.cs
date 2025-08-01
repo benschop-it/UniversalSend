@@ -5,11 +5,11 @@ using UniversalSend.Models.Interfaces;
 using Windows.Storage;
 
 namespace UniversalSend.Models.Managers {
-    internal class FileRequestDataManager {
+    internal class FileRequestDataManager : IFileRequestDataManager {
 
         #region Public Methods
 
-        public static async Task<FileRequestData> CreateFromStorageFileAsync(IStorageFile storageFile) {
+        public async Task<IFileRequestData> CreateFromStorageFileAsync(IStorageFile storageFile) {
             FileRequestData fileRequestData = new FileRequestData();
             fileRequestData.FileType = storageFile.FileType;
             fileRequestData.Size = (long)(await storageFile.GetBasicPropertiesAsync()).Size;
@@ -18,7 +18,7 @@ namespace UniversalSend.Models.Managers {
             return fileRequestData;
         }
 
-        public static FileRequestData CreateFromUniversalSendFile(IUniversalSendFile universalSendFile) {
+        public IFileRequestData CreateFromUniversalSendFile(IUniversalSendFile universalSendFile) {
             FileRequestData fileRequestData = new FileRequestData();
             fileRequestData.FileType = universalSendFile.FileType;
             fileRequestData.FileName = universalSendFile.FileName;

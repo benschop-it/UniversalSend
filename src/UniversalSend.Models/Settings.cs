@@ -9,7 +9,7 @@ using Windows.Storage;
 
 namespace UniversalSend.Models {
 
-    public class Settings : ISettings {
+    internal class Settings : ISettings {
 
         #region Public Fields
 
@@ -59,8 +59,6 @@ namespace UniversalSend.Models {
         }
 
         public bool SetSetting(string key, object value) {
-            Debug.WriteLine($"UTF-8 Byte Count: {Encoding.UTF8.GetByteCount((string)value)}");
-
             try {
                 UserSettings.Values[key] = value;
             } catch (Exception ex) {

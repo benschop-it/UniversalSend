@@ -25,6 +25,6 @@ namespace UniversalSend.Models.Interfaces {
         void CancelReceivedEvent();
         Task<bool> GetChosenOption();
         void SendDataReceivedEvent(IReceiveTask receiveTask);
-        void SendRequestEvent(SendRequestData sendRequestData);
+        void SendRequestEvent(ISendRequestData sendRequestData);
     }
 }

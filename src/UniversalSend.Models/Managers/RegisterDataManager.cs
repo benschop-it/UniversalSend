@@ -2,7 +2,7 @@
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
-    public class RegisterDataManager : IRegisterDataManager {
+    internal class RegisterDataManager : IRegisterDataManager {
 
         #region Public Methods
 

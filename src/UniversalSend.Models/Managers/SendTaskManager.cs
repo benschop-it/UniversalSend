@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
@@ -12,26 +13,32 @@ using Windows.Storage;
 
 namespace UniversalSend.Models.Managers {
 
-    public class SendTaskManager : ISendTaskManager {
+    internal class SendTaskManager : ISendTaskManager {
 
         private IUniversalSendFileManager _universalSendFileManager;
         private IInfoDataManager _infoDataManager;
         private IStorageHelper _storageHelper;
         private ISendTask _sendTask;
         private ISendManager _sendManager;
+        private IHttpClientHelper _httpClientHelper;
+        private IFileRequestDataManager _fileRequestDataManager;
 
         public SendTaskManager(
             IUniversalSendFileManager universalSendFileManager,
             IInfoDataManager infoDataManager,
             IStorageHelper storageHelper,
             ISendTask sendTask,
-            ISendManager sendManager
+            ISendManager sendManager,
+            IHttpClientHelper httpClientHelper,
+            IFileRequestDataManager fileRequestDataManager
         ) {
             _universalSendFileManager = universalSendFileManager ?? throw new System.ArgumentNullException(nameof(universalSendFileManager));
             _infoDataManager = infoDataManager ?? throw new System.ArgumentNullException(nameof(infoDataManager));
             _storageHelper = storageHelper ?? throw new System.ArgumentNullException(nameof(storageHelper));
             _sendTask = sendTask ?? throw new System.ArgumentNullException(nameof(sendTask));
             _sendManager = sendManager ?? throw new System.ArgumentNullException(nameof(sendManager));
+            _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
+            _fileRequestDataManager = fileRequestDataManager ?? throw new ArgumentNullException(nameof(fileRequestDataManager));
         }
 
         #region Public Properties
@@ -43,7 +50,7 @@ namespace UniversalSend.Models.Managers {
         #region Public Methods
 
         public async Task<ISendTask> CreateSendTask(IStorageFile file) {
-            FileRequestData fileRequestData = await FileRequestDataManager.CreateFromStorageFileAsync(file);
+            IFileRequestData fileRequestData = await _fileRequestDataManager.CreateFromStorageFileAsync(file);
             _sendManager.SendCreatedEvent();
             return CreateSendTaskFromFileRequestDataAndStorageFile(fileRequestData, file);
         }
@@ -66,7 +73,7 @@ namespace UniversalSend.Models.Managers {
         public async Task CreateSendTasks(List<IStorageFile> files) {
             SendTasks.Clear();
             foreach (var file in files) {
-                FileRequestData fileRequestData = await FileRequestDataManager.CreateFromStorageFileAsync(file);
+                IFileRequestData fileRequestData = await _fileRequestDataManager.CreateFromStorageFileAsync(file);
                 SendTasks.Add(CreateSendTaskFromFileRequestDataAndStorageFile(fileRequestData, file));
             }
             _sendManager.SendCreatedEvent();
@@ -77,14 +84,15 @@ namespace UniversalSend.Models.Managers {
             sendRequestData.Files = new Dictionary<string, FileRequestData>();
             sendRequestData.Info = _infoDataManager.GetInfoDataFromDevice();
             foreach (var task in SendTasks) {
-                sendRequestData.Files.Add(task.File.Id, FileRequestDataManager.CreateFromUniversalSendFile(task.File));
+                IFileRequestData fileRequestData = _fileRequestDataManager.CreateFromUniversalSendFile(task.File);
+                sendRequestData.Files.Add(task.File.Id, (FileRequestData)fileRequestData);
             }
             Debug.WriteLine($"Sending send request:\nURL: {destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request");
 
             var serializedSendRequestData = JsonConvert.SerializeObject(sendRequestData);
 
             Debug.WriteLine($"SendSendRequestAsync: {serializedSendRequestData}");
-            string responseStr = await HttpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request", serializedSendRequestData);
+            string responseStr = await _httpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request", serializedSendRequestData);
             Debug.WriteLine($"Receiver responded: {responseStr}");
 
             try {
@@ -122,13 +130,13 @@ namespace UniversalSend.Models.Managers {
                 task.TaskState = ReceiveTaskStates.Sending;
 
                 if (task.File.FileType == "text") {
-                    await HttpClientHelper.PostStringAsync(
+                    await _httpClientHelper.PostStringAsync(
                         $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}",
                         new StringContent(task.File.Text)
                     );
                 } else {
                     byte[] bytes = await _storageHelper.ReadBytesFromFileAsync(task.StorageFile);
-                    await HttpClientHelper.PostBinaryAsync(
+                    await _httpClientHelper.PostBinaryAsync(
                         $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}",
                         bytes
                     );

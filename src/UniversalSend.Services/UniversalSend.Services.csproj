@@ -157,11 +157,15 @@
     <Compile Include="HttpMessage\Headers\UntypedResponseHeader.cs" />
     <Compile Include="HttpMessage\HttpServerRequest.cs" />
     <Compile Include="HttpMessage\HttpServerResponse.cs" />
+    <Compile Include="Interfaces\IHttpServerResponseParser.cs" />
+    <Compile Include="Interfaces\IHttpCodesTranslator.cs" />
     <Compile Include="IEncodingCache.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IHttpRequestParser.cs" />
     <Compile Include="Interfaces\IMutableHttpServerRequest.cs" />
     <Compile Include="Interfaces\IOperationFunctions.cs" />
+    <Compile Include="Interfaces\IServiceHttpServer.cs" />
+    <Compile Include="RegisterServices.cs" />
     <Compile Include="Rest\Models\Contracts\IContentRestResponse.cs" />
     <Compile Include="Rest\Models\Contracts\IDeleteResponse.cs" />
     <Compile Include="Rest\Models\Contracts\IGetResponse.cs" />
@@ -257,6 +261,9 @@
     <EmbeddedResource Include="Properties\UniversalSend.Services.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>1.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.4.7</Version>
     </PackageReference>

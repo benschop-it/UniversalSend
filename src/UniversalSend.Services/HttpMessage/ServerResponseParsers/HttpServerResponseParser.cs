@@ -1,21 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
+using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
 
-    internal class HttpServerResponseParser {
-        internal static HttpServerResponseParser Default { get; }
-
-        static HttpServerResponseParser() {
-            Default = new HttpServerResponseParser();
-        }
+    internal class HttpServerResponseParser : IHttpServerResponseParser {
 
         private IEnumerable<IHttpResponsePartParser> _pipeline;
 
-        public HttpServerResponseParser() {
+        public HttpServerResponseParser(IHttpCodesTranslator httpCodesTranslator) {
             _pipeline = new IHttpResponsePartParser[] {
-                new StartLineParser(),
+                new StartLineParser(httpCodesTranslator),
                 new HeadersParser(),
                 new ContentParser()
             };

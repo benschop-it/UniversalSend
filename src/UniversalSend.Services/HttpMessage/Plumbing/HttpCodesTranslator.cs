@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Services.HttpMessage.Plumbing {
 
-    internal class HttpCodesTranslator {
-        public static HttpCodesTranslator Default { get; }
+    internal class HttpCodesTranslator : IHttpCodesTranslator {
 
         // From http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
         private readonly IDictionary<int, string> _statusCodeTexts = new Dictionary<int, string>() {
@@ -49,11 +49,7 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
             [505] = "HTTP Version not supported"
         };
 
-        static HttpCodesTranslator() {
-            Default = new HttpCodesTranslator();
-        }
-
-        private HttpCodesTranslator() {
+        public HttpCodesTranslator() {
         }
 
         public string GetHttpStatusCodeText(int statusCode) {

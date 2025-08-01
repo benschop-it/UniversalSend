@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UniversalSend.Models.Interfaces {
+namespace UniversalSend.Services.Interfaces {
     public interface IServiceHttpServer {
         Task<bool> StartHttpServerAsync(int port);
         void StopHttpServer();

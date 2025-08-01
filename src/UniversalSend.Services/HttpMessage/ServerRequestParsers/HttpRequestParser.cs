@@ -11,7 +11,7 @@ using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
-    public class HttpRequestParser : IHttpRequestParser {
+    internal class HttpRequestParser : IHttpRequestParser {
         private const uint BUFFER_SIZE = 8192;
 
         public HttpRequestParser() {

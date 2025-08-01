@@ -68,7 +68,7 @@ namespace UniversalSend.Services.Controllers {
         }
 
         [UriFormat("v1/register")]
-        public PostResponse PostRegister([FromContent] IRegisterRequestData registerRequestData) {
+        public PostResponse PostRegister([FromContent] RegisterRequestData registerRequestData) {
             Debug.WriteLine($"POST v1 register request Called: {registerRequestData.Alias} {registerRequestData.DeviceModel} {registerRequestData.DeviceType} {registerRequestData.Fingerprint}");
 
             IRegisterResponseData registerResponseData = _registerResponseDataManager.GetRegisterReponseData(false);
