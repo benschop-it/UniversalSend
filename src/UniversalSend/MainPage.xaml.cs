@@ -87,10 +87,10 @@ namespace UniversalSend {
         private void InitData() {
             IDevice localDevice = _deviceManager.GetLocalDevice();
 
-            localDevice.Alias = _settings.GetSettingContentAsString(Constants.Network_DeviceName);
-            localDevice.DeviceModel = _settings.GetSettingContentAsString(Constants.Network_DeviceModel);
-            localDevice.DeviceType = _settings.GetSettingContentAsString(Constants.Network_DeviceType);
-            localDevice.Port = (int)_settings.GetSettingContent(Constants.Network_Port);
+            ProgramData.LocalDevice.Alias = _settings.GetSettingContentAsString(Constants.Network_DeviceName);
+            ProgramData.LocalDevice.DeviceModel = _settings.GetSettingContentAsString(Constants.Network_DeviceModel);
+            ProgramData.LocalDevice.DeviceType = _settings.GetSettingContentAsString(Constants.Network_DeviceType);
+            ProgramData.LocalDevice.Port = (int)_settings.GetSettingContent(Constants.Network_Port);
         }
 
         private void NavigateToRootPage() {

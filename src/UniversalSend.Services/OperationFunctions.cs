@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Models;
 using UniversalSend.Models.Helpers;
+using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Models.Tasks;
@@ -57,7 +58,7 @@ namespace UniversalSend.Services {
 
             Debug.WriteLine($"RegisterRequestFunc: {host} {ip} {portStr} {jsonStr}");
 
-            IRegisterRequestData registerRequestData = JsonConvert.DeserializeObject<IRegisterRequestData>(jsonStr);
+            IRegisterRequestData registerRequestData = JsonConvert.DeserializeObject<RegisterRequestData>(jsonStr);
             if (registerRequestData == null) {
                 return null;
             }

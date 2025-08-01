@@ -47,7 +47,6 @@ namespace UniversalSend.Models.Managers {
                     History h = new History(conreteHistory.File, conreteHistory.FutureAccessListToken, conreteHistory.Device);
                     HistoriesList.Add(h);
                 }
-                //HistoriesList = list?.Cast<IHistory>().ToList();
             }
         }
 

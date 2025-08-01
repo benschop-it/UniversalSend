@@ -7,7 +7,7 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public IInfoData GetInfoDataFromDevice() {
+        public InfoData GetInfoDataFromDevice() {
             var device = ProgramData.LocalDevice;
 
             InfoData infoData = new InfoData();

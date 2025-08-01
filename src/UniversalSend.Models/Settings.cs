@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Text;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Strings;
@@ -57,7 +59,13 @@ namespace UniversalSend.Models {
         }
 
         public bool SetSetting(string key, object value) {
-            UserSettings.Values[key] = value;
+            Debug.WriteLine($"UTF-8 Byte Count: {Encoding.UTF8.GetByteCount((string)value)}");
+
+            try {
+                UserSettings.Values[key] = value;
+            } catch (Exception ex) {
+                Debug.WriteLine($"Exception storing settings: {ex.Message}");
+            }
             return true;
         }
 

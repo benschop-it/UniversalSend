@@ -72,12 +72,13 @@ namespace UniversalSend.Models.Managers {
         }
 
         public async Task<IDevice> FindDeviceByIPAsync(string IP) {
-            Debug.WriteLine($"URL:http://{IP}:53317/api/localsend/v1/register\nJson:{JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice))}");
+            var serializedDevice = JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice));
 
-            string responseString = await HttpClientHelper.PostJsonAsync(
-                $"http://{IP}:53317/api/localsend/v1/register",
-                JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice))
-            );
+            Debug.WriteLine($"URL:http://{IP}:53317/api/localsend/v1/register\nJson:{serializedDevice}");
+
+            string responseString = await HttpClientHelper.PostJsonAsync($"http://{IP}:53317/api/localsend/v1/register", serializedDevice);
+
+            Debug.WriteLine($"responseString: {responseString}");
 
             try {
                 RegisterResponseData registerResponseData = JsonConvert.DeserializeObject<RegisterResponseData>(responseString);
@@ -110,8 +111,9 @@ namespace UniversalSend.Models.Managers {
 
         private async Task SearchKnownDeviceAsync(string ip) {
             IDevice device = await FindDeviceByIPAsync(ip);
-            if (device != null)
+            if (device != null) {
                 AddKnownDevices(device);
+            }
         }
 
         public IDevice GetDeviceFromRequestData(IRegisterRequestData registerRequestData, string ip, int port) {

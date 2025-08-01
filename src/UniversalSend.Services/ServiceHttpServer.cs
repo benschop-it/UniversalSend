@@ -69,7 +69,6 @@ namespace UniversalSend.Services {
             await _udpDiscovery.StartUdpListenerAsync();
 
             RestRouteHandler restRouteHandler = new RestRouteHandler();
-            //restRouteHandler.RegisterController<V1RequestController>(); // Register controller
 
             restRouteHandler.RegisterController<V1RequestController>(() =>
             {
@@ -96,6 +95,7 @@ namespace UniversalSend.Services {
             }
 
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/send?fileId={}&token={}")) {
+                Debug.WriteLine($"[OperationController.UriOperations.Add] /api/localsend/v1/send");
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/send?fileId={}&token={}",
                     _operationFunctions.SendRequestFuncAsync
@@ -103,6 +103,7 @@ namespace UniversalSend.Services {
             }
 
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/register")) {
+                Debug.WriteLine($"[OperationController.UriOperations.Add] /api/localsend/v1/register");
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/register",
                     _operationFunctions.RegisterRequestFunc

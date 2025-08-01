@@ -1,14 +1,11 @@
 ﻿using System;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.Managers;
 
 namespace UniversalSend.Models {
 
-    internal class ProgramData {
+    public class ProgramData {
 
         #region Public Properties
-
-        public static ContentDialogManager ContentDialogManager { get; set; } = new ContentDialogManager();
 
         public static Device LocalDevice { get; set; } = new Device {
             //Alias = $"WindowsPhone (UWP)",
@@ -19,10 +16,6 @@ namespace UniversalSend.Models {
             //Port = 53317,
             HttpProtocol = "http",
         };
-
-        public static object ServiceServer { get; set; }
-
-        public static object UdpDiscoveryService { get; set; }
 
         #endregion Public Properties
     }

@@ -74,18 +74,19 @@ namespace UniversalSend.Models.Managers {
 
         public async Task<bool> SendSendRequestAsync(IDevice destinationDevice) {
             SendRequestData sendRequestData = new SendRequestData();
-            sendRequestData.Files = new Dictionary<string, IFileRequestData>();
+            sendRequestData.Files = new Dictionary<string, FileRequestData>();
             sendRequestData.Info = _infoDataManager.GetInfoDataFromDevice();
             foreach (var task in SendTasks) {
                 sendRequestData.Files.Add(task.File.Id, FileRequestDataManager.CreateFromUniversalSendFile(task.File));
             }
             Debug.WriteLine($"Sending send request:\nURL: {destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request");
-            Debug.WriteLine(JsonConvert.SerializeObject(sendRequestData));
-            string responseStr = await HttpClientHelper.PostJsonAsync(
-                $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request",
-                JsonConvert.SerializeObject(sendRequestData)
-            );
+
+            var serializedSendRequestData = JsonConvert.SerializeObject(sendRequestData);
+
+            Debug.WriteLine($"SendSendRequestAsync: {serializedSendRequestData}");
+            string responseStr = await HttpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request", serializedSendRequestData);
             Debug.WriteLine($"Receiver responded: {responseStr}");
+
             try {
                 FileResponseData fileResponseData = JsonConvert.DeserializeObject<FileResponseData>(responseStr);
                 if (fileResponseData == null) {

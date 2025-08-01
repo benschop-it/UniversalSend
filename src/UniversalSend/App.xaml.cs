@@ -158,6 +158,7 @@ namespace UniversalSend {
             services.AddSingleton<IUniversalSendFileManager, UniversalSendFileManager>();
             services.AddSingleton<IUIManager, UIManager>();
             services.AddSingleton<IOperationFunctions, OperationFunctions>();
+            services.AddSingleton<ISendRequestDataManager, SendRequestDataManager>();
 
             services.AddTransient<IContentDialogManager, ContentDialogManager>();
             services.AddTransient<IDevice, Device>();
@@ -171,6 +172,7 @@ namespace UniversalSend {
             services.AddTransient<ISendTask, SendTask>();
             services.AddTransient<IServiceHttpServer, ServiceHttpServer>();
             services.AddTransient<IUniversalSendFile, UniversalSendFile>();
+            services.AddTransient<ISendRequestData, SendRequestData>();
 
             Services = services.BuildServiceProvider();
         }

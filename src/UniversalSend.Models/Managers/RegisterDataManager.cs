@@ -1,5 +1,4 @@
-﻿using UniversalSend.Models.Data;
-using UniversalSend.Models.HttpData;
+﻿using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
