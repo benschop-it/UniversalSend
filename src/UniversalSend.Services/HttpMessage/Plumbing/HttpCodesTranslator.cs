@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.HttpMessage.Plumbing {
 

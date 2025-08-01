@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
 

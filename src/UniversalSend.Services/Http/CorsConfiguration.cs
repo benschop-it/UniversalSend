@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.Http {
 

@@ -6,11 +6,12 @@ using UniversalSend.Services.Controllers;
 using UniversalSend.Services.Http;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Rest;
 
 namespace UniversalSend.Services {
 
-    public class ServiceHttpServer : IServiceHttpServer {
+    internal class ServiceHttpServer : IServiceHttpServer {
 
         private readonly IDeviceManager _deviceManager;
         private readonly IRegister _register;

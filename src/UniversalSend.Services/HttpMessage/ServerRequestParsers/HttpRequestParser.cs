@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UniversalSend.Services.Controllers;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Plumbing;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {

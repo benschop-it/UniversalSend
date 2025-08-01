@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 
-namespace UniversalSend.Services.HttpMessage {
+namespace UniversalSend.Services.Interfaces.Internal {
 
     internal interface IHttpServerRequest {
         IEnumerable<IHttpRequestHeader> Headers { get; }

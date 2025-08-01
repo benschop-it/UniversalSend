@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Http {

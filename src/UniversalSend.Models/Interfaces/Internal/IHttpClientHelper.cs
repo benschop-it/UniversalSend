@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Models.Interfaces {
-    public interface IHttpClientHelper {
+namespace UniversalSend.Models.Interfaces.Internal {
+    internal interface IHttpClientHelper {
         Task<bool> DeleteAsync(string url, Dictionary<string, string> headers = null);
         Task<JsonArray> GetJsonArrayAsync(string url, Dictionary<string, string> headers = null);
         Task<JsonObject> GetJsonObjectAsync(string url, Dictionary<string, string> headers = null);

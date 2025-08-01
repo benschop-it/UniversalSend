@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services {
 

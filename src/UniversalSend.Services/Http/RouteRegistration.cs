@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Http {

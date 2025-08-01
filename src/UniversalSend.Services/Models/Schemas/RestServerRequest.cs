@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using UniversalSend.Services.HttpMessage;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.Models.Schemas {
 

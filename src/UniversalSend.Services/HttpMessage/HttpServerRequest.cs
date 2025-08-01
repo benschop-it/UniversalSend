@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.HttpMessage {
 

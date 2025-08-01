@@ -123,11 +123,11 @@
     <Compile Include="Common\AbstractLogger.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Constants\Constants.cs" />
-    <Compile Include="Interfaces\IHttpClientHelper.cs" />
-    <Compile Include="Interfaces\ISendRequestDataManager.cs" />
+    <Compile Include="Interfaces\Internal\IHttpClientHelper.cs" />
+    <Compile Include="Interfaces\Internal\ISendRequestDataManager.cs" />
     <Compile Include="Interfaces\ISendRequestData.cs" />
     <Compile Include="HttpData\SendRequestDataManager.cs" />
-    <Compile Include="Interfaces\IRegisterRequestDataManager.cs" />
+    <Compile Include="Interfaces\Internal\IRegisterRequestDataManager.cs" />
     <Compile Include="Interfaces\IFileRequestDataManager.cs" />
     <Compile Include="Interfaces\IFileResponseDataManager.cs" />
     <Compile Include="Managers\RegisterRequestDataManager.cs" />

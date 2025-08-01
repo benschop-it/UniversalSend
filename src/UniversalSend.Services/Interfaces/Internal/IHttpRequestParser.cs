@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Services.Interfaces {
-    public interface IHttpRequestParser {
+namespace UniversalSend.Services.Interfaces.Internal {
+    internal interface IHttpRequestParser {
         Task<IMutableHttpServerRequest> ParseRequestStream(IInputStream requestStream);
     }
 }

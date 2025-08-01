@@ -1,4 +1,4 @@
-﻿using UniversalSend.Services.Interfaces;
+﻿using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services {

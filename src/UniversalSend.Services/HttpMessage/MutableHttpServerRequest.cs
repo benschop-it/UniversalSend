@@ -6,7 +6,7 @@ using UniversalSend.Services.HttpMessage.Headers.Request;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.HttpMessage {

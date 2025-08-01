@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
-using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services.Rest {

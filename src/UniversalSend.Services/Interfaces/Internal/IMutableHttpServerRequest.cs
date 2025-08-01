@@ -6,8 +6,8 @@ using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Services.Interfaces {
-    public interface IMutableHttpServerRequest {
+namespace UniversalSend.Services.Interfaces.Internal {
+    internal interface IMutableHttpServerRequest {
         IEnumerable<string> AcceptCharsets { get; set; }
         IEnumerable<string> AcceptEncodings { get; set; }
         IEnumerable<string> AcceptMediaTypes { get; set; }

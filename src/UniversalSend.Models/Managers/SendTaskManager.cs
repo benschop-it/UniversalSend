@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Interfaces.Internal;
 using UniversalSend.Models.Tasks;
 using Windows.Storage;
 

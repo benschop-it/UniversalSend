@@ -7,6 +7,7 @@ using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Interfaces.Internal;
 
 namespace UniversalSend.Models.Managers {
 

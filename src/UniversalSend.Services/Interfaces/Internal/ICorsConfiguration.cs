@@ -1,4 +1,4 @@
-namespace UniversalSend.Services.Http {
+namespace UniversalSend.Services.Interfaces.Internal {
 
     internal interface ICorsConfiguration {
 

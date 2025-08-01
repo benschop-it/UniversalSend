@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage.Headers.Response;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.Http {
 

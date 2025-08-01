@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Interfaces.Internal;
 using UniversalSend.Models.Managers;
 using Windows.Storage;
 

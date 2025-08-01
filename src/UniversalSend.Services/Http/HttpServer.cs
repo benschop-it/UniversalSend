@@ -13,7 +13,7 @@ using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 using Windows.Networking.Sockets;
 
 namespace UniversalSend.Services.Http {

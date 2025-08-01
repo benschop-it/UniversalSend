@@ -8,6 +8,7 @@ using UniversalSend.Services.HttpMessage.Plumbing;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using UniversalSend.Services.HttpMessage.ServerResponseParsers;
 using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services {
     public static class RegisterServices {

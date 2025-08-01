@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Services.Models.Schemas {
 
-    public enum InstanceCreationType {
+    internal enum InstanceCreationType {
         Singleton,
         PerCall
     }

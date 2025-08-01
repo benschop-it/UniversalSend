@@ -4,6 +4,7 @@ using System.Linq;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
+using UniversalSend.Services.Interfaces.Internal;
 
 namespace UniversalSend.Services.Http {
 

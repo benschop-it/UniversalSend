@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 
-namespace UniversalSend.Services.Http {
+namespace UniversalSend.Services.Interfaces.Internal {
 
     internal interface IContentEncoder {
         ContentEncodingHeader ContentEncodingHeader { get; }

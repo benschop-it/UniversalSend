@@ -11,7 +11,7 @@ using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Services.Helpers;
 using UniversalSend.Services.HttpMessage;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Services.Interfaces.Internal;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 

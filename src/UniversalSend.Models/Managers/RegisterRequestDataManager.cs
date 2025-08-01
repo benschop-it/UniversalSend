@@ -1,6 +1,7 @@
 ﻿using UniversalSend.Models.Data;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Models.Interfaces.Internal;
 
 namespace UniversalSend.Models.Managers {
     internal class RegisterRequestDataManager : IRegisterRequestDataManager {
