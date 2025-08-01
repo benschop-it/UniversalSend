@@ -9,7 +9,7 @@ using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Rest;
 
-namespace UniversalSend.Services {
+namespace UniversalSend.Services.Misc {
 
     internal class ServiceHttpServer : IServiceHttpServer {
 

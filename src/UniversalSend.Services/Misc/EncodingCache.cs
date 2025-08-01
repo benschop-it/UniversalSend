@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UniversalSend.Services.Interfaces.Internal;
 
-namespace UniversalSend.Services {
+namespace UniversalSend.Services.Misc {
 
     internal class EncodingCache : IEncodingCache {
         private Dictionary<string, Encoding> _cache;

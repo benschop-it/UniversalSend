@@ -1,7 +1,7 @@
 ﻿using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Schemas;
 
-namespace UniversalSend.Services {
+namespace UniversalSend.Services.Misc {
 
     internal class Configuration : IConfiguration {
         public Configuration() {

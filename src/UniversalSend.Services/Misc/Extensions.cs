@@ -2,7 +2,7 @@
 using System.IO;
 using Windows.ApplicationModel;
 
-namespace UniversalSend.Services {
+namespace UniversalSend.Services.Misc {
 
     internal static class Extensions {
 

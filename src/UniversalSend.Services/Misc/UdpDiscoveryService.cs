@@ -13,7 +13,7 @@ using Windows.Networking;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 
-namespace UniversalSend.Services {
+namespace UniversalSend.Services.Misc {
 
     internal class UdpDiscoveryService {
 

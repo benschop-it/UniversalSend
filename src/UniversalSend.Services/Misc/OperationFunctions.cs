@@ -15,7 +15,7 @@ using UniversalSend.Services.Interfaces.Internal;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
-namespace UniversalSend.Services {
+namespace UniversalSend.Services.Misc {
 
     internal class OperationFunctions : IOperationFunctions {
 
