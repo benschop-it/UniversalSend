@@ -11,13 +11,24 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     /// on the stream to be sure it's not writing unexpected data.
     /// </summary>
     internal class ContentParser : HttpRequestPartParser {
+
+        #region Private Fields
+
         private List<byte> _content;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ContentParser() {
             // Incoming data is read entirely, always, so there will never be any unparsed data
             UnparsedData = new byte[0];
             _content = new List<byte>();
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public override void HandleRequestPart(byte[] stream, MutableHttpServerRequest resultThisFar) {
             if (resultThisFar.ContentLength == 0) {
@@ -33,5 +44,7 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
                 // else if content is bigger, finished will never be set, badrequest will happen
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -6,11 +6,22 @@ using System.Text.RegularExpressions;
 namespace UniversalSend.Services.Rest {
 
     internal class UriParser {
+
+        #region Private Fields
+
         private readonly Regex _splitRegex;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public UriParser() {
             _splitRegex = new Regex(@"(?<uri>.*?)(\?(?<parameters>.*?))?(#(?<fragment>.*?))?$");
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public bool TryParse(string uriFormatUri, out ParsedUri parsedUri) {
             var match = _splitRegex.Match(uriFormatUri);
@@ -34,16 +45,9 @@ namespace UniversalSend.Services.Rest {
             return true;
         }
 
-        private IReadOnlyList<PathPart> ParsePathParts(string path) {
-            return path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Select(GetPathPart).ToArray();
-        }
+        #endregion Public Methods
 
-        private PathPart GetPathPart(string pathPart) {
-            if (pathPart.StartsWith("{") && pathPart.EndsWith("}"))
-                return new PathPart(PathPart.PathPartType.Argument, pathPart.Substring(1, pathPart.Length - 2));
-
-            return new PathPart(PathPart.PathPartType.Path, pathPart);
-        }
+        #region Private Methods
 
         private static IReadOnlyList<UriParameter> ParseParameterGroup(Group group) {
             if (!group.Success)
@@ -71,5 +75,18 @@ namespace UniversalSend.Services.Rest {
 
             return value;
         }
+
+        private PathPart GetPathPart(string pathPart) {
+            if (pathPart.StartsWith("{") && pathPart.EndsWith("}"))
+                return new PathPart(PathPart.PathPartType.Argument, pathPart.Substring(1, pathPart.Length - 2));
+
+            return new PathPart(PathPart.PathPartType.Path, pathPart);
+        }
+
+        private IReadOnlyList<PathPart> ParsePathParts(string path) {
+            return path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Select(GetPathPart).ToArray();
+        }
+
+        #endregion Private Methods
     }
 }

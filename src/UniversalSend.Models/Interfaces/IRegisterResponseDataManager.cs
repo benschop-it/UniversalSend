@@ -1,7 +1,12 @@
 ﻿namespace UniversalSend.Models.Interfaces {
     public interface IRegisterResponseDataManager {
-        IRegisterResponseData GetRegisterReponseData(bool announcement);
+
+        #region Public Methods
 
         IRegisterResponseData DeserializeRegisterResponseData(string json);
+
+        IRegisterResponseData GetRegisterReponseData(bool announcement);
+
+        #endregion Public Methods
     }
 }

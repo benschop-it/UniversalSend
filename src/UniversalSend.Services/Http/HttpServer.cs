@@ -12,23 +12,30 @@ using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
-using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using UniversalSend.Services.Interfaces.Internal;
 using Windows.Networking.Sockets;
 
 namespace UniversalSend.Services.Http {
 
     internal class HttpServer : IDisposable {
-        private readonly int _port;
-        private readonly StreamSocketListener _listener;
-        private readonly SortedSet<RouteRegistration> _routes;
+
+        #region Private Fields
+
         private readonly ContentEncoderFactory _contentEncoderFactory;
+        private readonly IHttpRequestParser _httpRequestParser;
+        private readonly StreamSocketListener _listener;
         private readonly ILogger _log;
         private readonly List<IHttpMessageInspector> _messageInspectors;
-        private readonly IHttpRequestParser _httpRequestParser;
+        private readonly int _port;
+        private readonly SortedSet<RouteRegistration> _routes;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public HttpServer(
-            HttpServerConfiguration configuration, 
+                    HttpServerConfiguration configuration,
             IHttpRequestParser httpRequestParser
         ) {
             _log = LogManager.GetLogger<HttpServer>();
@@ -46,6 +53,14 @@ namespace UniversalSend.Services.Http {
             _httpRequestParser = httpRequestParser ?? throw new ArgumentNullException(nameof(httpRequestParser));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        void IDisposable.Dispose() {
+            _listener.Dispose();
+        }
+
         public async Task StartServerAsync() {
             await _listener.BindServiceNameAsync(_port.ToString());
 
@@ -58,7 +73,81 @@ namespace UniversalSend.Services.Http {
             _log.Info($"Webserver stopped listening on port {_port}");
         }
 
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal async Task<HttpServerResponse> HandleRequestAsync(IHttpServerRequest request) {
+            var routeRegistration = _routes.FirstOrDefault(x => x.Match(request));
+            if (routeRegistration == null) {
+                return HttpServerResponse.Create(new Version(1, 1), HttpResponseStatus.BadRequest);
+            }
+
+            var httpResponse = ApplyMessageInspectorsBeforeHandleRequest(request);
+
+            if (httpResponse == null)
+                httpResponse = await routeRegistration.HandleAsync(request);
+
+            httpResponse = await AddContentEncodingAsync(httpResponse, request.AcceptEncodings);
+            httpResponse = ApplyMessageInspectorsAfterHandleRequest(request, httpResponse);
+
+            return httpResponse;
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private static void AddHeaderIfNotNull(IHttpHeader contentEncodingHeader, HttpServerResponse newResponse) {
+            if (contentEncodingHeader != null) {
+                newResponse.AddHeader(contentEncodingHeader);
+            }
+        }
+
+        private static async Task WriteResponseAsync(HttpServerResponse response, StreamSocket socket) {
+            using (var output = socket.OutputStream) {
+                await output.WriteAsync(response.ToBytes().AsBuffer());
+                await output.FlushAsync();
+            }
+        }
+
+        private async Task<HttpServerResponse> AddContentEncodingAsync(HttpServerResponse httpResponse, IEnumerable<string> acceptEncodings) {
+            var contentEncoder = _contentEncoderFactory.GetEncoder(acceptEncodings);
+            var encodedContent = await contentEncoder.Encode(httpResponse.Content);
+
+            var newResponse = HttpServerResponse.Create(httpResponse.HttpVersion, httpResponse.ResponseStatus);
+
+            foreach (var header in httpResponse.Headers) {
+                newResponse.AddHeader(header);
+            }
+            newResponse.Content = encodedContent;
+            newResponse.AddHeader(new ContentLengthHeader(encodedContent?.Length ?? 0));
+
+            var contentEncodingHeader = contentEncoder.ContentEncodingHeader;
+            AddHeaderIfNotNull(contentEncodingHeader, newResponse);
+
+            return newResponse;
+        }
+
+        private HttpServerResponse ApplyMessageInspectorsAfterHandleRequest(IHttpServerRequest request,
+            HttpServerResponse httpResponse) {
+            foreach (var httpMessageInspector in _messageInspectors) {
+                var result = httpMessageInspector.AfterHandleRequest(request, httpResponse);
+                if (result != null)
+                    httpResponse = result.Response;
+            }
+            return httpResponse;
+        }
+
+        private HttpServerResponse ApplyMessageInspectorsBeforeHandleRequest(IHttpServerRequest request) {
+            foreach (var httpMessageInspector in _messageInspectors) {
+                var result = httpMessageInspector.BeforeHandleRequest(request);
+                if (result != null)
+                    return result.Response;
+            }
+
+            return null;
+        }
 
         private async void ProcessRequestAsync(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args) {
             await Task.Run(async () => {
@@ -98,76 +187,6 @@ namespace UniversalSend.Services.Http {
             });
         }
 
-        internal async Task<HttpServerResponse> HandleRequestAsync(IHttpServerRequest request) {
-            var routeRegistration = _routes.FirstOrDefault(x => x.Match(request));
-            if (routeRegistration == null) {
-                return HttpServerResponse.Create(new Version(1, 1), HttpResponseStatus.BadRequest);
-            }
-
-            var httpResponse = ApplyMessageInspectorsBeforeHandleRequest(request);
-
-            if (httpResponse == null)
-                httpResponse = await routeRegistration.HandleAsync(request);
-
-            httpResponse = await AddContentEncodingAsync(httpResponse, request.AcceptEncodings);
-            httpResponse = ApplyMessageInspectorsAfterHandleRequest(request, httpResponse);
-
-            return httpResponse;
-        }
-
-        private HttpServerResponse ApplyMessageInspectorsBeforeHandleRequest(IHttpServerRequest request) {
-            foreach (var httpMessageInspector in _messageInspectors) {
-                var result = httpMessageInspector.BeforeHandleRequest(request);
-                if (result != null)
-                    return result.Response;
-            }
-
-            return null;
-        }
-
-        private HttpServerResponse ApplyMessageInspectorsAfterHandleRequest(IHttpServerRequest request,
-            HttpServerResponse httpResponse) {
-            foreach (var httpMessageInspector in _messageInspectors) {
-                var result = httpMessageInspector.AfterHandleRequest(request, httpResponse);
-                if (result != null)
-                    httpResponse = result.Response;
-            }
-            return httpResponse;
-        }
-
-        private async Task<HttpServerResponse> AddContentEncodingAsync(HttpServerResponse httpResponse, IEnumerable<string> acceptEncodings) {
-            var contentEncoder = _contentEncoderFactory.GetEncoder(acceptEncodings);
-            var encodedContent = await contentEncoder.Encode(httpResponse.Content);
-
-            var newResponse = HttpServerResponse.Create(httpResponse.HttpVersion, httpResponse.ResponseStatus);
-
-            foreach (var header in httpResponse.Headers) {
-                newResponse.AddHeader(header);
-            }
-            newResponse.Content = encodedContent;
-            newResponse.AddHeader(new ContentLengthHeader(encodedContent?.Length ?? 0));
-
-            var contentEncodingHeader = contentEncoder.ContentEncodingHeader;
-            AddHeaderIfNotNull(contentEncodingHeader, newResponse);
-
-            return newResponse;
-        }
-
-        private static void AddHeaderIfNotNull(IHttpHeader contentEncodingHeader, HttpServerResponse newResponse) {
-            if (contentEncodingHeader != null) {
-                newResponse.AddHeader(contentEncodingHeader);
-            }
-        }
-
-        private static async Task WriteResponseAsync(HttpServerResponse response, StreamSocket socket) {
-            using (var output = socket.OutputStream) {
-                await output.WriteAsync(response.ToBytes().AsBuffer());
-                await output.FlushAsync();
-            }
-        }
-
-        void IDisposable.Dispose() {
-            _listener.Dispose();
-        }
+        #endregion Private Methods
     }
 }

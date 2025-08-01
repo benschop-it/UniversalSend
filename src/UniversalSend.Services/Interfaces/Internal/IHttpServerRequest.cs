@@ -6,20 +6,26 @@ using UniversalSend.Services.HttpMessage.Models.Schemas;
 namespace UniversalSend.Services.Interfaces.Internal {
 
     internal interface IHttpServerRequest {
-        IEnumerable<IHttpRequestHeader> Headers { get; }
-        HttpMethod? Method { get; }
-        Uri Uri { get; }
-        string HttpVersion { get; }
-        string ContentTypeCharset { get; }
+
+        #region Public Properties
+
         IEnumerable<string> AcceptCharsets { get; }
-        int ContentLength { get; }
-        string ContentType { get; }
         IEnumerable<string> AcceptEncodings { get; }
         IEnumerable<string> AcceptMediaTypes { get; }
-        byte[] Content { get; }
-        bool IsComplete { get; }
-        HttpMethod? AccessControlRequestMethod { get; }
         IEnumerable<string> AccessControlRequestHeaders { get; }
+        HttpMethod? AccessControlRequestMethod { get; }
+        byte[] Content { get; }
+        int ContentLength { get; }
+        string ContentType { get; }
+        string ContentTypeCharset { get; }
+        IEnumerable<IHttpRequestHeader> Headers { get; }
+        string HttpVersion { get; }
+        bool IsComplete { get; }
+        HttpMethod? Method { get; }
         string Origin { get; }
+        Uri Uri { get; }
+
+        #endregion Public Properties
+
     }
 }

@@ -5,6 +5,8 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
     internal class HttpMethodParser {
 
+        #region Public Methods
+
         public static HttpMethod GetMethod(string method) {
             method = method.ToUpper();
 
@@ -14,5 +16,7 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
             return methodVerb;
         }
+
+        #endregion Public Methods
     }
 }

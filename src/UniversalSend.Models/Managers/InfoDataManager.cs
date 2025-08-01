@@ -1,8 +1,8 @@
-﻿using UniversalSend.Models.Data;
-using UniversalSend.Models.HttpData;
+﻿using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
+
     internal class InfoDataManager : IInfoDataManager {
 
         #region Public Methods
@@ -18,5 +18,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

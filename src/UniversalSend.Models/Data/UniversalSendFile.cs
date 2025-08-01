@@ -26,5 +26,6 @@ namespace UniversalSend.Models.Data {
         public string TransferToken { get; set; }
 
         #endregion Public Properties
+
     }
 }

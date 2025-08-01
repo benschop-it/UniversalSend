@@ -12,6 +12,11 @@
     }
 
     public interface ISystemHelper {
+
+        #region Public Methods
+
         DeviceFormFactorType GetDeviceFormFactorType();
+
+        #endregion Public Methods
     }
 }

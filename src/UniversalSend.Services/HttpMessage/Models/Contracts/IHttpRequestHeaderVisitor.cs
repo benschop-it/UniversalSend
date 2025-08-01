@@ -5,6 +5,8 @@ namespace UniversalSend.Services.HttpMessage.Models.Contracts {
 
     internal interface IHttpRequestHeaderVisitor<T> {
 
+        #region Public Methods
+
         void Visit(UntypedRequestHeader uh, T arg);
 
         void Visit(ContentLengthHeader uh, T arg);
@@ -22,5 +24,7 @@ namespace UniversalSend.Services.HttpMessage.Models.Contracts {
         void Visit(AccessControlRequestHeadersHeader uh, T arg);
 
         void Visit(OriginHeader uh, T arg);
+
+        #endregion Public Methods
     }
 }

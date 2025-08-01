@@ -16,5 +16,6 @@ namespace UniversalSend.Models.Data {
         public string ProtocolVersion { get; set; } = "";
 
         #endregion Public Properties
+
     }
 }

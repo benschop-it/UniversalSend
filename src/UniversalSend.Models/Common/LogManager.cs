@@ -5,11 +5,22 @@ using UniversalSend.Models.Interfaces;
 namespace UniversalSend.Models.Common {
 
     public static class LogManager {
+
+        #region Private Fields
+
         private static ILogFactory _logFactory;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         static LogManager() {
             _logFactory = new NullLogFactory();
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public static ILogger GetLogger<T>() {
             return _logFactory.GetLogger<T>();
@@ -23,11 +34,29 @@ namespace UniversalSend.Models.Common {
             Interlocked.Exchange(ref _logFactory, logFactory);
         }
 
+        #endregion Public Methods
+
+        #region Private Classes
+
         private class NullLogFactory : ILogFactory {
+
+            #region Private Fields
+
             private readonly NullLogger _nullLogger;
+
+            #endregion Private Fields
+
+            #region Public Constructors
 
             public NullLogFactory() {
                 _nullLogger = new NullLogger();
+            }
+
+            #endregion Public Constructors
+
+            #region Public Methods
+
+            public void Dispose() {
             }
 
             ILogger ILogFactory.GetLogger<T>() {
@@ -38,11 +67,12 @@ namespace UniversalSend.Models.Common {
                 return _nullLogger;
             }
 
-            public void Dispose() {
-            }
+            #endregion Public Methods
         }
 
         private class NullLogger : AbstractLogger {
+
+            #region Protected Methods
 
             protected override bool IsLogEnabled(LogLevel trace) => false;
 
@@ -51,6 +81,10 @@ namespace UniversalSend.Models.Common {
 
             protected override void LogMessage(string message, LogLevel loggingLevel, Exception ex) {
             }
+
+            #endregion Protected Methods
         }
+
+        #endregion Private Classes
     }
 }

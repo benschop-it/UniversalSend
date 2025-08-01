@@ -8,6 +8,8 @@ namespace UniversalSend.Services.Http {
 
     internal class ContentSerializer {
 
+        #region Internal Methods
+
         internal object FromContent(string content, MediaType contentMediaType, Type contentType) {
             if (contentMediaType == MediaType.JSON) {
                 return JsonConvert.DeserializeObject(content, contentType);
@@ -32,14 +34,9 @@ namespace UniversalSend.Services.Http {
             return new byte[0];
         }
 
-        private static string XmlSerializeObject(object toSerialize) {
-            XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
+        #endregion Internal Methods
 
-            using (StringWriter textWriter = new StringWriter()) {
-                xmlSerializer.Serialize(textWriter, toSerialize);
-                return textWriter.ToString();
-            }
-        }
+        #region Private Methods
 
         private static object XmlDeserializeObject(string content, Type toType) {
             var serializer = new XmlSerializer(toType);
@@ -51,5 +48,16 @@ namespace UniversalSend.Services.Http {
 
             return result;
         }
+
+        private static string XmlSerializeObject(object toSerialize) {
+            XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
+
+            using (StringWriter textWriter = new StringWriter()) {
+                xmlSerializer.Serialize(textWriter, toSerialize);
+                return textWriter.ToString();
+            }
+        }
+
+        #endregion Private Methods
     }
 }

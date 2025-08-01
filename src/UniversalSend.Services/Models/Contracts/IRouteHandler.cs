@@ -6,6 +6,10 @@ namespace UniversalSend.Services.Models.Contracts {
 
     internal interface IRouteHandler {
 
+        #region Public Methods
+
         Task<HttpServerResponse> HandleRequest(IHttpServerRequest request);
+
+        #endregion Public Methods
     }
 }

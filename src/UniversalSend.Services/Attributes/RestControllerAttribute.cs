@@ -19,5 +19,6 @@ namespace UniversalSend.Services.Attributes {
         public InstanceCreationType InstanceCreationType { get; }
 
         #endregion Public Properties
+
     }
 }

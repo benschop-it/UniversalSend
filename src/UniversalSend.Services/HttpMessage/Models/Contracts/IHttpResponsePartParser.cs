@@ -2,8 +2,12 @@
 
     internal interface IHttpResponsePartParser {
 
-        string ParseToString(HttpServerResponse response);
+        #region Public Methods
 
         byte[] ParseToBytes(HttpServerResponse response);
+
+        string ParseToString(HttpServerResponse response);
+
+        #endregion Public Methods
     }
 }

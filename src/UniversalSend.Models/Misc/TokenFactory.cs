@@ -13,5 +13,6 @@ namespace UniversalSend.Models.Misc {
         }
 
         #endregion Public Methods
+
     }
 }

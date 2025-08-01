@@ -5,6 +5,8 @@ namespace UniversalSend.Models.Helpers {
 
     internal class SystemHelper : ISystemHelper {
 
+        #region Public Methods
+
         public DeviceFormFactorType GetDeviceFormFactorType() {
             switch (AnalyticsInfo.VersionInfo.DeviceFamily) {
                 case "Windows.Mobile":
@@ -23,5 +25,7 @@ namespace UniversalSend.Models.Helpers {
                     return DeviceFormFactorType.Other;
             }
         }
+
+        #endregion Public Methods
     }
 }

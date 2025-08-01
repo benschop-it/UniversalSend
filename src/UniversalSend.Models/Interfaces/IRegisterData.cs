@@ -1,5 +1,9 @@
 ﻿namespace UniversalSend.Models.Interfaces {
+
     public interface IRegisterData {
+
+        #region Public Properties
+
         string Alias { get; set; }
         bool Announce { get; set; }
         string DeviceModel { get; set; }
@@ -9,5 +13,7 @@
         int Port { get; set; }
         string Protocol { get; set; }
         string Version { get; set; }
+
+        #endregion Public Properties
     }
 }

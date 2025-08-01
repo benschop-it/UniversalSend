@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniversalSend.Services.HttpMessage.Plumbing;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using UniversalSend.Services.HttpMessage.ServerResponseParsers;
@@ -12,7 +7,10 @@ using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Misc;
 
 namespace UniversalSend.Services {
+
     public static class RegisterServices {
+
+        #region Public Methods
 
         public static void Register(IServiceCollection services) {
             services.AddSingleton<IOperationFunctions, OperationFunctions>();
@@ -23,5 +21,7 @@ namespace UniversalSend.Services {
             services.AddSingleton<IHttpServerResponseParser, HttpServerResponseParser>();
             services.AddTransient<IServiceHttpServer, ServiceHttpServer>();
         }
+
+        #endregion Public Methods
     }
 }

@@ -6,6 +6,9 @@ using Windows.Storage.Streams;
 
 namespace UniversalSend.Models.Interfaces.Internal {
     internal interface IHttpClientHelper {
+
+        #region Public Methods
+
         Task<bool> DeleteAsync(string url, Dictionary<string, string> headers = null);
         Task<JsonArray> GetJsonArrayAsync(string url, Dictionary<string, string> headers = null);
         Task<JsonObject> GetJsonObjectAsync(string url, Dictionary<string, string> headers = null);
@@ -19,5 +22,7 @@ namespace UniversalSend.Models.Interfaces.Internal {
         Task<string> PutStringAsync(string url, HttpContent content, Dictionary<string, string> headers = null);
         void SetBaseAddress(string baseAddress);
         void SetTimeout(int seconds);
+
+        #endregion Public Methods
     }
 }

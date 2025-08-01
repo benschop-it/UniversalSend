@@ -7,7 +7,14 @@ using UniversalSend.Services.HttpMessage.Plumbing;
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
     internal class RequestHeaderFactory {
+
+        #region Private Fields
+
         private readonly Dictionary<string, Func<string, IHttpRequestHeader>> _headerCollection;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal RequestHeaderFactory() {
             _headerCollection = new Dictionary<string, Func<string, IHttpRequestHeader>>(StringComparer.OrdinalIgnoreCase) {
@@ -22,35 +29,16 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
             };
         }
 
+        #endregion Internal Constructors
+
+        #region Internal Methods
+
         internal IHttpRequestHeader Create(string headerName, string headerValue) {
             if (_headerCollection.ContainsKey(headerName)) {
                 return _headerCollection[headerName](headerValue);
             }
 
             return new UntypedRequestHeader(headerName, headerValue);
-        }
-
-        private IHttpRequestHeader CreateRequestContentType(string headerValue) {
-            return new ContentTypeHeader(headerValue, ExtractQuantifiedHeader(headerValue));
-        }
-
-        private IHttpRequestHeader CreateResponseContentType(string headerValue) {
-            return new AcceptHeader(headerValue, ExtractQuantifiedHeaders(headerValue));
-        }
-
-        private IHttpRequestHeader CreateResponseContentCharset(string headerValue) {
-            return new AcceptCharsetHeader(headerValue, ExtractQuantifiedHeaders(headerValue));
-        }
-
-        private IHttpRequestHeader CreateResponseAcceptEncoding(string headerValue) {
-            return new AcceptEncodingHeader(headerValue, ExtractQuantifiedHeaders(headerValue));
-        }
-
-        internal IEnumerable<QuantifiedHeaderValue> ExtractQuantifiedHeaders(string value) {
-            var headerValues = value.Split(',');
-            var quantifiedValues = headerValues.Select(ExtractQuantifiedHeader);
-
-            return quantifiedValues.OrderByDescending(q => q.Quality).ToArray();
         }
 
         internal QuantifiedHeaderValue ExtractQuantifiedHeader(string value) {
@@ -73,5 +61,34 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
             return new QuantifiedHeaderValue(headerValue, extractedQuantifiers);
         }
+
+        internal IEnumerable<QuantifiedHeaderValue> ExtractQuantifiedHeaders(string value) {
+            var headerValues = value.Split(',');
+            var quantifiedValues = headerValues.Select(ExtractQuantifiedHeader);
+
+            return quantifiedValues.OrderByDescending(q => q.Quality).ToArray();
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private IHttpRequestHeader CreateRequestContentType(string headerValue) {
+            return new ContentTypeHeader(headerValue, ExtractQuantifiedHeader(headerValue));
+        }
+
+        private IHttpRequestHeader CreateResponseAcceptEncoding(string headerValue) {
+            return new AcceptEncodingHeader(headerValue, ExtractQuantifiedHeaders(headerValue));
+        }
+
+        private IHttpRequestHeader CreateResponseContentCharset(string headerValue) {
+            return new AcceptCharsetHeader(headerValue, ExtractQuantifiedHeaders(headerValue));
+        }
+
+        private IHttpRequestHeader CreateResponseContentType(string headerValue) {
+            return new AcceptHeader(headerValue, ExtractQuantifiedHeaders(headerValue));
+        }
+
+        #endregion Private Methods
     }
 }

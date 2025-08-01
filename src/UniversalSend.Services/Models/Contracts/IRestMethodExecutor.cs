@@ -7,6 +7,10 @@ namespace UniversalSend.Services.Models.Contracts {
 
     internal interface IRestMethodExecutor {
 
+        #region Public Methods
+
         Task<IRestResponse> ExecuteMethodAsync(RestControllerMethodInfo info, RestServerRequest request, ParsedUri requestUri);
+
+        #endregion Public Methods
     }
 }

@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
     internal class ReceiveManager : IReceiveManager {
 
+        #region Private Fields
+
         private readonly IReceiveTaskManager _receiveTaskManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ReceiveManager(IReceiveTaskManager receiveTaskManager) {
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
         }
+
+        #endregion Public Constructors
 
         #region Public Events
 
@@ -70,5 +77,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

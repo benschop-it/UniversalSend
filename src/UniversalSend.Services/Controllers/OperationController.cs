@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Services.Helpers;
 using UniversalSend.Services.HttpMessage;
 
@@ -29,5 +28,6 @@ namespace UniversalSend.Services.Controllers {
         }
 
         #endregion Public Methods
+
     }
 }

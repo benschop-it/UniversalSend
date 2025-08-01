@@ -4,7 +4,11 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
+
     internal class RegisterResponseDataManager : IRegisterResponseDataManager {
+
+        #region Public Methods
+
         public IRegisterResponseData DeserializeRegisterResponseData(string json) {
             var payload = JsonConvert.DeserializeObject<RegisterResponseData>(json);
             if (payload.Fingerprint == ProgramData.LocalDevice.Fingerprint) {
@@ -13,8 +17,6 @@ namespace UniversalSend.Models.Managers {
             }
             return payload;
         }
-
-        #region Public Methods
 
         public IRegisterResponseData GetRegisterReponseData(bool announcement) {
             var registerResponseData = new RegisterResponseData {
@@ -28,5 +30,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

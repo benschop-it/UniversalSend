@@ -18,5 +18,6 @@ namespace UniversalSend.Services.Attributes {
         public string UriFormat { get; }
 
         #endregion Public Properties
+
     }
 }

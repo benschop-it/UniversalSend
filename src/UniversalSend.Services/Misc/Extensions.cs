@@ -6,12 +6,7 @@ namespace UniversalSend.Services.Misc {
 
     internal static class Extensions {
 
-        internal static string RemovePreAndPostSlash(this string uri) {
-            if (uri == null)
-                return uri;
-
-            return uri.TrimStart('/').TrimEnd('/');
-        }
+        #region Internal Methods
 
         internal static string EscapeRegexChars(this string uri) {
             if (uri == null)
@@ -29,15 +24,15 @@ namespace UniversalSend.Services.Misc {
             return string.IsNullOrWhiteSpace(cleanUrl) ? string.Empty : "/" + cleanUrl;
         }
 
-        internal static string ToRelativeString(this Uri uri) {
-            string relativeUri = null;
-            if (uri.IsAbsoluteUri) {
-                relativeUri = uri.PathAndQuery;
-            } else {
-                relativeUri = uri.ToString();
-            }
+        internal static string GetAbsoluteBasePathUri(this string relativeOrAbsoluteBasePath) {
+            relativeOrAbsoluteBasePath = relativeOrAbsoluteBasePath ?? string.Empty;
 
-            return relativeUri.FormatRelativeUri();
+            relativeOrAbsoluteBasePath = relativeOrAbsoluteBasePath.TrimStart('\\');
+
+            if (Path.IsPathRooted(relativeOrAbsoluteBasePath))
+                return relativeOrAbsoluteBasePath;
+
+            return Path.Combine(Package.Current.InstalledLocation.Path, relativeOrAbsoluteBasePath);
         }
 
         internal static void GuardNull(this object argument, string argumentName) {
@@ -46,6 +41,12 @@ namespace UniversalSend.Services.Misc {
             }
         }
 
+        internal static string RemovePreAndPostSlash(this string uri) {
+            if (uri == null)
+                return uri;
+
+            return uri.TrimStart('/').TrimEnd('/');
+        }
         internal static Uri RemovePrefix(this Uri uri, string prefix) {
             if (string.IsNullOrWhiteSpace(prefix))
                 return uri;
@@ -57,15 +58,17 @@ namespace UniversalSend.Services.Misc {
             return new Uri(uriToString, UriKind.Relative);
         }
 
-        internal static string GetAbsoluteBasePathUri(this string relativeOrAbsoluteBasePath) {
-            relativeOrAbsoluteBasePath = relativeOrAbsoluteBasePath ?? string.Empty;
+        internal static string ToRelativeString(this Uri uri) {
+            string relativeUri = null;
+            if (uri.IsAbsoluteUri) {
+                relativeUri = uri.PathAndQuery;
+            } else {
+                relativeUri = uri.ToString();
+            }
 
-            relativeOrAbsoluteBasePath = relativeOrAbsoluteBasePath.TrimStart('\\');
-
-            if (Path.IsPathRooted(relativeOrAbsoluteBasePath))
-                return relativeOrAbsoluteBasePath;
-
-            return Path.Combine(Package.Current.InstalledLocation.Path, relativeOrAbsoluteBasePath);
+            return relativeUri.FormatRelativeUri();
         }
+
+        #endregion Internal Methods
     }
 }

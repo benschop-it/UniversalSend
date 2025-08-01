@@ -18,5 +18,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

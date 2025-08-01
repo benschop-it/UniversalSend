@@ -7,14 +7,35 @@ using UniversalSend.Services.Models.Contracts;
 namespace UniversalSend.Services.Rest {
 
     internal class RestRouteHandler : IRouteHandler {
+
+        #region Private Fields
+
         private readonly RestControllerRequestHandler _requestHandler;
-        private readonly RestToHttpResponseConverter _restToHttpConverter;
         private readonly RestServerRequestFactory _restServerRequestFactory;
+        private readonly RestToHttpResponseConverter _restToHttpConverter;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RestRouteHandler(IConfiguration configuration, IEncodingCache encodingCache) {
             _restServerRequestFactory = new RestServerRequestFactory(configuration, encodingCache);
             _requestHandler = new RestControllerRequestHandler();
             _restToHttpConverter = new RestToHttpResponseConverter();
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public async Task<HttpServerResponse> HandleRequest(IHttpServerRequest request) {
+            var restServerRequest = _restServerRequestFactory.Create(request);
+
+            var restResponse = await _requestHandler.HandleRequestAsync(restServerRequest);
+
+            var httpResponse = _restToHttpConverter.ConvertToHttpResponse(restResponse, restServerRequest);
+
+            return httpResponse;
         }
 
         public void RegisterController<T>() where T : class {
@@ -29,14 +50,6 @@ namespace UniversalSend.Services.Rest {
             _requestHandler.RegisterController<T>(args);
         }
 
-        public async Task<HttpServerResponse> HandleRequest(IHttpServerRequest request) {
-            var restServerRequest = _restServerRequestFactory.Create(request);
-
-            var restResponse = await _requestHandler.HandleRequestAsync(restServerRequest);
-
-            var httpResponse = _restToHttpConverter.ConvertToHttpResponse(restResponse, restServerRequest);
-
-            return httpResponse;
-        }
+        #endregion Public Methods
     }
 }

@@ -6,7 +6,14 @@ using UniversalSend.Services.Interfaces.Internal;
 namespace UniversalSend.Services.Http {
 
     internal abstract class CompressContentEncoder : IContentEncoder {
+
+        #region Public Properties
+
         public abstract ContentEncodingHeader ContentEncodingHeader { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public async Task<byte[]> Encode(byte[] content) {
             if (content == null)
@@ -20,6 +27,12 @@ namespace UniversalSend.Services.Http {
             }
         }
 
+        #endregion Public Methods
+
+        #region Protected Methods
+
         protected abstract Stream GetCompressStream(MemoryStream memoryStream);
+
+        #endregion Protected Methods
     }
 }

@@ -5,6 +5,7 @@ using UniversalSend.Models.Interfaces;
 using Windows.Storage;
 
 namespace UniversalSend.Models.Managers {
+
     internal class FileRequestDataManager : IFileRequestDataManager {
 
         #region Public Methods
@@ -31,5 +32,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

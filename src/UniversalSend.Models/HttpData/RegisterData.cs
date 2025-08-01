@@ -35,5 +35,6 @@ namespace UniversalSend.Models.HttpData {
         public string Version { get; set; }
 
         #endregion Public Properties
+
     }
 }

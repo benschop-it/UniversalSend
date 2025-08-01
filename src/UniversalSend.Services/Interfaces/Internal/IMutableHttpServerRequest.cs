@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using Windows.Storage.Streams;
 
 namespace UniversalSend.Services.Interfaces.Internal {
+
     internal interface IMutableHttpServerRequest {
+
+        #region Public Properties
+
         IEnumerable<string> AcceptCharsets { get; set; }
         IEnumerable<string> AcceptEncodings { get; set; }
         IEnumerable<string> AcceptMediaTypes { get; set; }
@@ -17,12 +20,21 @@ namespace UniversalSend.Services.Interfaces.Internal {
         int ContentLength { get; set; }
         string ContentType { get; set; }
         string ContentTypeCharset { get; set; }
-        //IEnumerable<IHttpRequestHeader> Headers { get; }
+
+        IEnumerable<IHttpRequestHeader> Headers { get; }
         string HttpVersion { get; set; }
+
         bool IsComplete { get; set; }
         HttpMethod? Method { get; set; }
         string Origin { get; set; }
         Uri Uri { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         Task<IMutableHttpServerRequest> Parse(IInputStream requestStream);
+
+        #endregion Public Methods
     }
 }

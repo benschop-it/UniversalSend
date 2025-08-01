@@ -4,13 +4,14 @@ using System.Collections.Generic;
 namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
     internal class QuantifiedHeaderValue {
+
+        #region Private Fields
+
         private static string QUALITY_KEY = "q";
 
-        internal string HeaderValue { get; }
+        #endregion Private Fields
 
-        internal IDictionary<string, string> Quantifiers { get; }
-
-        internal decimal Quality { get; private set; }
+        #region Public Constructors
 
         public QuantifiedHeaderValue(string headerValue, IDictionary<string, string> quantifiers) {
             HeaderValue = headerValue;
@@ -18,6 +19,31 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
 
             ExtractQuality();
         }
+
+        #endregion Public Constructors
+
+        #region Internal Properties
+
+        internal string HeaderValue { get; }
+
+        internal decimal Quality { get; private set; }
+        internal IDictionary<string, string> Quantifiers { get; }
+
+        #endregion Internal Properties
+
+        #region Internal Methods
+
+        internal string FindQuantifierValue(string quantifierKey) {
+            if (Quantifiers.ContainsKey(quantifierKey)) {
+                return Quantifiers[quantifierKey];
+            }
+
+            return null;
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private void ExtractQuality() {
             if (Quantifiers.ContainsKey(QUALITY_KEY)) {
@@ -32,12 +58,6 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
             }
         }
 
-        internal string FindQuantifierValue(string quantifierKey) {
-            if (Quantifiers.ContainsKey(quantifierKey)) {
-                return Quantifiers[quantifierKey];
-            }
-
-            return null;
-        }
+        #endregion Private Methods
     }
 }

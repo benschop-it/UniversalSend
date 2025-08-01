@@ -5,6 +5,8 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
 
     internal class HttpCodesTranslator : IHttpCodesTranslator {
 
+        #region Private Fields
+
         // From http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
         private readonly IDictionary<int, string> _statusCodeTexts = new Dictionary<int, string>() {
             [100] = "Continue",
@@ -49,11 +51,21 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
             [505] = "HTTP Version not supported"
         };
 
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public HttpCodesTranslator() {
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public string GetHttpStatusCodeText(int statusCode) {
             return _statusCodeTexts[statusCode];
         }
+
+        #endregion Public Methods
     }
 }

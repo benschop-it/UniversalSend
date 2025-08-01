@@ -9,13 +9,33 @@ using UniversalSend.Services.Interfaces.Internal;
 namespace UniversalSend.Services.Http {
 
     internal class CorsMessageInspector : IHttpMessageInspector {
-        private readonly IEnumerable<string> _allowedOrigins;
+
+        #region Private Fields
+
         private readonly bool _allOriginsAllowed = false;
+        private readonly IEnumerable<string> _allowedOrigins;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public CorsMessageInspector(IEnumerable<string> allowedOrigins) {
             _allowedOrigins = allowedOrigins ?? Enumerable.Empty<string>();
             if (_allowedOrigins.Contains("*"))
                 _allOriginsAllowed = true;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public AfterHandleRequestResult AfterHandleRequest(IHttpServerRequest request, HttpServerResponse httpResponse) {
+            string origin;
+            if (!TryGetAllowOrigin(request.Origin, out origin))
+                return null;
+
+            httpResponse.AddHeader(new AccessControlAllowOriginHeader(origin));
+            return new AfterHandleRequestResult(httpResponse);
         }
 
         public BeforeHandleRequestResult BeforeHandleRequest(IHttpServerRequest request) {
@@ -35,14 +55,9 @@ namespace UniversalSend.Services.Http {
             return new BeforeHandleRequestResult(httpResponse);
         }
 
-        public AfterHandleRequestResult AfterHandleRequest(IHttpServerRequest request, HttpServerResponse httpResponse) {
-            string origin;
-            if (!TryGetAllowOrigin(request.Origin, out origin))
-                return null;
+        #endregion Public Methods
 
-            httpResponse.AddHeader(new AccessControlAllowOriginHeader(origin));
-            return new AfterHandleRequestResult(httpResponse);
-        }
+        #region Private Methods
 
         private bool TryGetAllowOrigin(string requestOrigin, out string allowedOrigin) {
             if (string.IsNullOrWhiteSpace(requestOrigin)) {
@@ -61,5 +76,7 @@ namespace UniversalSend.Services.Http {
 
             return false;
         }
+
+        #endregion Private Methods
     }
 }

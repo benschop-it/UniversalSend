@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
-using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Tasks;
 using Windows.Storage;
 
 namespace UniversalSend.Models.Managers {
+
     internal class ReceiveTaskManager : IReceiveTaskManager {
 
+        #region Private Fields
+
         private IStorageHelper _storageHelper;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ReceiveTaskManager(IStorageHelper storageHelper) {
             _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
         }
+
+        #endregion Public Constructors
 
         #region Public Properties
 
@@ -54,5 +60,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

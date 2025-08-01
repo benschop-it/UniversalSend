@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace UniversalSend.Services.Interfaces.Internal {
+
     internal interface IEncodingCache {
+
+        #region Public Methods
+
         Encoding GetEncoding(string charset);
+
+        #endregion Public Methods
     }
 }

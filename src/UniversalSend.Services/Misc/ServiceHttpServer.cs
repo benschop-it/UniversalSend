@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Controllers;
 using UniversalSend.Services.Http;
-using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Rest;
@@ -13,19 +12,26 @@ namespace UniversalSend.Services.Misc {
 
     internal class ServiceHttpServer : IServiceHttpServer {
 
+        #region Private Fields
+
+        private readonly IConfiguration _configuration;
         private readonly IDeviceManager _deviceManager;
+        private readonly IEncodingCache _encodingCache;
+        private readonly IHttpRequestParser _httpRequestParser;
+        private readonly IOperationFunctions _operationFunctions;
         private readonly IRegister _register;
         private readonly ISettings _settings;
-        private readonly IOperationFunctions _operationFunctions;
         private IInfoDataManager _infoDataManager;
         private IReceiveManager _receiveManager;
-        private ITokenFactory _tokenFactory;
-        private IUniversalSendFileManager _universalSendFileManager;
         private IReceiveTaskManager _receiveTaskManager;
         private IRegisterResponseDataManager _registerResponseDataManager;
-        private readonly IHttpRequestParser _httpRequestParser;
-        private readonly IConfiguration _configuration;
-        private readonly IEncodingCache _encodingCache;
+        private ITokenFactory _tokenFactory;
+        private UdpDiscoveryService _udpDiscovery;
+        private IUniversalSendFileManager _universalSendFileManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ServiceHttpServer(
             IDeviceManager deviceManager,
@@ -57,19 +63,15 @@ namespace UniversalSend.Services.Misc {
             _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
         }
 
-        #region Private Fields
+        #endregion Public Constructors
 
-        private UdpDiscoveryService _udpDiscovery;
-
-        #endregion Private Fields
-
-        #region Public Properties
+        #region Internal Properties
 
         internal HttpServer HttpServer { get; set; }
 
         internal HttpServerConfiguration HttpServerConfiguration { get; set; }
 
-        #endregion Public Properties
+        #endregion Internal Properties
 
         #region Public Methods
 
@@ -79,8 +81,7 @@ namespace UniversalSend.Services.Misc {
 
             RestRouteHandler restRouteHandler = new RestRouteHandler(_configuration, _encodingCache);
 
-            restRouteHandler.RegisterController<V1RequestController>(() =>
-            {
+            restRouteHandler.RegisterController<V1RequestController>(() => {
                 return new object[]
                 {
                     _infoDataManager,

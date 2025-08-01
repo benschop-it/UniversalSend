@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace UniversalSend.Strings {
 
-namespace UniversalSend.Strings {
     public class Constants {
+
+        #region Public Fields
+
         public const string ExplorerPage_ViewMode = "ExplorerPage_ViewMode";
         public const string Favorite_Favorites = "Favorite_Favorites";
         public const string Lab_UseInternalExplorer = "Lab_UseInternalExplorer";
@@ -16,5 +14,7 @@ namespace UniversalSend.Strings {
         public const string Network_Port = "Network_Port";
         public const string Receive_Histories = "Receive_Histories";
         public const string Receive_SaveToFolder = "Receive_SaveToFolder";
+
+        #endregion Public Fields
     }
 }

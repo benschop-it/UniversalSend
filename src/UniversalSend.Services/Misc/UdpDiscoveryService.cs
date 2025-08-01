@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using UniversalSend.Models;
-using UniversalSend.Models.Data;
-using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Strings;
 using Windows.Networking;
@@ -20,13 +17,15 @@ namespace UniversalSend.Services.Misc {
         #region Private Fields
 
         private const string MULTICAST_GROUP = "224.0.0.167";
-        private DatagramSocket _udpSocket;
-        private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IRegister _register;
+        private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private ISettings _settings;
+        private DatagramSocket _udpSocket;
 
         #endregion Private Fields
+
+        #region Public Constructors
 
         public UdpDiscoveryService(
             IRegisterResponseDataManager registerResponseDataManager,
@@ -41,7 +40,30 @@ namespace UniversalSend.Services.Misc {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
+        #endregion Public Constructors
+
         #region Public Methods
+
+        public async Task SendAnnouncementAsync() {
+            var payload = _registerResponseDataManager.GetRegisterReponseData(true);
+
+            string json = JsonConvert.SerializeObject(payload);
+            var port = _settings.GetSettingContentAsString(Constants.Network_Port);
+            var multicast = _settings.GetSettingContentAsString(Constants.Network_MulticastAddress);
+
+            using (var socket = new DatagramSocket()) {
+                try {
+                    var outputStream = await socket.GetOutputStreamAsync(new HostName(multicast), port);
+
+                    using (var writer = new DataWriter(outputStream)) {
+                        writer.WriteString(json);
+                        await writer.StoreAsync();
+                    }
+                } catch (Exception ex) {
+                    Debug.WriteLine($"Failed to send UDP announcement: {ex.Message}");
+                }
+            }
+        }
 
         public async Task StartUdpListenerAsync() {
             _udpSocket = new DatagramSocket();
@@ -64,27 +86,6 @@ namespace UniversalSend.Services.Misc {
                 _udpSocket.MessageReceived -= OnUdpMessageReceived;
                 _udpSocket.Dispose();
                 _udpSocket = null;
-            }
-        }
-
-        public async Task SendAnnouncementAsync() {
-            var payload = _registerResponseDataManager.GetRegisterReponseData(true);
-
-            string json = JsonConvert.SerializeObject(payload);
-            var port = _settings.GetSettingContentAsString(Constants.Network_Port);
-            var multicast = _settings.GetSettingContentAsString(Constants.Network_MulticastAddress);
-
-            using (var socket = new DatagramSocket()) {
-                try {
-                    var outputStream = await socket.GetOutputStreamAsync(new HostName(multicast), port);
-
-                    using (var writer = new DataWriter(outputStream)) {
-                        writer.WriteString(json);
-                        await writer.StoreAsync();
-                    }
-                } catch (Exception ex) {
-                    Debug.WriteLine($"Failed to send UDP announcement: {ex.Message}");
-                }
             }
         }
 
@@ -134,5 +135,6 @@ namespace UniversalSend.Services.Misc {
         }
 
         #endregion Private Methods
+
     }
 }

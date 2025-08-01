@@ -7,5 +7,6 @@
         public byte[] FileData { get; set; }
 
         #endregion Public Properties
+
     }
 }

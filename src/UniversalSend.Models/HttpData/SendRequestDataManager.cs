@@ -8,11 +8,19 @@ using Windows.Storage;
 namespace UniversalSend.Models.HttpData {
     internal class SendRequestDataManager : ISendRequestDataManager {
 
+        #region Private Fields
+
         private readonly IFileRequestDataManager _fileRequestDataManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SendRequestDataManager(IFileRequestDataManager fileRequestDataManager) {
             _fileRequestDataManager = fileRequestDataManager ?? throw new System.ArgumentNullException(nameof(fileRequestDataManager));
         }
+
+        #endregion Public Constructors
 
         #region Public Methods
 
@@ -29,5 +37,6 @@ namespace UniversalSend.Models.HttpData {
         }
 
         #endregion Public Methods
+
     }
 }

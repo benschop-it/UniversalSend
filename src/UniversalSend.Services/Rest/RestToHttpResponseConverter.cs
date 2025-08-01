@@ -7,11 +7,22 @@ using UniversalSend.Services.Rest.Models.Contracts;
 namespace UniversalSend.Services.Rest {
 
     internal class RestToHttpResponseConverter {
+
+        #region Private Fields
+
         private readonly ContentSerializer _contentSerializer;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RestToHttpResponseConverter() {
             _contentSerializer = new ContentSerializer();
         }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
 
         internal HttpServerResponse ConvertToHttpResponse(IRestResponse restResponse, RestServerRequest restServerRequest) {
             var methodNotAllowedResponse = restResponse as MethodNotAllowedResponse;
@@ -29,20 +40,24 @@ namespace UniversalSend.Services.Rest {
             return GetDefaultResponse(restResponse);
         }
 
-        private static HttpServerResponse GetMethodNotAllowedResponse(MethodNotAllowedResponse methodNotAllowedResponse) {
-            var serverResponse = GetDefaultResponse(methodNotAllowedResponse);
-            serverResponse.Allow = methodNotAllowedResponse.Allows;
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private static HttpServerResponse GetDefaultResponse(IRestResponse response) {
+            var serverResponse = HttpServerResponse.Create(response.StatusCode);
+            serverResponse.Date = DateTime.Now;
+            serverResponse.IsConnectionClosed = true;
+            foreach (var header in response.Headers) {
+                serverResponse.AddHeader(header.Key, header.Value);
+            }
 
             return serverResponse;
         }
 
-        private HttpServerResponse GetPostResponse(PostResponse response, RestServerRequest restReq) {
-            var serverResponse = GetDefaultContentResponse(response, restReq);
-
-            var locationRedirect = response.LocationRedirect;
-            if (response.Status == PostResponse.ResponseStatus.Created && !string.IsNullOrWhiteSpace(locationRedirect)) {
-                serverResponse.Location = new Uri(locationRedirect, UriKind.RelativeOrAbsolute);
-            }
+        private static HttpServerResponse GetMethodNotAllowedResponse(MethodNotAllowedResponse methodNotAllowedResponse) {
+            var serverResponse = GetDefaultResponse(methodNotAllowedResponse);
+            serverResponse.Allow = methodNotAllowedResponse.Allows;
 
             return serverResponse;
         }
@@ -59,17 +74,6 @@ namespace UniversalSend.Services.Rest {
             return defaultResponse;
         }
 
-        private static HttpServerResponse GetDefaultResponse(IRestResponse response) {
-            var serverResponse = HttpServerResponse.Create(response.StatusCode);
-            serverResponse.Date = DateTime.Now;
-            serverResponse.IsConnectionClosed = true;
-            foreach (var header in response.Headers) {
-                serverResponse.AddHeader(header.Key, header.Value);
-            }
-
-            return serverResponse;
-        }
-
         private string GetMediaTypeAsString(MediaType acceptMediaType) {
             switch (acceptMediaType) {
                 case MediaType.JSON:
@@ -82,5 +86,18 @@ namespace UniversalSend.Services.Rest {
 
             throw new ArgumentException($"Don't know how to convert {nameof(acceptMediaType)}.");
         }
+
+        private HttpServerResponse GetPostResponse(PostResponse response, RestServerRequest restReq) {
+            var serverResponse = GetDefaultContentResponse(response, restReq);
+
+            var locationRedirect = response.LocationRedirect;
+            if (response.Status == PostResponse.ResponseStatus.Created && !string.IsNullOrWhiteSpace(locationRedirect)) {
+                serverResponse.Location = new Uri(locationRedirect, UriKind.RelativeOrAbsolute);
+            }
+
+            return serverResponse;
+        }
+
+        #endregion Private Methods
     }
 }

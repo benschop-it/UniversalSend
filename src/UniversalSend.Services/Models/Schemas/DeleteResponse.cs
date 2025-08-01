@@ -6,13 +6,17 @@ namespace UniversalSend.Services.Models.Schemas {
 
     internal class DeleteResponse : RestResponse, IDeleteResponse {
 
+        #region Public Enums
+
         public enum ResponseStatus {
             OK = 200,
             NoContent = 204,
             NotFound = 404
         };
 
-        public ResponseStatus Status { get; }
+        #endregion Public Enums
+
+        #region Public Constructors
 
         public DeleteResponse(ResponseStatus status, IReadOnlyDictionary<string, string> headers) : base((int)status, headers) {
             Status = status;
@@ -20,5 +24,13 @@ namespace UniversalSend.Services.Models.Schemas {
 
         public DeleteResponse(ResponseStatus status) : this(status, ImmutableDictionary<string, string>.Empty) {
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public ResponseStatus Status { get; }
+
+        #endregion Public Properties
     }
 }

@@ -4,6 +4,9 @@ using Windows.Storage;
 
 namespace UniversalSend.Models.Interfaces {
     public interface IStorageHelper {
+
+        #region Public Methods
+
         Task<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName);
         Task<StorageFile> CreateFileInAppLocalFolderAsync(string fileName);
         Task<StorageFile> CreateFileInDownloadsFolderAsync(string fileName);
@@ -16,5 +19,7 @@ namespace UniversalSend.Models.Interfaces {
         Task<byte[]> ReadBytesFromFileAsync(IStorageFile file);
         Task WriteBytesToFileAsync(IStorageFile file, byte[] data);
         Task WriteTestFileAsync(byte[] content);
+
+        #endregion Public Methods
     }
 }

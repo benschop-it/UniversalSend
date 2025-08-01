@@ -3,6 +3,7 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
+
     internal class FileResponseDataManager : IFileResponseDataManager {
 
         #region Public Methods
@@ -16,5 +17,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

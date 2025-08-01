@@ -6,6 +6,8 @@ namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
 
     internal class HeadersParser : IHttpResponsePartParser {
 
+        #region Public Methods
+
         public byte[] ParseToBytes(HttpServerResponse response) {
             return Constants.DefaultHttpEncoding.GetBytes(ParseToString(response));
         }
@@ -20,5 +22,7 @@ namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
 
             return headersTextBuilder.ToString();
         }
+
+        #endregion Public Methods
     }
 }

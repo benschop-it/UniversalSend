@@ -14,13 +14,21 @@ namespace UniversalSend.Models.Helpers {
 
     internal class StorageHelper : IStorageHelper {
 
-        private readonly ISystemHelper _systemHelper;
+        #region Private Fields
+
         private readonly ISettings _settings;
+        private readonly ISystemHelper _systemHelper;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public StorageHelper(ISystemHelper systemHelper, ISettings settings) {
             _systemHelper = systemHelper ?? throw new ArgumentNullException(nameof(systemHelper));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
+
+        #endregion Public Constructors
 
         #region Public Methods
 
@@ -126,5 +134,6 @@ namespace UniversalSend.Models.Helpers {
         }
 
         #endregion Public Methods
+
     }
 }

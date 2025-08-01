@@ -3,7 +3,6 @@ using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Tasks;
 
 namespace UniversalSend.Models.Interfaces {
-    #region Public Enums
 
     public enum ReceiveTaskStates {
 
@@ -26,12 +25,15 @@ namespace UniversalSend.Models.Interfaces {
         Done
     }
 
-    #endregion Public Enums
-
     public interface IReceiveTask {
+
+        #region Public Properties
+
         IUniversalSendFile File { get; set; }
         byte[] FileContent { get; set; }
         IInfoData Sender { get; set; }
         ReceiveTaskStates TaskState { get; set; }
+
+        #endregion Public Properties
     }
 }

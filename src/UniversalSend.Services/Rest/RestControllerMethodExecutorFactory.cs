@@ -3,13 +3,24 @@
 namespace UniversalSend.Services.Rest {
 
     internal class RestControllerMethodExecutorFactory {
-        private IRestMethodExecutor _withoutContentExecutor;
+
+        #region Private Fields
+
         private IRestMethodExecutor _withContentExecutor;
+        private IRestMethodExecutor _withoutContentExecutor;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RestControllerMethodExecutorFactory() {
             _withoutContentExecutor = new RestControllerMethodExecutor();
             _withContentExecutor = new RestControllerMethodWithContentExecutor();
         }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
 
         internal IRestMethodExecutor Create(RestControllerMethodInfo info) {
             if (info.HasContentParameter) {
@@ -18,5 +29,7 @@ namespace UniversalSend.Services.Rest {
                 return _withoutContentExecutor;
             }
         }
+
+        #endregion Internal Methods
     }
 }

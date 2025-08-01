@@ -4,6 +4,8 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
     internal class ProtocolVersionParser : HttpRequestPartParser {
 
+        #region Public Methods
+
         public override void HandleRequestPart(byte[] stream, MutableHttpServerRequest resultThisFar) {
             var word = stream.ReadNextWord();
 
@@ -14,5 +16,7 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
                 IsSucceeded = true;
             }
         }
+
+        #endregion Public Methods
     }
 }

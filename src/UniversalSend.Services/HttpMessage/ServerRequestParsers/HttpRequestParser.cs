@@ -12,10 +12,29 @@ using Windows.Storage.Streams;
 namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
     internal class HttpRequestParser : IHttpRequestParser {
+
+        #region Private Fields
+
         private const uint BUFFER_SIZE = 8192;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public HttpRequestParser() {
         }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
+
+        Task<IMutableHttpServerRequest> IHttpRequestParser.ParseRequestStream(IInputStream requestStream) {
+            return ParseRequestStream(requestStream);
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private IEnumerable<IHttpRequestPartParser> GetPipeline() {
             return new IHttpRequestPartParser[]
@@ -27,6 +46,10 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
                     new ContentParser()
             };
         }
+
+        #endregion Private Methods
+
+        #region Public Methods
 
         internal async Task<IMutableHttpServerRequest> ParseRequestStream(IInputStream requestStream) {
             var httpStream = new HttpRequestStream(requestStream);
@@ -77,8 +100,6 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
             return request;
         }
 
-        Task<IMutableHttpServerRequest> IHttpRequestParser.ParseRequestStream(IInputStream requestStream) {
-            return ParseRequestStream(requestStream);
-        }
+        #endregion Public Methods
     }
 }

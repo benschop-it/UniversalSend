@@ -4,11 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using UniversalSend.Models;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
-using UniversalSend.Models.Managers;
 using UniversalSend.Services.Helpers;
 using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.Interfaces.Internal;
@@ -19,11 +16,17 @@ namespace UniversalSend.Services.Misc {
 
     internal class OperationFunctions : IOperationFunctions {
 
+        #region Private Fields
+
+        private IDeviceManager _deviceManager;
+        private IHistoryManager _historyManager;
         private IReceiveManager _receiveManager;
         private IReceiveTaskManager _receiveTaskManager;
         private IRegister _register;
-        private IDeviceManager _deviceManager;
-        private IHistoryManager _historyManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public OperationFunctions(
             IReceiveManager receiveManager,
@@ -38,6 +41,8 @@ namespace UniversalSend.Services.Misc {
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _historyManager = historyManager ?? throw new ArgumentNullException(nameof(historyManager));
         }
+
+        #endregion Public Constructors
 
         #region Public Methods
 
@@ -120,5 +125,6 @@ namespace UniversalSend.Services.Misc {
         }
 
         #endregion Private Methods
+
     }
 }

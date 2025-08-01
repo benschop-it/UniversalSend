@@ -9,19 +9,8 @@ namespace UniversalSend.Services.Models.Schemas {
     /// settings.
     /// </summary>
     internal struct RestServerRequest {
-        internal IHttpServerRequest HttpServerRequest { get; private set; }
 
-        internal string AcceptCharset { get; private set; }
-
-        internal MediaType AcceptMediaType { get; private set; }
-
-        internal Encoding AcceptEncoding { get; private set; }
-
-        internal MediaType ContentMediaType { get; private set; }
-
-        internal string ContentCharset { get; private set; }
-
-        internal Encoding ContentEncoding { get; private set; }
+        #region Internal Constructors
 
         internal RestServerRequest(
             IHttpServerRequest httpServerRequest,
@@ -39,5 +28,19 @@ namespace UniversalSend.Services.Models.Schemas {
             this.ContentCharset = contentCharset;
             this.ContentEncoding = contentEncoding;
         }
+
+        #endregion Internal Constructors
+
+        #region Internal Properties
+
+        internal string AcceptCharset { get; private set; }
+        internal Encoding AcceptEncoding { get; private set; }
+        internal MediaType AcceptMediaType { get; private set; }
+        internal string ContentCharset { get; private set; }
+        internal Encoding ContentEncoding { get; private set; }
+        internal MediaType ContentMediaType { get; private set; }
+        internal IHttpServerRequest HttpServerRequest { get; private set; }
+
+        #endregion Internal Properties
     }
 }

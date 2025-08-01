@@ -6,22 +6,22 @@ using UniversalSend.Services.HttpMessage.Models.Schemas;
 namespace UniversalSend.Services.HttpMessage.Plumbing {
 
     internal static class Extensions {
-        private static Regex _trimStart = new Regex(@"^\s+", RegexOptions.Compiled);
+
+        #region Private Fields
+
         private static Regex _trimEnd = new Regex(@"\s+$", RegexOptions.Compiled);
+        private static Regex _trimStart = new Regex(@"^\s+", RegexOptions.Compiled);
 
-        internal static string TrimWhitespaces(this string value) {
-            if (value == null) {
-                return null;
-            }
+        #endregion Private Fields
 
-            if (string.IsNullOrWhiteSpace(value)) {
-                return string.Empty;
-            }
+        #region Internal Methods
 
-            value = _trimStart.Replace(value, string.Empty);
-            value = _trimStart.Replace(value, string.Empty);
+        internal static T[] ConcatArray<T>(this T[] array1, T[] array2) {
+            int array1OriginalLength = array1.Length;
+            Array.Resize(ref array1, array1OriginalLength + array2.Length);
+            Array.Copy(array2, 0, array1, array1OriginalLength, array2.Length);
 
-            return value;
+            return array1;
         }
 
         /// <summary>
@@ -53,12 +53,21 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
             return new ExtractedWord() { RemainingBytes = stream };
         }
 
-        internal static T[] ConcatArray<T>(this T[] array1, T[] array2) {
-            int array1OriginalLength = array1.Length;
-            Array.Resize(ref array1, array1OriginalLength + array2.Length);
-            Array.Copy(array2, 0, array1, array1OriginalLength, array2.Length);
+        internal static string TrimWhitespaces(this string value) {
+            if (value == null) {
+                return null;
+            }
 
-            return array1;
+            if (string.IsNullOrWhiteSpace(value)) {
+                return string.Empty;
+            }
+
+            value = _trimStart.Replace(value, string.Empty);
+            value = _trimStart.Replace(value, string.Empty);
+
+            return value;
         }
+
+        #endregion Internal Methods
     }
 }

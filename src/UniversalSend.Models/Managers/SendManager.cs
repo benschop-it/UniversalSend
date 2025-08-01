@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using UniversalSend.Models.Data;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
@@ -62,5 +61,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

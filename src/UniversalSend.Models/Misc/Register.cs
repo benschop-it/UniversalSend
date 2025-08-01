@@ -7,11 +7,19 @@ namespace UniversalSend.Models.Misc {
 
     internal class Register : IRegister {
 
+        #region Private Fields
+
         private readonly IDeviceManager _deviceManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Register(IDeviceManager deviceManager) {
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
         }
+
+        #endregion Public Constructors
 
         #region Public Events
 
@@ -43,5 +51,6 @@ namespace UniversalSend.Models.Misc {
         }
 
         #endregion Private Methods
+
     }
 }

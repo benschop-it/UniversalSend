@@ -10,14 +10,29 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
     /// All methods in this class are thread safe
     /// </remarks>
     internal class HttpRequestHandleHeaderData : IHttpRequestHeaderVisitor<MutableHttpServerRequest> {
-        internal static HttpRequestHandleHeaderData Default { get; }
+
+        #region Public Constructors
 
         static HttpRequestHandleHeaderData() {
             Default = new HttpRequestHandleHeaderData();
         }
 
+        #endregion Public Constructors
+
+        #region Private Constructors
+
         private HttpRequestHandleHeaderData() {
         }
+
+        #endregion Private Constructors
+
+        #region Internal Properties
+
+        internal static HttpRequestHandleHeaderData Default { get; }
+
+        #endregion Internal Properties
+
+        #region Public Methods
 
         public void Visit(AcceptHeader uh, MutableHttpServerRequest arg) {
             arg.AcceptMediaTypes = uh.AcceptTypes;
@@ -56,5 +71,7 @@ namespace UniversalSend.Services.HttpMessage.Headers.Request {
         public void Visit(UntypedRequestHeader uh, MutableHttpServerRequest arg) {
             // no specific info to set for untyped header
         }
+
+        #endregion Public Methods
     }
 }

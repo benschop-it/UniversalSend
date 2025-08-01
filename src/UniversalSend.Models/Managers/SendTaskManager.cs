@@ -15,13 +15,19 @@ namespace UniversalSend.Models.Managers {
 
     internal class SendTaskManager : ISendTaskManager {
 
-        private IUniversalSendFileManager _universalSendFileManager;
-        private IInfoDataManager _infoDataManager;
-        private IStorageHelper _storageHelper;
-        private ISendTask _sendTask;
-        private ISendManager _sendManager;
-        private IHttpClientHelper _httpClientHelper;
+        #region Private Fields
+
         private IFileRequestDataManager _fileRequestDataManager;
+        private IHttpClientHelper _httpClientHelper;
+        private IInfoDataManager _infoDataManager;
+        private ISendManager _sendManager;
+        private ISendTask _sendTask;
+        private IStorageHelper _storageHelper;
+        private IUniversalSendFileManager _universalSendFileManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SendTaskManager(
             IUniversalSendFileManager universalSendFileManager,
@@ -40,6 +46,8 @@ namespace UniversalSend.Models.Managers {
             _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _fileRequestDataManager = fileRequestDataManager ?? throw new ArgumentNullException(nameof(fileRequestDataManager));
         }
+
+        #endregion Public Constructors
 
         #region Public Properties
 
@@ -148,5 +156,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

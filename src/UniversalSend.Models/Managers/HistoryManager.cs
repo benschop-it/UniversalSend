@@ -1,28 +1,33 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Misc;
 using UniversalSend.Strings;
-using Windows.Storage.AccessCache;
 
 namespace UniversalSend.Models.Managers {
 
     internal class HistoryManager : IHistoryManager {
 
+        #region Private Fields
+
         private ISettings _settings;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public HistoryManager(ISettings settings) {
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
+
+        #endregion Public Constructors
 
         #region Public Properties
 
         public List<IHistory> HistoriesList { get; set; } = new List<IHistory>();
 
         #endregion Public Properties
-
-        public HistoryManager(ISettings settings) {
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-        }
 
         #region Public Methods
 
@@ -56,5 +61,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

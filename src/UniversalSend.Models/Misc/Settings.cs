@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Text;
-using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Strings;
 using Windows.Security.ExchangeActiveSyncProvisioning;
@@ -16,13 +14,21 @@ namespace UniversalSend.Models.Misc {
         // Use internal file manager
         public ApplicationDataContainer UserSettings;
 
+        #endregion Public Fields
+
+        #region Private Fields
+
         private ISystemHelper _systemHelper;
 
-        #endregion Public Fields
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Settings(ISystemHelper systemHelper) {
             _systemHelper = systemHelper ?? throw new ArgumentNullException(nameof(systemHelper));
         }
+
+        #endregion Public Constructors
 
         #region Public Methods
 
@@ -116,5 +122,6 @@ namespace UniversalSend.Models.Misc {
         }
 
         #endregion Private Methods
+
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
-using UniversalSend.Models;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.Models.Schemas;
@@ -12,13 +11,21 @@ namespace UniversalSend.Services.Controllers {
     [RestController(InstanceCreationType.PerCall)]
     internal class V2RequestController {
 
+        #region Private Fields
+
         private IRegisterDataManager _registerDataManager;
         private IStorageHelper _storageHelper;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public V2RequestController(IRegisterDataManager registerDataManager, IStorageHelper storageHelper) {
             _registerDataManager = registerDataManager ?? throw new ArgumentNullException(nameof(registerDataManager));
             _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
         }
+
+        #endregion Public Constructors
 
         //[UriFormat("v2/hello")]
         //public GetResponse GetHello()
@@ -68,5 +75,6 @@ namespace UniversalSend.Services.Controllers {
         }
 
         #endregion Public Methods
+
     }
 }

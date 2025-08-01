@@ -6,13 +6,24 @@ using UniversalSend.Services.Interfaces.Internal;
 namespace UniversalSend.Services.Misc {
 
     internal class EncodingCache : IEncodingCache {
+
+        #region Private Fields
+
         private Dictionary<string, Encoding> _cache;
         private object _cacheLock;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public EncodingCache() {
             _cache = new Dictionary<string, Encoding>(StringComparer.OrdinalIgnoreCase);
             _cacheLock = new object();
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public Encoding GetEncoding(string charset) {
             if (string.IsNullOrEmpty(charset)) {
@@ -35,5 +46,7 @@ namespace UniversalSend.Services.Misc {
 
             return _cache[charset];
         }
+
+        #endregion Public Methods
     }
 }

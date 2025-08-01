@@ -9,7 +9,19 @@ namespace UniversalSend.Models.Managers {
 
     internal class FavoriteManager : IFavoriteManager {
 
+        #region Private Fields
+
         private ISettings _settings;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public FavoriteManager(ISettings settings) {
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
+
+        #endregion Public Constructors
 
         #region Public Properties
 
@@ -17,11 +29,11 @@ namespace UniversalSend.Models.Managers {
 
         #endregion Public Properties
 
-        public FavoriteManager(ISettings settings) {
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-        }
-
         #region Public Methods
+
+        public IFavorite CreateFavorite(string deviceName, string ipAddr, long port) {
+            return new Favorite(deviceName, ipAddr, port);
+        }
 
         public void InitFavoritesData() {
             string str = _settings.GetSettingContentAsString(Constants.Favorite_Favorites);
@@ -37,10 +49,6 @@ namespace UniversalSend.Models.Managers {
 
         public void SaveFavoritesData() {
             _settings.SetSetting(Constants.Favorite_Favorites, JsonConvert.SerializeObject(Favorites));
-        }
-
-        public IFavorite CreateFavorite(string deviceName, string ipAddr, long port) {
-            return new Favorite(deviceName, ipAddr, port);
         }
 
         #endregion Public Methods

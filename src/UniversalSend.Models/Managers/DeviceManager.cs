@@ -13,15 +13,15 @@ namespace UniversalSend.Models.Managers {
 
     internal class DeviceManager : IDeviceManager {
 
+        #region Private Fields
+
+        private IHttpClientHelper _httpClientHelper;
         private INetworkHelper _networkHelper;
         private IRegisterRequestDataManager _registerRequestDataManager;
-        private IHttpClientHelper _httpClientHelper;
 
-        #region Public Events
+        #endregion Private Fields
 
-        public event EventHandler KnownDevicesChanged;
-
-        #endregion Public Events
+        #region Public Constructors
 
         public DeviceManager(
             INetworkHelper networkHelper,
@@ -32,6 +32,14 @@ namespace UniversalSend.Models.Managers {
             _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _registerRequestDataManager = registerRequestDataManager ?? throw new ArgumentNullException(nameof(registerRequestDataManager));
         }
+
+        #endregion Public Constructors
+
+        #region Public Events
+
+        public event EventHandler KnownDevicesChanged;
+
+        #endregion Public Events
 
         #region Public Properties
 
@@ -55,6 +63,15 @@ namespace UniversalSend.Models.Managers {
 
         public void ClearKnownDevices() {
             KnownDevices.Clear();
+        }
+
+        public IDevice CreateDevice(string alias, string ip, int port) {
+            IDevice device = new Device {
+                Alias = "RM-1116_15169 (UWP)",
+                IP = "192.168.0.193",
+                Port = 53317,
+            };
+            return device;
         }
 
         public IDevice CreateDeviceFromInfoData(IInfoData info) {
@@ -106,23 +123,6 @@ namespace UniversalSend.Models.Managers {
             return null;
         }
 
-        public async Task SearchKnownDevicesAsync(List<string> ipList) {
-            foreach (var ip in ipList) {
-                await SearchKnownDeviceAsync(ip);
-            }
-        }
-
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private async Task SearchKnownDeviceAsync(string ip) {
-            IDevice device = await FindDeviceByIPAsync(ip);
-            if (device != null) {
-                AddKnownDevices(device);
-            }
-        }
-
         public IDevice GetDeviceFromRequestData(IRegisterRequestData registerRequestData, string ip, int port) {
             IDevice device = new Device {
                 Alias = registerRequestData.Alias,
@@ -149,15 +149,6 @@ namespace UniversalSend.Models.Managers {
             return device;
         }
 
-        public IDevice CreateDevice(string alias, string ip, int port) {
-            IDevice device = new Device {
-                Alias = "RM-1116_15169 (UWP)",
-                IP = "192.168.0.193",
-                Port = 53317,
-            };
-            return device;
-        }
-
         public IDevice GetLocalDevice() {
             IDevice localDevice = new Device {
                 //Alias = $"WindowsPhone (UWP)",
@@ -169,7 +160,24 @@ namespace UniversalSend.Models.Managers {
                 HttpProtocol = "http",
             };
             return localDevice;
-    }
+        }
+
+        public async Task SearchKnownDevicesAsync(List<string> ipList) {
+            foreach (var ip in ipList) {
+                await SearchKnownDeviceAsync(ip);
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private async Task SearchKnownDeviceAsync(string ip) {
+            IDevice device = await FindDeviceByIPAsync(ip);
+            if (device != null) {
+                AddKnownDevices(device);
+            }
+        }
 
         #endregion Private Methods
     }

@@ -6,15 +6,30 @@ using System.Reflection;
 namespace UniversalSend.Services.Rest {
 
     internal abstract class ParameterValueGetter {
+
+        #region Private Fields
+
         private const char URIPARAMETER_ARRAY_SEPERATOR = ';';
         private readonly Type _parameterType;
 
-        internal string MethodName { get; }
+        #endregion Private Fields
+
+        #region Protected Constructors
 
         protected ParameterValueGetter(string methodName, Type parameterType) {
             MethodName = methodName;
             _parameterType = parameterType;
         }
+
+        #endregion Protected Constructors
+
+        #region Internal Properties
+
+        internal string MethodName { get; }
+
+        #endregion Internal Properties
+
+        #region Internal Methods
 
         internal object GetParameterValue(ParsedUri parsedUri) {
             var value = GetValueFromUri(parsedUri);
@@ -22,7 +37,15 @@ namespace UniversalSend.Services.Rest {
             return convertedValue;
         }
 
+        #endregion Internal Methods
+
+        #region Protected Methods
+
         protected abstract string GetValueFromUri(ParsedUri parsedUri);
+
+        #endregion Protected Methods
+
+        #region Private Methods
 
         private static object ConvertValueToParameterType(Type parameterType, string parameterValue) {
             if (parameterType == typeof(string)) {
@@ -53,5 +76,7 @@ namespace UniversalSend.Services.Rest {
 
             return Convert.ChangeType(parameterValue, parameterType);
         }
+
+        #endregion Private Methods
     }
 }

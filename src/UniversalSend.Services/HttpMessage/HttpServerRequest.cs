@@ -7,21 +7,8 @@ using UniversalSend.Services.Interfaces.Internal;
 namespace UniversalSend.Services.HttpMessage {
 
     internal class HttpServerRequest : IHttpServerRequest {
-        public IEnumerable<IHttpRequestHeader> Headers { get; }
-        public HttpMethod? Method { get; }
-        public Uri Uri { get; }
-        public string HttpVersion { get; }
-        public string ContentTypeCharset { get; }
-        public IEnumerable<string> AcceptCharsets { get; }
-        public int ContentLength { get; }
-        public string ContentType { get; }
-        public IEnumerable<string> AcceptEncodings { get; }
-        public IEnumerable<string> AcceptMediaTypes { get; }
-        public byte[] Content { get; }
-        public bool IsComplete { get; }
-        public HttpMethod? AccessControlRequestMethod { get; }
-        public IEnumerable<string> AccessControlRequestHeaders { get; }
-        public string Origin { get; }
+
+        #region Public Constructors
 
         public HttpServerRequest(IEnumerable<IHttpRequestHeader> headers, HttpMethod? method, Uri uri,
             string httpVersion, string contentTypeCharset, IEnumerable<string> acceptCharsets, int contentLength,
@@ -44,5 +31,27 @@ namespace UniversalSend.Services.HttpMessage {
             AccessControlRequestHeaders = accessControlRequestHeaders;
             Origin = origin;
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public IEnumerable<string> AcceptCharsets { get; }
+        public IEnumerable<string> AcceptEncodings { get; }
+        public IEnumerable<string> AcceptMediaTypes { get; }
+        public IEnumerable<string> AccessControlRequestHeaders { get; }
+        public HttpMethod? AccessControlRequestMethod { get; }
+        public byte[] Content { get; }
+        public int ContentLength { get; }
+        public string ContentType { get; }
+        public string ContentTypeCharset { get; }
+        public IEnumerable<IHttpRequestHeader> Headers { get; }
+        public string HttpVersion { get; }
+        public bool IsComplete { get; }
+        public HttpMethod? Method { get; }
+        public string Origin { get; }
+        public Uri Uri { get; }
+
+        #endregion Public Properties
     }
 }

@@ -5,6 +5,8 @@ namespace UniversalSend.Services.Helpers {
 
     internal class StringHelper {
 
+        #region Public Methods
+
         public static string ByteArrayToString(byte[] bytes) {
             string result = Encoding.UTF8.GetString(bytes);
             return result;
@@ -53,5 +55,7 @@ namespace UniversalSend.Services.Helpers {
 
             return parameterDictionary;
         }
+
+        #endregion Public Methods
     }
 }

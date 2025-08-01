@@ -6,15 +6,17 @@ namespace UniversalSend.Services.Models.Schemas {
 
     internal class PutResponse : RestResponse, IPutResponse {
 
+        #region Public Enums
+
         public enum ResponseStatus : int {
             OK = 200,
             NoContent = 204,
             NotFound = 404
         };
 
-        public ResponseStatus Status { get; }
+        #endregion Public Enums
 
-        public object ContentData { get; set; }
+        #region Public Constructors
 
         public PutResponse(ResponseStatus status, object content, IReadOnlyDictionary<string, string> headers) : base((int)status, headers) {
             Status = status;
@@ -30,8 +32,21 @@ namespace UniversalSend.Services.Models.Schemas {
         public PutResponse(ResponseStatus status) : this(status, null, ImmutableDictionary<string, string>.Empty) {
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public object ContentData { get; set; }
+        public ResponseStatus Status { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public static PutResponse CreateNotFound() {
             return new PutResponse(ResponseStatus.NotFound, null);
         }
+
+        #endregion Public Methods
     }
 }

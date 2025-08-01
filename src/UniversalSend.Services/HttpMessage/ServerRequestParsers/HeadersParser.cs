@@ -23,11 +23,22 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
     ///   on receiving a valid Content-Length.
     /// </summary>
     internal class HeadersParser : HttpRequestPartParser {
+
+        #region Private Fields
+
         private RequestHeaderFactory _headerFactory;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public HeadersParser() {
             _headerFactory = new RequestHeaderFactory();
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         /// <summary>
         /// A regex would be nice :)
@@ -90,6 +101,10 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
             UnparsedData = stream.Skip(headerValueEndIndex).ToArray();
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private string GetHeaderString(byte[] stream, int unparsedIndex, int markerIndex) {
             int length = markerIndex - unparsedIndex;
             var data = new byte[length];
@@ -97,5 +112,7 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
             return Constants.DefaultHttpEncoding.GetString(data);
         }
+
+        #endregion Private Methods
     }
 }

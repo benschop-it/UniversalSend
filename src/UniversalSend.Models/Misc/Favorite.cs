@@ -23,5 +23,6 @@ namespace UniversalSend.Models.Misc {
         public long Port { get; set; }
 
         #endregion Public Properties
+
     }
 }

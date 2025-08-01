@@ -7,7 +7,13 @@ namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
 
     internal class HttpServerResponseParser : IHttpServerResponseParser {
 
+        #region Private Fields
+
         private IEnumerable<IHttpResponsePartParser> _pipeline;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public HttpServerResponseParser(IHttpCodesTranslator httpCodesTranslator) {
             _pipeline = new IHttpResponsePartParser[] {
@@ -15,6 +21,19 @@ namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
                 new HeadersParser(),
                 new ContentParser()
             };
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public byte[] ConvertToBytes(HttpServerResponse response) {
+            var responseBytes = new List<byte>();
+            foreach (var pipelinePart in _pipeline) {
+                responseBytes.AddRange(pipelinePart.ParseToBytes(response));
+            }
+
+            return responseBytes.ToArray();
         }
 
         public string ConvertToString(HttpServerResponse response) {
@@ -26,13 +45,6 @@ namespace UniversalSend.Services.HttpMessage.ServerResponseParsers {
             return responseBuilder.ToString();
         }
 
-        public byte[] ConvertToBytes(HttpServerResponse response) {
-            var responseBytes = new List<byte>();
-            foreach (var pipelinePart in _pipeline) {
-                responseBytes.AddRange(pipelinePart.ParseToBytes(response));
-            }
-
-            return responseBytes.ToArray();
-        }
+        #endregion Public Methods
     }
 }

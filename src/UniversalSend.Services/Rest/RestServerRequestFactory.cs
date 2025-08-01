@@ -6,13 +6,24 @@ using UniversalSend.Services.Models.Schemas;
 namespace UniversalSend.Services.Rest {
 
     internal class RestServerRequestFactory {
+
+        #region Private Fields
+
         private readonly IConfiguration _configuration;
         private readonly IEncodingCache _encodingCache;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RestServerRequestFactory(IConfiguration configuration, IEncodingCache encodingCache) {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public RestServerRequest Create(IHttpServerRequest httpRequest) {
             var acceptMediaType = GetAcceptMediaType(httpRequest);
@@ -34,13 +45,9 @@ namespace UniversalSend.Services.Rest {
             );
         }
 
-        private MediaType GetContentMediaType(IHttpServerRequest httpRequest) {
-            var contentMediaType = GetMediaType(httpRequest.ContentType ?? string.Empty); // guard against nulls
-            if (contentMediaType == MediaType.Unsupported)
-                return _configuration.DefaultContentType;
+        #endregion Public Methods
 
-            return contentMediaType;
-        }
+        #region Private Methods
 
         private static MediaType GetMediaType(string contentType) {
             if ("application/json".Equals(contentType, StringComparison.OrdinalIgnoreCase) ||
@@ -52,33 +59,6 @@ namespace UniversalSend.Services.Rest {
                 return MediaType.XML;
 
             return MediaType.Unsupported;
-        }
-
-        private string GetContentCharset(IHttpServerRequest httpRequest, MediaType contentMediaType) {
-            var requestContentCharset = httpRequest.ContentTypeCharset;
-            var encoding = _encodingCache.GetEncoding(requestContentCharset);
-            if (encoding == null) {
-                if (contentMediaType == MediaType.JSON) {
-                    requestContentCharset = _configuration.DefaultJSONCharset;
-                } else if (contentMediaType == MediaType.XML) {
-                    requestContentCharset = _configuration.DefaultXMLCharset;
-                } else {
-                    throw new NotImplementedException("Content media type is not supported.");
-                }
-            }
-
-            return requestContentCharset;
-        }
-
-        private MediaType GetAcceptMediaType(IHttpServerRequest httpRequest) {
-            var preferredType = httpRequest.AcceptMediaTypes
-                                    .Select(GetMediaType)
-                                    .FirstOrDefault(a => a != MediaType.Unsupported);
-
-            if (preferredType == MediaType.Unsupported)
-                preferredType = _configuration.DefaultAcceptType;
-
-            return preferredType;
         }
 
         private string GetAcceptCharset(IHttpServerRequest httpRequest, MediaType acceptMediaType) {
@@ -104,5 +84,42 @@ namespace UniversalSend.Services.Rest {
 
             return firstAvailableEncoding;
         }
+
+        private MediaType GetAcceptMediaType(IHttpServerRequest httpRequest) {
+            var preferredType = httpRequest.AcceptMediaTypes
+                                    .Select(GetMediaType)
+                                    .FirstOrDefault(a => a != MediaType.Unsupported);
+
+            if (preferredType == MediaType.Unsupported)
+                preferredType = _configuration.DefaultAcceptType;
+
+            return preferredType;
+        }
+
+        private string GetContentCharset(IHttpServerRequest httpRequest, MediaType contentMediaType) {
+            var requestContentCharset = httpRequest.ContentTypeCharset;
+            var encoding = _encodingCache.GetEncoding(requestContentCharset);
+            if (encoding == null) {
+                if (contentMediaType == MediaType.JSON) {
+                    requestContentCharset = _configuration.DefaultJSONCharset;
+                } else if (contentMediaType == MediaType.XML) {
+                    requestContentCharset = _configuration.DefaultXMLCharset;
+                } else {
+                    throw new NotImplementedException("Content media type is not supported.");
+                }
+            }
+
+            return requestContentCharset;
+        }
+
+        private MediaType GetContentMediaType(IHttpServerRequest httpRequest) {
+            var contentMediaType = GetMediaType(httpRequest.ContentType ?? string.Empty); // guard against nulls
+            if (contentMediaType == MediaType.Unsupported)
+                return _configuration.DefaultContentType;
+
+            return contentMediaType;
+        }
+
+        #endregion Private Methods
     }
 }

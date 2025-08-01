@@ -23,5 +23,6 @@ namespace UniversalSend.Models.HttpData {
         public long Size { get; set; }
 
         #endregion Public Properties
+
     }
 }

@@ -17,5 +17,6 @@ namespace UniversalSend.Models.HttpData {
         public string DeviceType { get; set; }
 
         #endregion Public Properties
+
     }
 }

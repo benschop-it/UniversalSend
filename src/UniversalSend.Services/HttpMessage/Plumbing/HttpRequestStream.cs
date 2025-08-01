@@ -15,13 +15,24 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
     /// the owner of the stream.
     /// </remarks>
     internal class HttpRequestStream {
+
+        #region Private Fields
+
         private static readonly int[] INPUTSTREAM_EMPTY_DELAYMS = new int[] { 1, 10, 10 };
 
         private IInputStream _requestStream;
 
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public HttpRequestStream(IInputStream requestStream) {
             _requestStream = requestStream;
         }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
 
         internal async Task<StreamReadResult> ReadAsync(uint bufferSize, InputStreamOptions streamOptions) {
             IBuffer response = null;
@@ -41,5 +52,7 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
 
             return new StreamReadResult(data, succeed);
         }
+
+        #endregion Internal Methods
     }
 }

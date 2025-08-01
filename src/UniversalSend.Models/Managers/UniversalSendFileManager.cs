@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
 using UniversalSend.Models.Data;
-using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Managers {
+
     internal class UniversalSendFileManager : IUniversalSendFileManager {
 
         #region Public Methods
@@ -39,5 +39,6 @@ namespace UniversalSend.Models.Managers {
         }
 
         #endregion Public Methods
+
     }
 }

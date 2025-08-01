@@ -4,12 +4,17 @@ using System.Text;
 namespace UniversalSend.Services.HttpMessage.Plumbing {
 
     internal class Constants {
-        internal static Encoding DefaultHttpEncoding { get; }
 
-        internal static readonly byte SpaceByte;
+        #region Internal Fields
+
+        internal static readonly byte ColonByte;
         internal static readonly byte CRByte;
         internal static readonly byte LFByte;
-        internal static readonly byte ColonByte;
+        internal static readonly byte SpaceByte;
+
+        #endregion Internal Fields
+
+        #region Public Constructors
 
         static Constants() {
             DefaultHttpEncoding = Encoding.GetEncoding("iso-8859-1");
@@ -19,5 +24,13 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
             LFByte = Constants.DefaultHttpEncoding.GetBytes(new[] { '\n' }).Single();
             ColonByte = Constants.DefaultHttpEncoding.GetBytes(new[] { ':' }).Single();
         }
+
+        #endregion Public Constructors
+
+        #region Internal Properties
+
+        internal static Encoding DefaultHttpEncoding { get; }
+
+        #endregion Internal Properties
     }
 }

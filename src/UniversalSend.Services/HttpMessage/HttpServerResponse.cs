@@ -11,20 +11,16 @@ using UniversalSend.Services.HttpMessage.ServerResponseParsers;
 namespace UniversalSend.Services.HttpMessage {
 
     internal class HttpServerResponse {
-        private readonly List<IHttpHeader> _headers;
 
-        internal IEnumerable<IHttpHeader> Headers => _headers;
-
-        // Header line info
-        public Version HttpVersion { get; set; }
-
-        public HttpResponseStatus ResponseStatus { get; set; }
-
-        // Content
-        public byte[] Content { get; set; }
+        #region Private Fields
 
         private static HttpCodesTranslator _httpCodesTranslator = new HttpCodesTranslator();
         private static HttpServerResponseParser _httpServerResponseParser;
+        private readonly List<IHttpHeader> _headers;
+
+        #endregion Private Fields
+
+        #region Private Constructors
 
         private HttpServerResponse(Version httpVersion, HttpResponseStatus status) {
             if (_httpServerResponseParser == null) {
@@ -36,48 +32,28 @@ namespace UniversalSend.Services.HttpMessage {
             ResponseStatus = status;
         }
 
-        public static HttpServerResponse Create(int statusCode) {
-            return Create((HttpResponseStatus)statusCode);
-        }
+        #endregion Private Constructors
 
-        public static HttpServerResponse Create(HttpResponseStatus status) {
-            return Create(new Version(1, 1), status);
-        }
+        #region Public Properties
 
-        public static HttpServerResponse Create(Version httpVersion, HttpResponseStatus status) {
-            return new HttpServerResponse(httpVersion, status);
-        }
-
-        // This section contains shortcuts to headers. By setting the property a header is added,
-        // removed or updated from the header collection.
-
-        public DateTime? Date {
+        public IEnumerable<HttpMethod> Allow {
             get {
-                return Headers.OfType<DateHeader>().SingleOrDefault()?.Date;
+                var allowHeader = Headers.OfType<AllowHeader>().SingleOrDefault();
+
+                return allowHeader?.Allows ?? Enumerable.Empty<HttpMethod>();
             }
             set {
-                var dateHeader = Headers.OfType<DateHeader>().SingleOrDefault();
-                _headers.Remove(dateHeader);
+                var allowHeader = Headers.OfType<AllowHeader>().SingleOrDefault();
+                _headers.Remove(allowHeader);
 
-                if (value.HasValue) {
-                    _headers.Add(new DateHeader(value.Value));
+                if (value != null) {
+                    _headers.Add(new AllowHeader(value));
                 }
             }
         }
 
-        public bool IsConnectionClosed {
-            get {
-                return Headers.OfType<CloseConnectionHeader>().Any();
-            }
-            set {
-                var closeConnHeader = Headers.OfType<CloseConnectionHeader>().SingleOrDefault();
-                if (value && closeConnHeader == null) {
-                    _headers.Add(new CloseConnectionHeader());
-                } else if (!value && closeConnHeader != null) {
-                    _headers.Remove(closeConnHeader);
-                }
-            }
-        }
+        // Content
+        public byte[] Content { get; set; }
 
         public string ContentCharset {
             get {
@@ -113,6 +89,37 @@ namespace UniversalSend.Services.HttpMessage {
             }
         }
 
+        public DateTime? Date {
+            get {
+                return Headers.OfType<DateHeader>().SingleOrDefault()?.Date;
+            }
+            set {
+                var dateHeader = Headers.OfType<DateHeader>().SingleOrDefault();
+                _headers.Remove(dateHeader);
+
+                if (value.HasValue) {
+                    _headers.Add(new DateHeader(value.Value));
+                }
+            }
+        }
+
+        // Header line info
+        public Version HttpVersion { get; set; }
+
+        public bool IsConnectionClosed {
+            get {
+                return Headers.OfType<CloseConnectionHeader>().Any();
+            }
+            set {
+                var closeConnHeader = Headers.OfType<CloseConnectionHeader>().SingleOrDefault();
+                if (value && closeConnHeader == null) {
+                    _headers.Add(new CloseConnectionHeader());
+                } else if (!value && closeConnHeader != null) {
+                    _headers.Remove(closeConnHeader);
+                }
+            }
+        }
+
         public Uri Location {
             get {
                 return Headers.OfType<LocationHeader>().SingleOrDefault()?.Location;
@@ -127,38 +134,29 @@ namespace UniversalSend.Services.HttpMessage {
             }
         }
 
-        public IEnumerable<HttpMethod> Allow {
-            get {
-                var allowHeader = Headers.OfType<AllowHeader>().SingleOrDefault();
+        public HttpResponseStatus ResponseStatus { get; set; }
 
-                return allowHeader?.Allows ?? Enumerable.Empty<HttpMethod>();
-            }
-            set {
-                var allowHeader = Headers.OfType<AllowHeader>().SingleOrDefault();
-                _headers.Remove(allowHeader);
+        #endregion Public Properties
 
-                if (value != null) {
-                    _headers.Add(new AllowHeader(value));
-                }
-            }
+        #region Internal Properties
+
+        internal IEnumerable<IHttpHeader> Headers => _headers;
+
+        #endregion Internal Properties
+
+        #region Public Methods
+
+        public static HttpServerResponse Create(int statusCode) {
+            return Create((HttpResponseStatus)statusCode);
         }
 
-        public byte[] ToBytes() {
-            return _httpServerResponseParser.ConvertToBytes(this);
+        public static HttpServerResponse Create(HttpResponseStatus status) {
+            return Create(new Version(1, 1), status);
         }
 
-        public override string ToString() {
-#if DEBUG
-            // This is just used for debugging purposes and will not be available when running in release mode. Problem with
-            // this method is that it uses Encoding to decode the content which is a fairly complicated process. For debugging
-            // purposes I'm using UTF-8 which is working most of the time. In real life you want to use the charset provided, or
-            // some default encoding as explained in the HTTP specs.
-            return _httpServerResponseParser.ConvertToString(this);
-#else
-            return $"{HttpVersion} {ResponseStatus} including {Headers.Count()} headers.";
-#endif
+        public static HttpServerResponse Create(Version httpVersion, HttpResponseStatus status) {
+            return new HttpServerResponse(httpVersion, status);
         }
-
         public IHttpHeader AddHeader(string name, string value) {
             var knownHeader = Headers.SingleOrDefault(h => string.Equals(h.Name, name, StringComparison.OrdinalIgnoreCase));
             _headers.Remove(knownHeader);
@@ -186,5 +184,23 @@ namespace UniversalSend.Services.HttpMessage {
         public void RemoveHeader(IHttpHeader header) {
             _headers.Remove(header);
         }
+
+        public byte[] ToBytes() {
+            return _httpServerResponseParser.ConvertToBytes(this);
+        }
+
+        public override string ToString() {
+#if DEBUG
+            // This is just used for debugging purposes and will not be available when running in release mode. Problem with
+            // this method is that it uses Encoding to decode the content which is a fairly complicated process. For debugging
+            // purposes I'm using UTF-8 which is working most of the time. In real life you want to use the charset provided, or
+            // some default encoding as explained in the HTTP specs.
+            return _httpServerResponseParser.ConvertToString(this);
+#else
+            return $"{HttpVersion} {ResponseStatus} including {Headers.Count()} headers.";
+#endif
+        }
+
+        #endregion Public Methods
     }
 }

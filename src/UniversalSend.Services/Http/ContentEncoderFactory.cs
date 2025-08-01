@@ -7,6 +7,8 @@ namespace UniversalSend.Services.Http {
 
     internal class ContentEncoderFactory {
 
+        #region Internal Methods
+
         internal IContentEncoder GetEncoder(IEnumerable<string> acceptEncodings) {
             var firstSupportedEncoding = GetSupportedAcceptEncoding(acceptEncodings);
             switch (firstSupportedEncoding) {
@@ -21,11 +23,9 @@ namespace UniversalSend.Services.Http {
             throw new Exception($"{firstSupportedEncoding} not supported.");
         }
 
-        private static ContentCoding GetSupportedAcceptEncoding(IEnumerable<string> acceptEncodings) {
-            return acceptEncodings
-                .Select(GetAcceptEncoding)
-                .FirstOrDefault(x => x != ContentCoding.None);
-        }
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private static ContentCoding GetAcceptEncoding(string possibleValidEncoding) {
             var trimmedEncoding = possibleValidEncoding.Trim();
@@ -36,5 +36,13 @@ namespace UniversalSend.Services.Http {
 
             return ContentCoding.None;
         }
+
+        private static ContentCoding GetSupportedAcceptEncoding(IEnumerable<string> acceptEncodings) {
+            return acceptEncodings
+                .Select(GetAcceptEncoding)
+                .FirstOrDefault(x => x != ContentCoding.None);
+        }
+
+        #endregion Private Methods
     }
 }

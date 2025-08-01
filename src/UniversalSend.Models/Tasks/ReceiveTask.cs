@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using UniversalSend.Models.Interfaces;
+﻿using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.Tasks {
 
@@ -16,5 +15,6 @@ namespace UniversalSend.Models.Tasks {
         public ReceiveTaskStates TaskState { get; set; } = ReceiveTaskStates.Waiting;
 
         #endregion Public Properties
+
     }
 }

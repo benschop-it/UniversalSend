@@ -7,14 +7,21 @@ using UniversalSend.Services.Models.Contracts;
 namespace UniversalSend.Services.Http {
 
     internal class HttpServerConfiguration {
+
+        #region Public Properties
+
         public int ServerPort { get; private set; } = 80;
+
+        #endregion Public Properties
+
+        #region Internal Properties
+
         internal CorsConfiguration CorsConfiguration { get; private set; }
         internal IEnumerable<RouteRegistration> Routes { get; private set; } = new RouteRegistration[] { };
 
-        public HttpServerConfiguration ListenOnPort(int serverPort) {
-            ServerPort = serverPort;
-            return this;
-        }
+        #endregion Internal Properties
+
+        #region Public Methods
 
         /// <summary>
         /// Enables cors support on all origins (*).
@@ -48,6 +55,10 @@ namespace UniversalSend.Services.Http {
             return this;
         }
 
+        public HttpServerConfiguration ListenOnPort(int serverPort) {
+            ServerPort = serverPort;
+            return this;
+        }
         /// <summary>
         /// Registers the <see cref="IRouteHandler"/> on the root url.
         /// </summary>
@@ -71,5 +82,7 @@ namespace UniversalSend.Services.Http {
             Routes = Routes.Concat(new[] { routeRegistration });
             return this;
         }
+
+        #endregion Public Methods
     }
 }

@@ -23,5 +23,6 @@ namespace UniversalSend.Models.HttpData {
         public string Fingerprint { get; set; }
 
         #endregion Public Properties
+
     }
 }

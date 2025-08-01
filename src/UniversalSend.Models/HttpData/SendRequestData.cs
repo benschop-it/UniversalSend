@@ -15,5 +15,6 @@ namespace UniversalSend.Models.HttpData {
         public InfoData Info { get; set; }
 
         #endregion Public Properties
+
     }
 }
