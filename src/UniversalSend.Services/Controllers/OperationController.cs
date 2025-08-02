@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using UniversalSend.Models.Common;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Helpers;
 using UniversalSend.Services.HttpMessage;
 
 namespace UniversalSend.Services.Controllers {
 
     internal class OperationController {
+
+        private static readonly ILogger _logger;
+
+        static OperationController() {
+            _logger = LogManager.GetLogger<OperationController>();
+        }
 
         #region Public Properties
 
@@ -17,11 +24,11 @@ namespace UniversalSend.Services.Controllers {
         #region Public Methods
 
         public static void TryRunOperationByRequestUri(MutableHttpServerRequest mutableHttpServerRequest) {
-            Debug.WriteLine($"uri:{mutableHttpServerRequest.Uri.ToString()}");
+            _logger.Debug($"TryRunOperationByRequestUri for URI:{mutableHttpServerRequest.Uri.ToString()}.");
             string uri = StringHelper.GetURLFromURLWithQueryParmeters(mutableHttpServerRequest.Uri.ToString());
-            Debug.WriteLine($"Looking for managed function for uri: {uri}");
+            _logger.Debug($"Looking for managed function for URI: {uri}.");
             if (UriOperations.ContainsKey(uri)) {
-                Debug.WriteLine($"Preparing to execute managed function for uri: {uri}");
+                _logger.Debug($"Preparing to execute managed function.");
                 Func<MutableHttpServerRequest, object> func = UriOperations[uri];
                 func(mutableHttpServerRequest);
             }

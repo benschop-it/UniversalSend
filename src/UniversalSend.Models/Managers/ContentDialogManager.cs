@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace UniversalSend.Models.Managers {
@@ -17,8 +18,11 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public void HideContentDialog() {
-            _contentDialog.Hide();
+        public async Task HideContentDialogAsync() {
+            if (_contentDialog == null) return;
+
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher
+                .RunAsync(CoreDispatcherPriority.Normal, () => _contentDialog.Hide());
         }
 
         public async Task ShowContentDialogAsync(object Content) {

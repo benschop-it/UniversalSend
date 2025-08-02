@@ -1,70 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
-<Package
-  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
-
-  <Identity
-    Name="PigeonMing.UniversalSend"
-    Publisher="CN=40BCA14A-EEC5-4086-9CC1-FB1A9BFCC6D0"
-    Version="1.0.2.0" />
-
-  <mp:PhoneIdentity PhoneProductId="1f271639-57da-4d20-90bd-85d05bd921fd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
-
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="Zerqle.UniversalSend" Publisher="CN=Zerqle" Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="1f271639-57da-4d20-90bd-85d05bd921fd" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>UniversalSend</DisplayName>
-    <PublisherDisplayName>Pigeon_Ming</PublisherDisplayName>
+    <PublisherDisplayName>Zerqle</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="UniversalSend.App">
-      <uap:VisualElements
-        DisplayName="UniversalSend"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="UniversalSend"
-        BackgroundColor="transparent">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="UniversalSend.App">
+      <uap:VisualElements DisplayName="UniversalSend" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="UniversalSend" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
           <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
           </uap:ShowNameOnTiles>
-        </uap:DefaultTile >
+        </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileSavePicker">
           <uap:FileSavePicker>
             <uap:SupportedFileTypes>
-              <uap:SupportsAnyFileType/>
+              <uap:SupportsAnyFileType />
             </uap:SupportedFileTypes>
           </uap:FileSavePicker>
         </uap:Extension>
         <uap:Extension Category="windows.fileOpenPicker">
           <uap:FileOpenPicker>
             <uap:SupportedFileTypes>
-              <uap:SupportsAnyFileType/>
+              <uap:SupportsAnyFileType />
             </uap:SupportedFileTypes>
           </uap:FileOpenPicker>
         </uap:Extension>
         <uap:Extension Category="windows.shareTarget">
           <uap:ShareTarget>
             <uap:SupportedFileTypes>
-              <uap:SupportsAnyFileType/>
+              <uap:SupportsAnyFileType />
             </uap:SupportedFileTypes>
             <uap:DataFormat>Text</uap:DataFormat>
             <uap:DataFormat>URI</uap:DataFormat>
@@ -77,10 +56,9 @@
       </Extensions>
     </Application>
   </Applications>
-
   <Capabilities>
     <Capability Name="internetClient" />
-    <Capability Name="internetClientServer"/>
-    <Capability Name="privateNetworkClientServer"/>
+    <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
   </Capabilities>
 </Package>

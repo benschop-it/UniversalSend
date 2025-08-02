@@ -1,4 +1,5 @@
-﻿using UniversalSend.Services.Models.Contracts;
+﻿using UniversalSend.Services.Interfaces.Internal;
+using UniversalSend.Services.Models.Contracts;
 
 namespace UniversalSend.Services.Rest {
 
@@ -13,9 +14,9 @@ namespace UniversalSend.Services.Rest {
 
         #region Public Constructors
 
-        public RestControllerMethodExecutorFactory() {
-            _withoutContentExecutor = new RestControllerMethodExecutor();
-            _withContentExecutor = new RestControllerMethodWithContentExecutor();
+        public RestControllerMethodExecutorFactory(IInstanceCreatorCache instanceCreatorCache) {
+            _withoutContentExecutor = new RestControllerMethodExecutor(instanceCreatorCache);
+            _withContentExecutor = new RestControllerMethodWithContentExecutor(instanceCreatorCache);
         }
 
         #endregion Public Constructors

@@ -6,6 +6,8 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Methods
 
+        void SetType(string type);
+
         void Debug(string message, Exception ex);
 
         void Debug(string message, params object[] args);

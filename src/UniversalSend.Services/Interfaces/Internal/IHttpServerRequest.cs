@@ -24,6 +24,7 @@ namespace UniversalSend.Services.Interfaces.Internal {
         HttpMethod? Method { get; }
         string Origin { get; }
         Uri Uri { get; }
+        string ToString();
 
         #endregion Public Properties
 

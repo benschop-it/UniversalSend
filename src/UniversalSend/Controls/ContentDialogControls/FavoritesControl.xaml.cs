@@ -33,8 +33,8 @@ namespace UniversalSend.Controls.ContentDialogControls {
             await _contentDialogManager.ShowContentDialogAsync(new EditFavoriteItemControl());
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            _contentDialogManager.HideContentDialog();
+        private async void CancelButton_Click(object sender, RoutedEventArgs e) {
+            await _contentDialogManager.HideContentDialogAsync();
         }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e) {
@@ -61,7 +61,7 @@ namespace UniversalSend.Controls.ContentDialogControls {
                 MessageTextBlock.Text = $"Device not found: {item.DeviceName} ({item.IPAddr})";
             } else {
                 _sendManager.SendPreparedEvent(device);
-                _contentDialogManager.HideContentDialog();
+                await _contentDialogManager.HideContentDialogAsync();
             }
         }
 

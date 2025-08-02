@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Strings;
 using Windows.Networking;
@@ -17,6 +17,7 @@ namespace UniversalSend.Services.Misc {
         #region Private Fields
 
         private const string MULTICAST_GROUP = "224.0.0.167";
+        private readonly ILogger _logger;
         private readonly IDeviceManager _deviceManager;
         private readonly IRegister _register;
         private readonly IRegisterResponseDataManager _registerResponseDataManager;
@@ -34,6 +35,7 @@ namespace UniversalSend.Services.Misc {
             ISettings settings
 
         ) {
+            _logger = LogManager.GetLogger<UdpDiscoveryService>();
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _register = register ?? throw new ArgumentNullException(nameof(register));
@@ -51,6 +53,9 @@ namespace UniversalSend.Services.Misc {
             var port = _settings.GetSettingContentAsString(Constants.Network_Port);
             var multicast = _settings.GetSettingContentAsString(Constants.Network_MulticastAddress);
 
+            _logger.Debug($"SendAnnouncementAsync called. Port = {port}, Multicast = {multicast}.");
+
+
             using (var socket = new DatagramSocket()) {
                 try {
                     var outputStream = await socket.GetOutputStreamAsync(new HostName(multicast), port);
@@ -60,7 +65,7 @@ namespace UniversalSend.Services.Misc {
                         await writer.StoreAsync();
                     }
                 } catch (Exception ex) {
-                    Debug.WriteLine($"Failed to send UDP announcement: {ex.Message}");
+                    _logger.Debug($"Failed to send UDP announcement: {ex.Message}");
                 }
             }
         }
@@ -103,18 +108,18 @@ namespace UniversalSend.Services.Misc {
 
                 IRegisterResponseData payload = _registerResponseDataManager.DeserializeRegisterResponseData(message);
                 if (payload == null) {
-                    Debug.WriteLine("Ignore self!");
+                    _logger.Debug("Ignore self!");
                     return;
                 }
 
-                Debug.WriteLine($"UDP message received: {payload.Announcement}, {payload.Alias}, {payload.DeviceModel}, {payload.DeviceType}, {payload.Fingerprint}");
+                _logger.Debug($"UDP message received: {payload.Announcement}, {payload.Alias}, {payload.DeviceModel}, {payload.DeviceType}, {payload.Fingerprint}");
 
                 if (payload.Announcement) {
                     // Send HTTP POST response
-                    Debug.WriteLine("Register via HTTP");
+                    _logger.Debug("Register via HTTP");
                     await RegisterViaHttpAsync(args.RemoteAddress.ToString(), payload.Fingerprint);
                 } else {
-                    Debug.WriteLine("Register new device, no announcement!");
+                    _logger.Debug("Register new device, no announcement!");
                     IDevice device = _deviceManager.GetDeviceFromResponseData(payload, args.RemoteAddress.CanonicalName);
                     _register.NewDeviceRegisterV1Event(device);
                 }
@@ -130,7 +135,7 @@ namespace UniversalSend.Services.Misc {
                     await client.PostAsync($"http://{ip}:53317/api/localsend/v1/register", content);
                 }
             } catch (Exception ex) {
-                Debug.WriteLine($"RegisterViaHttpAsync failed: {ex.Message}");
+                _logger.Debug($"RegisterViaHttpAsync failed: {ex.Message}");
             }
         }
 

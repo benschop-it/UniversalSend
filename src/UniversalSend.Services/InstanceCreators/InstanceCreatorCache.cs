@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UniversalSend.Services.Attributes;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Contracts;
 using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services.InstanceCreators {
 
-    internal class InstanceCreatorCache {
+    internal class InstanceCreatorCache : IInstanceCreatorCache {
 
         #region Private Fields
 
@@ -15,31 +16,17 @@ namespace UniversalSend.Services.InstanceCreators {
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        static InstanceCreatorCache() {
-            Default = new InstanceCreatorCache();
-        }
-
-        #endregion Public Constructors
-
         #region Internal Constructors
 
-        internal InstanceCreatorCache() {
+        public InstanceCreatorCache() {
             _cache = new Dictionary<Type, IInstanceCreator>();
         }
 
         #endregion Internal Constructors
 
-        #region Internal Properties
-
-        internal static InstanceCreatorCache Default { get; }
-
-        #endregion Internal Properties
-
         #region Internal Methods
 
-        internal void CacheCreator(Type restController) {
+        public void CacheCreator(Type restController) {
             if (!_cache.ContainsKey(restController)) {
                 var restControllerAtt = restController.GetTypeInfo().GetCustomAttribute<RestControllerAttribute>();
                 InstanceCreationType t = restControllerAtt != null ? restControllerAtt.InstanceCreationType : InstanceCreationType.Singleton;
@@ -52,7 +39,7 @@ namespace UniversalSend.Services.InstanceCreators {
             }
         }
 
-        internal IInstanceCreator GetCreator(Type restController) {
+        public IInstanceCreator GetCreator(Type restController) {
             CacheCreator(restController);
             return _cache[restController];
         }

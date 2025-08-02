@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Controllers;
 using UniversalSend.Services.Http;
@@ -18,16 +18,18 @@ namespace UniversalSend.Services.Misc {
         private readonly IDeviceManager _deviceManager;
         private readonly IEncodingCache _encodingCache;
         private readonly IHttpRequestParser _httpRequestParser;
+        private readonly IInfoDataManager _infoDataManager;
+        private readonly IInstanceCreatorCache _instanceCreatorCache;
+        private readonly ILogger _logger;
         private readonly IOperationFunctions _operationFunctions;
+        private readonly IReceiveManager _receiveManager;
+        private readonly IReceiveTaskManager _receiveTaskManager;
         private readonly IRegister _register;
+        private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private readonly ISettings _settings;
-        private IInfoDataManager _infoDataManager;
-        private IReceiveManager _receiveManager;
-        private IReceiveTaskManager _receiveTaskManager;
-        private IRegisterResponseDataManager _registerResponseDataManager;
-        private ITokenFactory _tokenFactory;
+        private readonly ITokenFactory _tokenFactory;
+        private readonly IUniversalSendFileManager _universalSendFileManager;
         private UdpDiscoveryService _udpDiscovery;
-        private IUniversalSendFileManager _universalSendFileManager;
 
         #endregion Private Fields
 
@@ -46,8 +48,10 @@ namespace UniversalSend.Services.Misc {
             IRegisterResponseDataManager registerResponseDataManager,
             IHttpRequestParser httpRequestParser,
             IConfiguration configuration,
-            IEncodingCache encodingCache
+            IEncodingCache encodingCache,
+            IInstanceCreatorCache instanceCreatorCache
         ) {
+            _logger = LogManager.GetLogger<ServiceHttpServer>();
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _register = register ?? throw new ArgumentNullException(nameof(register));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -61,9 +65,16 @@ namespace UniversalSend.Services.Misc {
             _httpRequestParser = httpRequestParser ?? throw new ArgumentNullException(nameof(httpRequestParser));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
+            _instanceCreatorCache = instanceCreatorCache ?? throw new ArgumentNullException(nameof(instanceCreatorCache));
         }
 
         #endregion Public Constructors
+
+        #region Public Events
+
+        public event EventHandler<HttpParseProgressEventArgs> HttpRequestProgressChanged;
+
+        #endregion Public Events
 
         #region Internal Properties
 
@@ -76,10 +87,12 @@ namespace UniversalSend.Services.Misc {
         #region Public Methods
 
         public async Task<bool> StartHttpServerAsync(int port) {
+            _httpRequestParser.ProgressChanged += OnParserProgressChanged;
+
             _udpDiscovery = new UdpDiscoveryService(_registerResponseDataManager, _deviceManager, _register, _settings);
             await _udpDiscovery.StartUdpListenerAsync();
 
-            RestRouteHandler restRouteHandler = new RestRouteHandler(_configuration, _encodingCache);
+            RestRouteHandler restRouteHandler = new RestRouteHandler(_configuration, _encodingCache, _instanceCreatorCache);
 
             restRouteHandler.RegisterController<V1RequestController>(() => {
                 return new object[]
@@ -101,11 +114,12 @@ namespace UniversalSend.Services.Misc {
             try {
                 await HttpServer.StartServerAsync();
             } catch {
+                _httpRequestParser.ProgressChanged -= OnParserProgressChanged;
                 return false;
             }
 
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/send?fileId={}&token={}")) {
-                Debug.WriteLine($"[OperationController.UriOperations.Add] /api/localsend/v1/send");
+                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/send");
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/send?fileId={}&token={}",
                     _operationFunctions.SendRequestFuncAsync
@@ -113,14 +127,14 @@ namespace UniversalSend.Services.Misc {
             }
 
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/register")) {
-                Debug.WriteLine($"[OperationController.UriOperations.Add] /api/localsend/v1/register");
+                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/register");
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/register",
                     _operationFunctions.RegisterRequestFunc
                 );
             }
 
-            Debug.WriteLine($"HTTP server started on port {port}");
+            _logger.Debug($"HTTP server started on port {port}");
             return true;
         }
 
@@ -128,11 +142,21 @@ namespace UniversalSend.Services.Misc {
             _udpDiscovery?.StopUdpListener();
             _udpDiscovery = null;
 
+            _httpRequestParser.ProgressChanged -= OnParserProgressChanged;
+
             HttpServer.StopServer();
-            Debug.WriteLine($"HTTP server has stopped");
+            _logger.Debug("HTTP server has stopped");
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void OnParserProgressChanged(object sender, HttpParseProgressEventArgs e) {
+            HttpRequestProgressChanged?.Invoke(this, e);
+        }
+
+        #endregion Private Methods
 
     }
 }

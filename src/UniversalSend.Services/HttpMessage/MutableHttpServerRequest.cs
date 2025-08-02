@@ -54,14 +54,6 @@ namespace UniversalSend.Services.HttpMessage {
 
         #endregion Public Properties
 
-        #region Public Methods
-
-        public async Task<IMutableHttpServerRequest> Parse(IInputStream requestStream) {
-            return await _httpRequestParser.ParseRequestStream(requestStream);
-        }
-
-        #endregion Public Methods
-
         #region Internal Methods
 
         internal void AddHeader(IHttpRequestHeader header) {

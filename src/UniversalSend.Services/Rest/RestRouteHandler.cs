@@ -13,14 +13,16 @@ namespace UniversalSend.Services.Rest {
         private readonly RestControllerRequestHandler _requestHandler;
         private readonly RestServerRequestFactory _restServerRequestFactory;
         private readonly RestToHttpResponseConverter _restToHttpConverter;
+        private readonly IInstanceCreatorCache _instanceCreatorCache;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public RestRouteHandler(IConfiguration configuration, IEncodingCache encodingCache) {
+        public RestRouteHandler(IConfiguration configuration, IEncodingCache encodingCache, IInstanceCreatorCache instanceCreatorCache) {
+            _instanceCreatorCache = instanceCreatorCache;
             _restServerRequestFactory = new RestServerRequestFactory(configuration, encodingCache);
-            _requestHandler = new RestControllerRequestHandler();
+            _requestHandler = new RestControllerRequestHandler(instanceCreatorCache);
             _restToHttpConverter = new RestToHttpResponseConverter();
         }
 

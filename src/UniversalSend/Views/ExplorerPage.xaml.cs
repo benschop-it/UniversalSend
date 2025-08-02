@@ -117,7 +117,7 @@ namespace UniversalSend.Views {
         private async void CreateFolderButton_Click(object sender, RoutedEventArgs e) {
             CreateNewFolderControl control = new CreateNewFolderControl();
             control.CancelButton.Click += (a, b) => {
-                ContentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialogAsync();
             };
             control.OKButton.Click += async (a, b) => {
                 if (StringHelper.IsValidFileName(control.NameTextBox.Text)) {
@@ -129,7 +129,7 @@ namespace UniversalSend.Views {
                     }
 
                     await folder.CreateFolderAsync(control.NameTextBox.Text);
-                    ContentDialogManager.HideContentDialog();
+                    await _contentDialogManager.HideContentDialogAsync();
                     await UpdateViewAsync(folder);
                 } else {
                     control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
@@ -264,7 +264,7 @@ namespace UniversalSend.Views {
         private async void ListViewFlyout_Properties_Click(object sender, RoutedEventArgs e) {
             StorageItemPropertiesControl control = new StorageItemPropertiesControl(_rightTabedItem);
             control.CancelButton.Click += (a, b) => {
-                ContentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialogAsync();
             };
             await ContentDialogManager.ShowContentDialogAsync(control);
         }
@@ -273,7 +273,7 @@ namespace UniversalSend.Views {
             RenameStorageItemControl control = new RenameStorageItemControl();
             control.NameTextBox.Text = _rightTabedItem.Name;
             control.CancelButton.Click += (a, b) => {
-                ContentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialogAsync();
             };
             control.OKButton.Click += async (a, b) => {
                 if (StringHelper.IsValidFileName(control.NameTextBox.Text)) {
@@ -285,7 +285,7 @@ namespace UniversalSend.Views {
                         await storageFolder.RenameAsync(control.NameTextBox.Text);
                     }
                     await UpdateViewAsync(await GetFolderOfCurrentViewAsync());
-                    ContentDialogManager.HideContentDialog();
+                    await ContentDialogManager.HideContentDialogAsync();
                 } else {
                     control.NameTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
                 }

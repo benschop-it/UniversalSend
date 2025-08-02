@@ -23,6 +23,8 @@ namespace UniversalSend.Models.Common {
 
         #region Public Methods
 
+        public void SetType(string type) => SetLogType(type);
+
         public void Debug(string message, Exception ex) => LogMessage(message, LogLevel.Debug, ex);
 
         public void Debug(string message, params object[] args) => LogMessage(message, LogLevel.Debug, args);
@@ -54,6 +56,7 @@ namespace UniversalSend.Models.Common {
         public void Trace(string message, Exception ex) => LogMessage(message, LogLevel.Trace, ex);
 
         public void Trace(string message, params object[] args) => LogMessage(message, LogLevel.Trace, args);
+
         public void Warn(string message, Exception ex) => LogMessage(message, LogLevel.Warn, ex);
 
         public void Warn(string message, params object[] args) => LogMessage(message, LogLevel.Warn, args);
@@ -67,6 +70,8 @@ namespace UniversalSend.Models.Common {
         protected abstract void LogMessage(string message, LogLevel loggingLevel, params object[] args);
 
         protected abstract void LogMessage(string message, LogLevel loggingLevel, Exception ex);
+
+        protected abstract void SetLogType(string logType);
 
         #endregion Protected Methods
     }

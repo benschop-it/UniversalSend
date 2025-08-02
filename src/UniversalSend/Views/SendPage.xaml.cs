@@ -169,7 +169,7 @@ namespace UniversalSend.Views {
                         IDevice device = await _deviceManager.FindDeviceByIPAsync(manualSendControl.IPAddressTextBox.Text);
                         if (device != null) {
                             _sendManager.SendPreparedEvent(device);
-                            _contentDialogManager.HideContentDialog();
+                            await _contentDialogManager.HideContentDialogAsync();
                         }
                         manualSendControl.ErrorMessageTextBlock.Text = $"Error: failed to get host info for {manualSendControl.IPAddressTextBox.Text}:53317";
                     }
@@ -183,7 +183,7 @@ namespace UniversalSend.Views {
                         manualSendControl.LoadingProgressBar.Visibility = Visibility.Collapsed;
                         if (device != null) {
                             _sendManager.SendPreparedEvent(device);
-                            _contentDialogManager.HideContentDialog();
+                            await _contentDialogManager.HideContentDialogAsync();
                         }
                         manualSendControl.ErrorMessageTextBlock.Text = $"Error: no host found for this hashtag";
                     }
@@ -193,7 +193,7 @@ namespace UniversalSend.Views {
             };
 
             manualSendControl.CancelButton.Click += (sender, e) => {
-                _contentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialogAsync();
             };
             await _contentDialogManager.ShowContentDialogAsync(manualSendControl);
         }
@@ -313,13 +313,13 @@ namespace UniversalSend.Views {
         private async Task TypeTextAsync() {
             CreateTextSendTaskControl control = new CreateTextSendTaskControl();
             control.CancelButton.Click += (sender, e) => {
-                _contentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialogAsync();
             };
             control.ConfirmButton.Click += (sender, e) => {
                 if (!string.IsNullOrEmpty(control.MainTextBox.Text)) {
                     AddItemToSendQueue(_sendTaskManager.CreateSendTask(control.MainTextBox.Text));
                 }
-                _contentDialogManager.HideContentDialog();
+                _contentDialogManager.HideContentDialogAsync();
             };
             await _contentDialogManager.ShowContentDialogAsync(control);
         }

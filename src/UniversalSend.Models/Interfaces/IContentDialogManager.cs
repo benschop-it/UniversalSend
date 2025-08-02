@@ -6,7 +6,7 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Methods
 
-        void HideContentDialog();
+        Task HideContentDialogAsync();
         Task ShowContentDialogAsync(object Content);
         Task<ContentDialogResult> ShowContentDialogAsync(string Title, string Content, string PrimaryButtonText, string SecondaryButtonText, string CloseButtonText);
 

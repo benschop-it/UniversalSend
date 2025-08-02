@@ -82,6 +82,9 @@ namespace UniversalSend.Models.Common {
             protected override void LogMessage(string message, LogLevel loggingLevel, Exception ex) {
             }
 
+            protected override void SetLogType(string logType) {
+            }
+
             #endregion Protected Methods
         }
 

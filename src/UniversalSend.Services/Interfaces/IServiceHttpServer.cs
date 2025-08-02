@@ -1,8 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace UniversalSend.Services.Interfaces {
 
     public interface IServiceHttpServer {
+
+        #region Public Events
+
+        event EventHandler<HttpParseProgressEventArgs> HttpRequestProgressChanged;
+
+        #endregion Public Events
 
         #region Public Methods
 
@@ -11,5 +18,6 @@ namespace UniversalSend.Services.Interfaces {
         void StopHttpServer();
 
         #endregion Public Methods
+
     }
 }

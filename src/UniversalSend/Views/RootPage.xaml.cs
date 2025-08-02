@@ -39,12 +39,6 @@ namespace UniversalSend.Views {
 
         #endregion Public Constructors
 
-        #region Public Properties
-
-        public static IServiceHttpServer ServiceServer { get; set; }
-
-        #endregion Public Properties
-
         #region Private Methods
 
         private void MainNavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args) {

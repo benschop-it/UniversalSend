@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.Models.Schemas;
@@ -13,14 +13,16 @@ namespace UniversalSend.Services.Controllers {
 
         #region Private Fields
 
-        private IRegisterDataManager _registerDataManager;
-        private IStorageHelper _storageHelper;
+        private readonly ILogger _logger;
+        private readonly IRegisterDataManager _registerDataManager;
+        private readonly IStorageHelper _storageHelper;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public V2RequestController(IRegisterDataManager registerDataManager, IStorageHelper storageHelper) {
+            _logger = LogManager.GetLogger<V2RequestController>();
             _registerDataManager = registerDataManager ?? throw new ArgumentNullException(nameof(registerDataManager));
             _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
         }
@@ -50,12 +52,15 @@ namespace UniversalSend.Services.Controllers {
 
         [UriFormat("v2/register")]
         public PostResponse PostRegister([FromContent] IRegisterData data) {
-            Debug.WriteLine("POST /register called"); // Debug output
-            if (data != null)
-                Debug.WriteLine(JsonConvert.SerializeObject(data));
+            _logger.Debug("POST /register called"); // Debug output
+            if (data != null) {
+                _logger.Debug(JsonConvert.SerializeObject(data));
+            }
+
             return new PostResponse(
                 PostResponse.ResponseStatus.Created,
-                "", JsonConvert.SerializeObject(_registerDataManager.GetRegisterDataFromDevice()/*ProgramData.LocalDeviceRegisterData*/)); // Fix: pass string directly instead of anonymous type
+                "",
+                JsonConvert.SerializeObject(_registerDataManager.GetRegisterDataFromDevice()/*ProgramData.LocalDeviceRegisterData*/)); // Fix: pass string directly instead of anonymous type
         }
 
         //[UriFormat("v2/prepare-upload?fileId={fileId}&token={token}")]

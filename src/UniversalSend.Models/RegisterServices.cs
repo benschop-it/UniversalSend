@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
@@ -11,6 +9,7 @@ using UniversalSend.Models.Misc;
 using UniversalSend.Models.Tasks;
 
 namespace UniversalSend.Models {
+
     public static class RegisterServices {
 
         public static void Register(IServiceCollection services) {

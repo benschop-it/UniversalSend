@@ -56,16 +56,16 @@ namespace UniversalSend.Controls.ContentDialogControls {
 
         #region Private Methods
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            _contentDialogManager.HideContentDialog();
+        private async void CancelButton_Click(object sender, RoutedEventArgs e) {
+            await _contentDialogManager.HideContentDialogAsync();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e) {
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e) {
             _favoriteManager.Favorites.Remove(Favorite);
-            _contentDialogManager.HideContentDialog();
+            await _contentDialogManager.HideContentDialogAsync();
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e) {
+        private async void SaveButton_Click(object sender, RoutedEventArgs e) {
             SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Red);
             /* To-Do: Validate and Save */
             if (string.IsNullOrEmpty(DeviceNameTextBox.Text)) {
@@ -94,7 +94,7 @@ namespace UniversalSend.Controls.ContentDialogControls {
                 _favoriteManager.SaveFavoritesData();
             }
 
-            _contentDialogManager.HideContentDialog();
+            await _contentDialogManager.HideContentDialogAsync();
         }
 
         #endregion Private Methods

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Attributes;
@@ -16,12 +16,13 @@ namespace UniversalSend.Services.Controllers {
 
         #region Private Fields
 
-        private IInfoDataManager _infoDataManager;
-        private IReceiveManager _receiveManager;
-        private IReceiveTaskManager _receiveTaskManager;
-        private IRegisterResponseDataManager _registerResponseDataManager;
-        private ITokenFactory _tokenFactory;
-        private IUniversalSendFileManager _universalSendFileManager;
+        private readonly ILogger _logger;
+        private readonly IInfoDataManager _infoDataManager;
+        private readonly IReceiveManager _receiveManager;
+        private readonly IReceiveTaskManager _receiveTaskManager;
+        private readonly IRegisterResponseDataManager _registerResponseDataManager;
+        private readonly ITokenFactory _tokenFactory;
+        private readonly IUniversalSendFileManager _universalSendFileManager;
 
         #endregion Private Fields
 
@@ -35,6 +36,7 @@ namespace UniversalSend.Services.Controllers {
             IReceiveTaskManager receiveTaskManager,
             IRegisterResponseDataManager registerResponseDataManager
         ) {
+            _logger = LogManager.GetLogger<V1RequestController>();
             _infoDataManager = infoDataManager ?? throw new ArgumentNullException(nameof(infoDataManager));
             _receiveManager = receiveManager ?? throw new ArgumentNullException(nameof(receiveManager));
             _tokenFactory = tokenFactory ?? throw new ArgumentNullException(nameof(tokenFactory));
@@ -49,26 +51,22 @@ namespace UniversalSend.Services.Controllers {
 
         [UriFormat("v1/info?fingerprint={fingerprint}")]
         public GetResponse GetInfo(string fingerprint) {
-            Debug.WriteLine($"GET v1/info Called\nfingerprint:{fingerprint}");
-            return new GetResponse(
-                GetResponse.ResponseStatus.OK,
-                _infoDataManager.GetInfoDataFromDevice()
-            );
+            _logger.Debug($"GET v1/info called with fingerprint: {fingerprint}.");
+
+            return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataFromDevice());
         }
 
         [UriFormat("v1/cancel")]
         public PostResponse PostCancel() {
-            Debug.WriteLine($"GET v1/Cancel Called");
+            _logger.Debug($"GET v1/Cancel called.");
+
             _receiveManager.CancelReceivedEvent();
-            return new PostResponse(
-                PostResponse.ResponseStatus.OK,
-                ""
-            );
+            return new PostResponse(PostResponse.ResponseStatus.OK, "");
         }
 
         [UriFormat("v1/register")]
         public PostResponse PostRegister([FromContent] RegisterRequestData registerRequestData) {
-            Debug.WriteLine($"POST v1 register request Called: {registerRequestData.Alias} {registerRequestData.DeviceModel} {registerRequestData.DeviceType} {registerRequestData.Fingerprint}");
+            _logger.Debug($"POST v1 register request called with RegisterRequestData:\n{JsonConvert.SerializeObject(registerRequestData)}.");
 
             IRegisterResponseData registerResponseData = _registerResponseDataManager.GetRegisterReponseData(false);
             return new PostResponse(PostResponse.ResponseStatus.OK, "", registerResponseData);
@@ -76,7 +74,7 @@ namespace UniversalSend.Services.Controllers {
 
         [UriFormat("v1/send-request")]
         public IAsyncOperation<IPostResponse> PostSendRequest([FromContent] SendRequestData requestData) {
-            Debug.WriteLine($"POST v1 send-request Called\nrequestdata:{JsonConvert.SerializeObject(requestData)}");
+            _logger.Debug($"POST v1 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
 
             _receiveManager.SendRequestEvent(requestData);
 
@@ -92,20 +90,25 @@ namespace UniversalSend.Services.Controllers {
                 }
             }
 
-            return Task.FromResult<IPostResponse>(new PostResponse(
-                PostResponse.ResponseStatus.OK,
-                "",
-                (object)responseData // Cast to object otherwise the wrong method will be called!
-            )).AsAsyncOperation();
+            return Task.FromResult<IPostResponse>(
+                new PostResponse(
+                    PostResponse.ResponseStatus.OK,
+                    "",
+                    (object)responseData // Cast to object otherwise the wrong method will be called!
+                )
+            ).AsAsyncOperation();
         }
 
         [UriFormat("v1/send?fileId={fileId}&token={token}")]
         public IAsyncOperation<IPostResponse> PostSendRequest(string fileId, string token) {
-            Debug.WriteLine($"POST send Called\nfileId = {fileId},token = {token},dataLength = B");
-            return Task.FromResult<IPostResponse>(new PostResponse(
-                PostResponse.ResponseStatus.OK,
-                ""
-            )).AsAsyncOperation();
+            _logger.Debug($"POST send called with fileId = {fileId} and token = {token}.");
+
+            return Task.FromResult<IPostResponse>(
+                new PostResponse(
+                    PostResponse.ResponseStatus.OK,
+                    ""
+                )
+            ).AsAsyncOperation();
         }
 
         #endregion Public Methods

@@ -2,6 +2,7 @@
 using UniversalSend.Services.HttpMessage.Plumbing;
 using UniversalSend.Services.HttpMessage.ServerRequestParsers;
 using UniversalSend.Services.HttpMessage.ServerResponseParsers;
+using UniversalSend.Services.InstanceCreators;
 using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Misc;
@@ -19,7 +20,8 @@ namespace UniversalSend.Services {
             services.AddSingleton<IEncodingCache, EncodingCache>();
             services.AddSingleton<IHttpCodesTranslator, HttpCodesTranslator>();
             services.AddSingleton<IHttpServerResponseParser, HttpServerResponseParser>();
-            services.AddTransient<IServiceHttpServer, ServiceHttpServer>();
+            services.AddSingleton<IServiceHttpServer, ServiceHttpServer>();
+            services.AddSingleton<IInstanceCreatorCache, InstanceCreatorCache>();
         }
 
         #endregion Public Methods

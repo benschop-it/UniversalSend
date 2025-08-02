@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -24,7 +23,7 @@ namespace UniversalSend.Services.Http {
         private readonly ContentEncoderFactory _contentEncoderFactory;
         private readonly IHttpRequestParser _httpRequestParser;
         private readonly StreamSocketListener _listener;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
         private readonly List<IHttpMessageInspector> _messageInspectors;
         private readonly int _port;
         private readonly SortedSet<RouteRegistration> _routes;
@@ -34,11 +33,8 @@ namespace UniversalSend.Services.Http {
 
         #region Public Constructors
 
-        public HttpServer(
-                    HttpServerConfiguration configuration,
-            IHttpRequestParser httpRequestParser
-        ) {
-            _log = LogManager.GetLogger<HttpServer>();
+        public HttpServer(HttpServerConfiguration configuration, IHttpRequestParser httpRequestParser) {
+            _logger = LogManager.GetLogger<HttpServer>();
             _port = configuration.ServerPort;
             _listener = new StreamSocketListener();
 
@@ -64,13 +60,13 @@ namespace UniversalSend.Services.Http {
         public async Task StartServerAsync() {
             await _listener.BindServiceNameAsync(_port.ToString());
 
-            _log.Info($"Webserver listening on port {_port}");
+            _logger.Info($"Webserver listening on port {_port}");
         }
 
         public void StopServer() {
             ((IDisposable)this).Dispose();
 
-            _log.Info($"Webserver stopped listening on port {_port}");
+            _logger.Info($"Webserver stopped listening on port {_port}");
         }
 
         #endregion Public Methods
@@ -78,6 +74,8 @@ namespace UniversalSend.Services.Http {
         #region Internal Methods
 
         internal async Task<HttpServerResponse> HandleRequestAsync(IHttpServerRequest request) {
+            _logger.Debug($"HandleRequestAsync:\n{request.ToString()}");
+
             var routeRegistration = _routes.FirstOrDefault(x => x.Match(request));
             if (routeRegistration == null) {
                 return HttpServerResponse.Create(new Version(1, 1), HttpResponseStatus.BadRequest);
@@ -159,7 +157,6 @@ namespace UniversalSend.Services.Http {
 
                         requestLog.AppendLine("[HttpServer.ProcessRequestAsync] [Request]");
                         requestLog.AppendLine($"    Uri = {request.Uri}");
-
                         foreach (var header in request.Headers) {
                             requestLog.AppendLine($"    Header = {header.Name}: {header.Value}");
                         }
@@ -168,10 +165,9 @@ namespace UniversalSend.Services.Http {
 
                         requestLog.AppendLine($"[HttpServer.ProcessRequestAsync] [Response]");
                         requestLog.AppendLine($"    ContentType = {httpResponse.ContentType}");
-
-                        foreach (var header in httpResponse.Headers)
+                        foreach (var header in httpResponse.Headers) {
                             requestLog.AppendLine($"    {header.Name}: {header.Value}");
-
+                        }
                         requestLog.AppendLine($"    HttpResponse = {httpResponse}");
 
                         await WriteResponseAsync(httpResponse, args.Socket);
@@ -182,11 +178,12 @@ namespace UniversalSend.Services.Http {
                     try { args.Socket.Dispose(); } catch { }
 
                     // Emit full log block at once
-                    Debug.WriteLine(requestLog.ToString());
+                    //_logger.Debug($"RequestLog:\n{requestLog.ToString()}.");
                 }
             });
         }
 
         #endregion Private Methods
+
     }
 }

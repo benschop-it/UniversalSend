@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
 using UniversalSend.Services.InstanceCreators;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Misc;
 using UniversalSend.Services.Models.Schemas;
 using UniversalSend.Services.Rest.Models.Contracts;
@@ -20,6 +21,7 @@ namespace UniversalSend.Services.Rest {
 
         private readonly RestControllerMethodExecutorFactory _methodExecuteFactory;
         private readonly RestResponseFactory _responseFactory;
+        private readonly IInstanceCreatorCache _instanceCreatorCache;
         private ImmutableArray<RestControllerMethodInfo> _restMethodCollection;
         private UriParser _uriParser;
 
@@ -27,10 +29,11 @@ namespace UniversalSend.Services.Rest {
 
         #region Internal Constructors
 
-        internal RestControllerRequestHandler() {
+        internal RestControllerRequestHandler(IInstanceCreatorCache instanceCreatorCache) {
+            _instanceCreatorCache = instanceCreatorCache ?? throw new ArgumentNullException(nameof(instanceCreatorCache));
             _restMethodCollection = ImmutableArray<RestControllerMethodInfo>.Empty;
             _responseFactory = new RestResponseFactory();
-            _methodExecuteFactory = new RestControllerMethodExecutorFactory();
+            _methodExecuteFactory = new RestControllerMethodExecutorFactory(instanceCreatorCache);
             _uriParser = new UriParser();
         }
 
@@ -124,7 +127,7 @@ namespace UniversalSend.Services.Rest {
                 .OrderByDescending(x => x.MethodInfo.GetParameters().Count())
                 .ToImmutableArray();
 
-            InstanceCreatorCache.Default.CacheCreator(typeof(T));
+            _instanceCreatorCache.CacheCreator(typeof(T));
         }
 
         #endregion Private Methods

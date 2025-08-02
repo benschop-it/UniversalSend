@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniversalSend.Models.Data;
@@ -20,6 +21,15 @@ namespace UniversalSend.Views {
         private IServiceHttpServer _serviceHttpServer;
 
         #region Public Constructors
+
+        public DevPage() {
+            _storageHelper = App.Services.GetRequiredService<IStorageHelper>();
+            _sendTaskManager = App.Services.GetRequiredService<ISendTaskManager>();
+            _deviceManager = App.Services.GetRequiredService<IDeviceManager>();
+            _serviceHttpServer = App.Services.GetRequiredService<IServiceHttpServer>();
+
+            InitializeComponent();
+        }
 
         public DevPage(
             IStorageHelper storageHelper, 

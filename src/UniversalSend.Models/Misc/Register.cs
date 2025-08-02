@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Interfaces;
 
@@ -10,12 +10,14 @@ namespace UniversalSend.Models.Misc {
         #region Private Fields
 
         private readonly IDeviceManager _deviceManager;
+        private readonly ILogger _logger;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public Register(IDeviceManager deviceManager) {
+            _logger = LogManager.GetLogger<Register>();
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
         }
 
@@ -46,7 +48,7 @@ namespace UniversalSend.Models.Misc {
             if (device == null) {
                 return;
             }
-            Debug.WriteLine($"Register_NewDeviceRegister {device.Alias} {device.DeviceModel} {device.DeviceType} {device.IP}");
+            _logger.Debug($"Register_NewDeviceRegister {device.Alias} {device.DeviceModel} {device.DeviceType} {device.IP}");
             _deviceManager.AddKnownDevices((Device)sender);
         }
 

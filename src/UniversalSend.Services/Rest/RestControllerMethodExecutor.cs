@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UniversalSend.Services.InstanceCreators;
+using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Schemas;
 
 namespace UniversalSend.Services.Rest {
@@ -10,12 +11,14 @@ namespace UniversalSend.Services.Rest {
         #region Private Fields
 
         private readonly RestResponseFactory _responseFactory;
+        private readonly IInstanceCreatorCache _instanceCreatorCache;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public RestControllerMethodExecutor() {
+        public RestControllerMethodExecutor(IInstanceCreatorCache instanceCreatorCache) {
+            _instanceCreatorCache = instanceCreatorCache ?? throw new ArgumentNullException(nameof(instanceCreatorCache));
             _responseFactory = new RestResponseFactory();
         }
 
@@ -24,7 +27,7 @@ namespace UniversalSend.Services.Rest {
         #region Protected Methods
 
         protected override object ExecuteAnonymousMethod(RestControllerMethodInfo info, RestServerRequest request, ParsedUri requestUri) {
-            var instantiator = InstanceCreatorCache.Default.GetCreator(info.MethodInfo.DeclaringType);
+            var instantiator = _instanceCreatorCache.GetCreator(info.MethodInfo.DeclaringType);
 
             object[] parameters;
             try {

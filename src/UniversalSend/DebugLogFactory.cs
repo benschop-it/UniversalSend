@@ -18,6 +18,9 @@ namespace UniversalSend {
         }
 
         public ILogger GetLogger<T>() {
+            var ns = typeof(T).Namespace;
+            var name = typeof(T).Name;
+            _debugLogger.SetType(ns + "." + name);
             return _debugLogger;
         }
     }

@@ -30,11 +30,5 @@ namespace UniversalSend.Services.Interfaces.Internal {
         Uri Uri { get; set; }
 
         #endregion Public Properties
-
-        #region Public Methods
-
-        Task<IMutableHttpServerRequest> Parse(IInputStream requestStream);
-
-        #endregion Public Methods
     }
 }
