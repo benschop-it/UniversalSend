@@ -5,12 +5,6 @@ namespace UniversalSend.Services.Interfaces {
 
     public interface IServiceHttpServer {
 
-        #region Public Events
-
-        event EventHandler<HttpParseProgressEventArgs> HttpRequestProgressChanged;
-
-        #endregion Public Events
-
         #region Public Methods
 
         Task<bool> StartHttpServerAsync(int port);

@@ -13,6 +13,7 @@ namespace UniversalSend.Models {
     public static class RegisterServices {
 
         public static void Register(IServiceCollection services) {
+            services.AddSingleton<IDispatcherProvider, DispatcherProvider>();
             services.AddSingleton<IDeviceManager, DeviceManager>();
             services.AddSingleton<IFavoriteManager, FavoriteManager>();
             services.AddSingleton<IHistoryManager, HistoryManager>();

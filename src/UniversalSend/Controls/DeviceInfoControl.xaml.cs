@@ -37,6 +37,11 @@ namespace UniversalSend.Controls {
         #region Private Methods
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+            var localDevice = ProgramData.LocalDevice;
+
+            Port = localDevice.Port;
+            DeviceName = localDevice.Alias;
+
             IP = "";
             List<string> ipList = _networkHelper.GetIPv4AddrList();
             foreach (string ip in ipList) {

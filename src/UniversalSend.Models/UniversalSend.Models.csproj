@@ -125,6 +125,7 @@
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Interfaces\Internal\IHttpClientHelper.cs" />
     <Compile Include="Interfaces\Internal\ISendRequestDataManager.cs" />
+    <Compile Include="Interfaces\ISendRequestProgress.cs" />
     <Compile Include="Interfaces\ISendRequestData.cs" />
     <Compile Include="HttpData\SendRequestDataManager.cs" />
     <Compile Include="Interfaces\Internal\IRegisterRequestDataManager.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Data\Device.cs" />
     <Compile Include="Managers\DeviceManager.cs" />
     <Compile Include="Data\UniversalSendFile.cs" />
+    <Compile Include="Misc\DispatchProvider.cs" />
     <Compile Include="Misc\Favorite.cs" />
     <Compile Include="Managers\FavoriteManager.cs" />
     <Compile Include="Misc\History.cs" />
@@ -184,6 +186,7 @@
     <Compile Include="HttpData\SendResponseData.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Interfaces\IReceiveManager.cs" />
+    <Compile Include="Interfaces\IDispatcherProvider.cs" />
     <Compile Include="ProgramData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\ReceiveManager.cs" />

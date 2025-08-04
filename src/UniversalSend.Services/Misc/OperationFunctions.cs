@@ -86,7 +86,7 @@ namespace UniversalSend.Services.Misc {
                 return null;
             }
 
-            IReceiveTask task = _receiveTaskManager.WriteFileContentToReceivingTask(fileId, token, mutableHttpServerRequest.Content);
+            IReceiveTask task = await _receiveTaskManager.WriteFileContentToReceivingTask(fileId, token, mutableHttpServerRequest.Content);
 
             if (task != null) {
                 _receiveManager.SendDataReceivedEvent(task);
@@ -112,7 +112,13 @@ namespace UniversalSend.Services.Misc {
         #region Private Methods
 
         private async Task WriteFileAsync(IReceiveTask task, string ip) {
-            IStorageFile file = await _receiveTaskManager.WriteReceiveTaskToFileAsync(task);
+            IStorageFile file = null;
+            try {
+                file = await _receiveTaskManager.WriteReceiveTaskToFileAsync(task);
+            } catch (Exception ex) {
+                _logger.Error($"Exception trying to write file {ex.Message}");
+            }
+
             if (file != null) {
                 var history = _historyManager.CreateHistory(
                     task.File,

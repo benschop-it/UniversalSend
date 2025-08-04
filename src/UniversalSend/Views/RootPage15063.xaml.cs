@@ -42,26 +42,6 @@ namespace UniversalSend.Views {
         public RootPage15063() {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
-            _serviceHttpServer.HttpRequestProgressChanged += OnServiceHttpServerHttpRequestProgressChanged;
-        }
-
-        private async void OnServiceHttpServerHttpRequestProgressChanged(object sender, HttpParseProgressEventArgs e) {
-            // Marshal to UI thread for safety
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                if (e.ContentLength == null || e.ContentLength.Value == 0) {
-                    ProgressText = $"Receiving…";
-                } else {
-                    if (e.Percent.HasValue) {
-                        ProgressPercent = e.Percent.Value;
-                        ProgressText = $"Receiving {e.Percent.Value}% ({e.Received}/{e.ContentLength} bytes)";
-                    } else {
-                        ProgressText = $"Receiving… {e.Received} bytes";
-                    }
-                }
-
-                Debug.WriteLine($"{ProgressText}");
-            });
         }
 
         #endregion Public Constructors

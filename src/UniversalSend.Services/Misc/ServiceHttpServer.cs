@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Controllers;
+using UniversalSend.Services.Helpers;
 using UniversalSend.Services.Http;
 using UniversalSend.Services.Interfaces;
 using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Rest;
+using Windows.UI.Core;
 
 namespace UniversalSend.Services.Misc {
 
@@ -29,6 +32,7 @@ namespace UniversalSend.Services.Misc {
         private readonly ISettings _settings;
         private readonly ITokenFactory _tokenFactory;
         private readonly IUniversalSendFileManager _universalSendFileManager;
+        private readonly CoreDispatcher _dispatcher;
         private UdpDiscoveryService _udpDiscovery;
 
         #endregion Private Fields
@@ -49,7 +53,8 @@ namespace UniversalSend.Services.Misc {
             IHttpRequestParser httpRequestParser,
             IConfiguration configuration,
             IEncodingCache encodingCache,
-            IInstanceCreatorCache instanceCreatorCache
+            IInstanceCreatorCache instanceCreatorCache,
+            IDispatcherProvider dispatcherProvider
         ) {
             _logger = LogManager.GetLogger<ServiceHttpServer>();
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
@@ -66,15 +71,10 @@ namespace UniversalSend.Services.Misc {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
             _instanceCreatorCache = instanceCreatorCache ?? throw new ArgumentNullException(nameof(instanceCreatorCache));
+            _dispatcher = dispatcherProvider?.Dispatcher ?? throw new ArgumentNullException(nameof(dispatcherProvider));
         }
 
         #endregion Public Constructors
-
-        #region Public Events
-
-        public event EventHandler<HttpParseProgressEventArgs> HttpRequestProgressChanged;
-
-        #endregion Public Events
 
         #region Internal Properties
 
@@ -152,8 +152,36 @@ namespace UniversalSend.Services.Misc {
 
         #region Private Methods
 
-        private void OnParserProgressChanged(object sender, HttpParseProgressEventArgs e) {
-            HttpRequestProgressChanged?.Invoke(this, e);
+        private async void OnParserProgressChanged(object sender, HttpParseProgressEventArgs e) {
+            Dictionary<string, string> parameters = StringHelper.GetURLQueryParameters(e.Uri.ToString());
+            if (parameters.Count > 0) {
+                if (parameters.ContainsKey("fileId") && parameters.ContainsKey("token")) {
+                    var fileId = parameters["fileId"];
+                    var token = parameters["token"];
+
+                    var receivingTasks = _receiveTaskManager.ReceivingTasks;
+
+                    foreach (IReceiveTask task in receivingTasks) {
+                        IUniversalSendFile file = task.File;
+                        if (file.Id == fileId && file.TransferToken == token) {
+                            if (_dispatcher.HasThreadAccess) {
+                                UpdateTask(task, e);
+                            } else {
+                                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateTask(task, e));
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            _receiveManager.SendProgressEvent(e);
+        }
+
+        private void UpdateTask(IReceiveTask task, HttpParseProgressEventArgs e) {
+            task.Error = e.Error;
+            task.Progress = e.Percent ?? 0;
+            task.Status = e.Status;
         }
 
         #endregion Private Methods

@@ -157,14 +157,14 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
                     Report(HttpParseProgressStatus.Error, null, received, contentLength > 0 ? (long?)contentLength : null, request.Uri, "HTTP request parsing failed.");
                 }
 
-                _logger.Debug($"[OperationController.TryRunOperationByRequestUri] URI:{request.Uri.ToString()}");
+                //_logger.Debug($"[OperationController.TryRunOperationByRequestUri] URI:{request.Uri.ToString()}");
 
                 OperationController.TryRunOperationByRequestUri(request);  //Execute functionality based on the requested URI.
 
-                if (request.Content != null) {
-                    _logger.Debug($"RequestContentLength: {request.Content.Length}");
-                    _logger.Debug("The byte[] data has been saved to requestContent.");
-                }
+                //if (request.Content != null) {
+                //    _logger.Debug($"RequestContentLength: {request.Content.Length}");
+                //    _logger.Debug("The byte[] data has been saved to requestContent.");
+                //}
             } catch (Exception ex) {
                 _logger.Debug(ex.Message);
                 Report(HttpParseProgressStatus.Error, null, received, contentLength > 0 ? (long?)contentLength : null, request.Uri, ex.Message);

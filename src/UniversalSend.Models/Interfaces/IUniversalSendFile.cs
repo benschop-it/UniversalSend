@@ -1,4 +1,6 @@
-﻿namespace UniversalSend.Models.Interfaces {
+﻿using UniversalSend.Services.Interfaces;
+
+namespace UniversalSend.Models.Interfaces {
     public interface IUniversalSendFile {
 
         #region Public Properties

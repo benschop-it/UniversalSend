@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using UniversalSend.Models.HttpData;
-using UniversalSend.Models.Managers;
-using UniversalSend.Models.Tasks;
+using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Models.Interfaces {
 
@@ -22,6 +20,8 @@ namespace UniversalSend.Models.Interfaces {
 
         event EventHandler SendRequestReceived;
 
+        event EventHandler SendRequestProgressReceived;
+
         #endregion Public Events
 
         #region Public Properties
@@ -34,8 +34,13 @@ namespace UniversalSend.Models.Interfaces {
         #region Public Methods
 
         void CancelReceivedEvent();
+
         Task<bool> GetChosenOption();
+
         void SendDataReceivedEvent(IReceiveTask receiveTask);
+
+        void SendProgressEvent(ISendRequestProgress sendRequestProgress);
+
         void SendRequestEvent(ISendRequestData sendRequestData);
 
         #endregion Public Methods

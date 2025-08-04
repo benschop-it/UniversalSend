@@ -56,8 +56,13 @@ namespace UniversalSend.Models.Managers {
             }
         }
 
+        private static object _lockObject = new object();
+
         public void SaveHistoriesList() {
-            _settings.SetSetting(Constants.Receive_Histories, JsonConvert.SerializeObject(HistoriesList));
+            lock (_lockObject) {
+                var histories = new List<IHistory>(HistoriesList);
+                _settings.SetSetting(Constants.Receive_Histories, JsonConvert.SerializeObject(histories));
+            }
         }
 
         #endregion Public Methods

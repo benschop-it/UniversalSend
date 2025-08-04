@@ -3,13 +3,7 @@
 namespace UniversalSend.Services.Interfaces {
     // C# 7.3: no records; keep it simple and immutable
 
-    public enum HttpParseProgressStatus {
-        InProgress = 0,
-        Finished = 1,
-        Error = 2
-    }
-
-    public sealed class HttpParseProgressEventArgs : EventArgs {
+    public sealed class HttpParseProgressEventArgs : EventArgs, ISendRequestProgress {
         public HttpParseProgressEventArgs(
             HttpParseProgressStatus status,
             int? percent,

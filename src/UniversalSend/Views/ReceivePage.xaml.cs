@@ -52,6 +52,7 @@ namespace UniversalSend.Views {
             } else {
                 IconImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/UniversalSendNew.png"));
             }
+            SpinStoryboard.Begin();
         }
 
         #endregion Private Methods

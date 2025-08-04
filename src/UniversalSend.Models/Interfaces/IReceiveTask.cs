@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Tasks;
+using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Models.Interfaces {
 
@@ -25,7 +26,7 @@ namespace UniversalSend.Models.Interfaces {
         Done
     }
 
-    public interface IReceiveTask {
+    public interface IReceiveTask: INotifyPropertyChanged {
 
         #region Public Properties
 
@@ -33,7 +34,13 @@ namespace UniversalSend.Models.Interfaces {
         byte[] FileContent { get; set; }
         IInfoData Sender { get; set; }
         ReceiveTaskStates TaskState { get; set; }
+        int Progress { get; set; }
+        HttpParseProgressStatus Status { get; set; }
+        string Error { get; set; }
+
 
         #endregion Public Properties
+
+        void Refresh(string propertyName);
     }
 }

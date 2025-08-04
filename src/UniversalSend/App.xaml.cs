@@ -107,6 +107,10 @@ namespace UniversalSend {
                 Window.Current.Content = _rootFrame;
             }
 
+            // Initialize the dispatcher provider here
+            var dispatcherProvider = Services.GetRequiredService<IDispatcherProvider>();
+            dispatcherProvider.Initialize(Window.Current.Dispatcher); // or CoreApplication.MainView.CoreWindow.Dispatcher
+
             if (e.PrelaunchActivated == false) {
                 if (_rootFrame.Content == null) {
                     // When the navigation stack isn't restored, navigate to the first page,

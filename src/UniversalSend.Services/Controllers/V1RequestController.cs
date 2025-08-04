@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.HttpData;
@@ -73,31 +74,55 @@ namespace UniversalSend.Services.Controllers {
         }
 
         [UriFormat("v1/send-request")]
-        public IAsyncOperation<IPostResponse> PostSendRequest([FromContent] SendRequestData requestData) {
-            _logger.Debug($"POST v1 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
+        public IAsyncOperation<IPostResponse> PostSendRequestAsync([FromContent] SendRequestData requestData) {
+            return AsyncInfo.Run(async ct =>
+            {
+                _logger.Debug($"POST v1 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
 
-            _receiveManager.SendRequestEvent(requestData);
+                _receiveManager.SendRequestEvent(requestData);
 
-            FileResponseData responseData = new FileResponseData();
-            if (requestData != null && requestData.Files != null && requestData.Files.Count != 0) {
-                foreach (var item in requestData.Files) {
-                    string token = _tokenFactory.CreateToken();
-                    responseData.Add(item.Key, token);
-                    _receiveTaskManager.CreateReceivingTaskFromUniversalSendFile(
-                        _universalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token),
-                        requestData.Info
-                    );
+                var responseData = new FileResponseData();
+                if (requestData?.Files != null && requestData.Files.Count != 0) {
+                    foreach (var item in requestData.Files) {
+                        var token = _tokenFactory.CreateToken();
+                        responseData.Add(item.Key, token);
+
+                        var file = _universalSendFileManager
+                            .GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token);
+
+                        await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileAsync(file, requestData.Info);
+                    }
                 }
-            }
 
-            return Task.FromResult<IPostResponse>(
-                new PostResponse(
-                    PostResponse.ResponseStatus.OK,
-                    "",
-                    (object)responseData // Cast to object otherwise the wrong method will be called!
-                )
-            ).AsAsyncOperation();
+                return (IPostResponse)new PostResponse(PostResponse.ResponseStatus.OK, "", (object)responseData);
+            });
         }
+
+        //public IAsyncOperation<IPostResponse> PostSendRequestAsync([FromContent] SendRequestData requestData) {
+        //    _logger.Debug($"POST v1 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
+
+        //    _receiveManager.SendRequestEvent(requestData);
+
+        //    FileResponseData responseData = new FileResponseData();
+        //    if (requestData != null && requestData.Files != null && requestData.Files.Count != 0) {
+        //        foreach (var item in requestData.Files) {
+        //            string token = _tokenFactory.CreateToken();
+        //            responseData.Add(item.Key, token);
+        //            _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileAsync(
+        //                _universalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token),
+        //                requestData.Info
+        //            );
+        //        }
+        //    }
+
+        //    return Task.FromResult<IPostResponse>(
+        //        new PostResponse(
+        //            PostResponse.ResponseStatus.OK,
+        //            "",
+        //            (object)responseData // Cast to object otherwise the wrong method will be called!
+        //        )
+        //    ).AsAsyncOperation();
+        //}
 
         [UriFormat("v1/send?fileId={fileId}&token={token}")]
         public IAsyncOperation<IPostResponse> PostSendRequest(string fileId, string token) {

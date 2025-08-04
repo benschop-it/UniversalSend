@@ -24,11 +24,11 @@ namespace UniversalSend.Services.Controllers {
         #region Public Methods
 
         public static void TryRunOperationByRequestUri(MutableHttpServerRequest mutableHttpServerRequest) {
-            _logger.Debug($"TryRunOperationByRequestUri for URI:{mutableHttpServerRequest.Uri.ToString()}.");
+            //_logger.Debug($"TryRunOperationByRequestUri for URI:{mutableHttpServerRequest.Uri.ToString()}.");
             string uri = StringHelper.GetURLFromURLWithQueryParmeters(mutableHttpServerRequest.Uri.ToString());
-            _logger.Debug($"Looking for managed function for URI: {uri}.");
+            //_logger.Debug($"Looking for managed function for URI: {uri}.");
             if (UriOperations.ContainsKey(uri)) {
-                _logger.Debug($"Preparing to execute managed function.");
+                //_logger.Debug($"Preparing to execute managed function.");
                 Func<MutableHttpServerRequest, object> func = UriOperations[uri];
                 func(mutableHttpServerRequest);
             }

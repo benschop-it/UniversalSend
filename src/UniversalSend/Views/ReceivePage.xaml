@@ -10,6 +10,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
 
+    <Page.Resources>
+        <Storyboard x:Name="SpinStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimation
+            Storyboard.TargetName="IconImageRotateTransform"
+            Storyboard.TargetProperty="Angle"
+            From="0" To="360"
+            Duration="0:0:15"
+            RepeatBehavior="Forever" />
+        </Storyboard>
+    </Page.Resources>
+
     <Grid Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -38,8 +49,19 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
-        <Image Name="IconImage" MaxHeight="200" MaxWidth="200" Margin="0,48,0,0" />
-        <TextBlock Margin="24,0,24,8" Grid.Row="1" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="Laptop" Style="{ThemeResource HeaderTextBlockStyle}" />
+
+        <Grid>
+            <Image x:Name="IconImage"
+                MaxHeight="200"
+                MaxWidth="200"
+                Margin="0,48,0,0">
+                <Image.RenderTransform>
+                    <RotateTransform x:Name="IconImageRotateTransform" CenterX="100" CenterY="100" />
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
+
+        <TextBlock Margin="24,0,24,8" Grid.Row="1" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="AliasTextBlock" Text="..." Style="{ThemeResource HeaderTextBlockStyle}" />
         <TextBlock Margin="24,0,24,0" Grid.Row="2" TextAlignment="Center" TextWrapping="WrapWholeWords" Name="HashtagTextBlock" Text="" Style="{ThemeResource TitleTextBlockStyle}" />
 
         <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">

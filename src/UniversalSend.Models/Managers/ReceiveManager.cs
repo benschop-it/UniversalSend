@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Models.Managers {
 
@@ -31,6 +32,8 @@ namespace UniversalSend.Models.Managers {
 
         // Event triggered upon receiving a Send-Request
         public event EventHandler SendRequestReceived;
+
+        public event EventHandler SendRequestProgressReceived;
 
         #endregion Public Events
 
@@ -74,6 +77,11 @@ namespace UniversalSend.Models.Managers {
         public void SendRequestEvent(ISendRequestData sendRequestData) {
             Debug.WriteLine("SendRequestEvent");
             SendRequestReceived?.Invoke(sendRequestData, EventArgs.Empty);
+        }
+
+        public void SendProgressEvent(ISendRequestProgress sendRequestProgress) {
+            Debug.WriteLine("SendRequestProgressEvent");
+            SendRequestProgressReceived?.Invoke(sendRequestProgress, EventArgs.Empty);
         }
 
         #endregion Public Methods

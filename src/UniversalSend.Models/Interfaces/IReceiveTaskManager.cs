@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Tasks;
@@ -9,15 +10,17 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Properties
 
-        List<IReceiveTask> ReceivingTasks { get; }
+        ObservableCollection<IReceiveTask> ReceivingTasks { get; }
 
         #endregion Public Properties
 
         #region Public Methods
 
+        Task CreateReceivingTaskFromUniversalSendFileAsync(IUniversalSendFile universalSendFile, IInfoData info);
+
         void CreateReceivingTaskFromUniversalSendFile(IUniversalSendFile universalSendFile, IInfoData info);
 
-        IReceiveTask WriteFileContentToReceivingTask(string fileId, string token, byte[] fileContent);
+        Task<IReceiveTask> WriteFileContentToReceivingTask(string fileId, string token, byte[] fileContent);
 
         Task<IStorageFile> WriteReceiveTaskToFileAsync(IReceiveTask receiveTask);
 
