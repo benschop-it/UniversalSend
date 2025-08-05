@@ -21,7 +21,7 @@ namespace UniversalSend.Models.Managers {
         private IHttpClientHelper _httpClientHelper;
         private IInfoDataManager _infoDataManager;
         private ISendManager _sendManager;
-        private ISendTask _sendTask;
+        private ISendTaskV1 _sendTask;
         private IStorageHelper _storageHelper;
         private IUniversalSendFileManager _universalSendFileManager;
 
@@ -33,7 +33,7 @@ namespace UniversalSend.Models.Managers {
             IUniversalSendFileManager universalSendFileManager,
             IInfoDataManager infoDataManager,
             IStorageHelper storageHelper,
-            ISendTask sendTask,
+            ISendTaskV1 sendTask,
             ISendManager sendManager,
             IHttpClientHelper httpClientHelper,
             IFileRequestDataManager fileRequestDataManager
@@ -51,49 +51,82 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Properties
 
-        public List<ISendTask> SendTasks { get; private set; } = new List<ISendTask>();
+        public List<ISendTaskV1> SendTasksV1 { get; private set; } = new List<ISendTaskV1>();
+
+        public List<ISendTaskV2> SendTasksV2 { get; private set; } = new List<ISendTaskV2>();
 
         #endregion Public Properties
 
         #region Public Methods
 
-        public async Task<ISendTask> CreateSendTask(IStorageFile file) {
-            IFileRequestData fileRequestData = await _fileRequestDataManager.CreateFromStorageFileAsync(file);
+        public async Task<ISendTaskV1> CreateSendTaskV1(IStorageFile file) {
+            IFileRequestDataV1 fileRequestData = await _fileRequestDataManager.CreateFromStorageFileV1Async(file);
             _sendManager.SendCreatedEvent();
-            return CreateSendTaskFromFileRequestDataAndStorageFile(fileRequestData, file);
+            return CreateSendTaskFromFileRequestDataAndStorageFileV1(fileRequestData, file);
         }
 
-        public ISendTask CreateSendTask(string text) {
-            SendTask sendTask = new SendTask();
-            sendTask.File = _universalSendFileManager.CreateUniversalSendFileFromText(text);
+        public async Task<ISendTaskV2> CreateSendTaskV2(IStorageFile file) {
+            IFileRequestDataV2 fileRequestData = await _fileRequestDataManager.CreateFromStorageFileV2Async(file);
+            _sendManager.SendCreatedEvent();
+            return CreateSendTaskFromFileRequestDataAndStorageFileV2(fileRequestData, file);
+        }
+
+        public ISendTaskV1 CreateSendTaskV1(string text) {
+            SendTaskV1 sendTask = new SendTaskV1();
+            sendTask.File = _universalSendFileManager.CreateUniversalSendFileFromTextV1(text);
             _sendManager.SendCreatedEvent();
             return sendTask;
         }
 
-        public ISendTask CreateSendTaskFromFileRequestDataAndStorageFile(IFileRequestData fileRequestData, IStorageFile storageFile) {
-            SendTask sendTask = new SendTask();
-            IUniversalSendFile universalSendFile = _universalSendFileManager.GetUniversalSendFileFromFileRequestData(fileRequestData); // Token will be added after receiver responds
+        public ISendTaskV2 CreateSendTaskV2(string text) {
+            SendTaskV2 sendTask = new SendTaskV2();
+            sendTask.File = _universalSendFileManager.CreateUniversalSendFileFromTextV2(text);
+            _sendManager.SendCreatedEvent();
+            return sendTask;
+        }
+
+        public ISendTaskV1 CreateSendTaskFromFileRequestDataAndStorageFileV1(IFileRequestDataV1 fileRequestData, IStorageFile storageFile) {
+            SendTaskV1 sendTask = new SendTaskV1();
+            IUniversalSendFileV1 universalSendFile = _universalSendFileManager.GetUniversalSendFileFromFileRequestDataV1(fileRequestData); // Token will be added after receiver responds
             sendTask.File = universalSendFile;
             sendTask.StorageFile = storageFile;
             return sendTask;
         }
 
-        public async Task CreateSendTasks(List<IStorageFile> files) {
-            SendTasks.Clear();
+        public ISendTaskV2 CreateSendTaskFromFileRequestDataAndStorageFileV2(IFileRequestDataV2 fileRequestData, IStorageFile storageFile) {
+            SendTaskV2 sendTask = new SendTaskV2();
+            IUniversalSendFileV2 universalSendFile = _universalSendFileManager.GetUniversalSendFileFromFileRequestDataV2(fileRequestData); // Token will be added after receiver responds
+            sendTask.File = universalSendFile;
+            sendTask.StorageFile = storageFile;
+            return sendTask;
+        }
+
+        public async Task CreateSendTasksV1(List<IStorageFile> files) {
+            SendTasksV1.Clear();
             foreach (var file in files) {
-                IFileRequestData fileRequestData = await _fileRequestDataManager.CreateFromStorageFileAsync(file);
-                SendTasks.Add(CreateSendTaskFromFileRequestDataAndStorageFile(fileRequestData, file));
+                IFileRequestDataV1 fileRequestData = await _fileRequestDataManager.CreateFromStorageFileV1Async(file);
+                SendTasksV1.Add(CreateSendTaskFromFileRequestDataAndStorageFileV1(fileRequestData, file));
             }
             _sendManager.SendCreatedEvent();
         }
 
-        public async Task<bool> SendSendRequestAsync(IDevice destinationDevice) {
-            SendRequestData sendRequestData = new SendRequestData();
-            sendRequestData.Files = new Dictionary<string, FileRequestData>();
-            sendRequestData.Info = _infoDataManager.GetInfoDataFromDevice();
-            foreach (var task in SendTasks) {
-                IFileRequestData fileRequestData = _fileRequestDataManager.CreateFromUniversalSendFile(task.File);
-                sendRequestData.Files.Add(task.File.Id, (FileRequestData)fileRequestData);
+        public async Task CreateSendTasksV2(List<IStorageFile> files) {
+            SendTasksV2.Clear();
+            foreach (var file in files) {
+                IFileRequestDataV2 fileRequestData = await _fileRequestDataManager.CreateFromStorageFileV2Async(file);
+                SendTasksV2.Add(CreateSendTaskFromFileRequestDataAndStorageFileV2(fileRequestData, file));
+            }
+            _sendManager.SendCreatedEvent();
+        }
+
+
+        public async Task<bool> SendSendRequestV1Async(IDevice destinationDevice) {
+            SendRequestDataV1 sendRequestData = new SendRequestDataV1();
+            sendRequestData.Files = new Dictionary<string, FileRequestDataV1>();
+            sendRequestData.Info = _infoDataManager.GetInfoDataV1FromDevice();
+            foreach (var task in SendTasksV1) {
+                IFileRequestDataV1 fileRequestData = _fileRequestDataManager.CreateFromUniversalSendFileV1(task.File);
+                sendRequestData.Files.Add(task.File.Id, (FileRequestDataV1)fileRequestData);
             }
             Debug.WriteLine($"Sending send request:\nURL: {destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send-request");
 
@@ -106,12 +139,12 @@ namespace UniversalSend.Models.Managers {
             try {
                 FileResponseData fileResponseData = JsonConvert.DeserializeObject<FileResponseData>(responseStr);
                 if (fileResponseData == null) {
-                    SendTasks.Clear();
+                    SendTasksV1.Clear();
                     return false;
                 }
 
                 foreach (var data in fileResponseData) {
-                    ISendTask sendTask = SendTasks.Find(x => x.File.Id == data.Key);
+                    ISendTaskV1 sendTask = SendTasksV1.Find(x => x.File.Id == data.Key);
                     if (sendTask != null) {
                         sendTask.File.TransferToken = data.Value;
                     }
@@ -122,10 +155,45 @@ namespace UniversalSend.Models.Managers {
             }
         }
 
-        public async Task SendSendTasksAsync(IDevice destinationDevice) {
+        public async Task<bool> SendSendRequestV2Async(IDevice destinationDevice) {
+            SendRequestDataV2 sendRequestData = new SendRequestDataV2();
+            sendRequestData.Files = new Dictionary<string, FileRequestDataV2>();
+            sendRequestData.Info = _infoDataManager.GetInfoDataV2FromDevice();
+            foreach (var task in SendTasksV2) {
+                IFileRequestDataV2 fileRequestData = _fileRequestDataManager.CreateFromUniversalSendFileV2(task.File);
+                sendRequestData.Files.Add(task.File.Id, (FileRequestDataV2)fileRequestData);
+            }
+            Debug.WriteLine($"Sending send request:\nURL: {destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/send-request");
+
+            var serializedSendRequestData = JsonConvert.SerializeObject(sendRequestData);
+
+            Debug.WriteLine($"SendSendRequestAsync: {serializedSendRequestData}");
+            string responseStr = await _httpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/send-request", serializedSendRequestData);
+            Debug.WriteLine($"Receiver responded: {responseStr}");
+
+            try {
+                FileResponseData fileResponseData = JsonConvert.DeserializeObject<FileResponseData>(responseStr);
+                if (fileResponseData == null) {
+                    SendTasksV2.Clear();
+                    return false;
+                }
+
+                foreach (var data in fileResponseData) {
+                    ISendTaskV2 sendTask = SendTasksV2.Find(x => x.File.Id == data.Key);
+                    if (sendTask != null) {
+                        sendTask.File.TransferToken = data.Value;
+                    }
+                }
+                return true;
+            } catch (JsonException) {
+                return false;
+            }
+        }
+
+        public async Task SendSendTasksV1Async(IDevice destinationDevice) {
             // /api/localsend/v1/send?fileId=some file id&token=some token
             _sendManager.SendStartedEvent();
-            foreach (var task in SendTasks) {
+            foreach (var task in SendTasksV1) {
                 Debug.WriteLine($"Preparing to send file: {task.File.FileName}");
 
                 if (string.IsNullOrEmpty(task.File.TransferToken)) {
@@ -140,12 +208,45 @@ namespace UniversalSend.Models.Managers {
                 if (task.File.FileType == "text") {
                     await _httpClientHelper.PostStringAsync(
                         $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}",
-                        new StringContent(task.File.Text)
+                        new StringContent(task.File.Preview)
                     );
                 } else {
                     byte[] bytes = await _storageHelper.ReadBytesFromFileAsync(task.StorageFile);
                     await _httpClientHelper.PostBinaryAsync(
                         $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v1/send?fileId={task.File.Id}&token={task.File.TransferToken}",
+                        bytes
+                    );
+                }
+
+                task.TaskState = ReceiveTaskStates.Done;
+                _sendManager.SendStateChangedEvent();
+            }
+        }
+
+        public async Task SendSendTasksV2Async(IDevice destinationDevice) {
+            // /api/localsend/v2/upload?sessionId=some session id&fileId=some file id&token=some token
+            _sendManager.SendStartedEvent();
+            foreach (ISendTaskV2 task in SendTasksV1) {
+                Debug.WriteLine($"Preparing to send file: {task.File.FileName}");
+
+                if (string.IsNullOrEmpty(task.File.TransferToken)) {
+                    task.TaskState = ReceiveTaskStates.Error;
+                    _sendManager.SendStateChangedEvent();
+                    continue;
+                }
+
+                Debug.WriteLine($"Sending file: {task.File.FileName}");
+                task.TaskState = ReceiveTaskStates.Sending;
+
+                if (task.File.FileType == "text") {
+                    await _httpClientHelper.PostStringAsync(
+                        $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/upload?sessionId={task.SessionId}&fileId={task.File.Id}&token={task.File.TransferToken}",
+                        new StringContent(task.File.Preview)
+                    );
+                } else {
+                    byte[] bytes = await _storageHelper.ReadBytesFromFileAsync(task.StorageFile);
+                    await _httpClientHelper.PostBinaryAsync(
+                        $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/upload?sessionId={task.SessionId}&fileId={task.File.Id}&token={task.File.TransferToken}",
                         bytes
                     );
                 }

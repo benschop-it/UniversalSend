@@ -12,7 +12,7 @@ namespace UniversalSend.Models.Interfaces {
         #region Public Methods
 
         void AddHistoriesList(IHistory history);
-        IHistory CreateHistory(IUniversalSendFile file, string futureAccessListToken, IDevice device);
+        IHistory CreateHistory(IUniversalSendFileV1 file, string futureAccessListToken, IDevice device);
 
         void InitHistoriesList();
         void SaveHistoriesList();

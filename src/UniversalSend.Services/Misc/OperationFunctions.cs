@@ -48,7 +48,7 @@ namespace UniversalSend.Services.Misc {
         #region Public Methods
 
         // Handles registration request from remote device
-        public object RegisterRequestFunc(IMutableHttpServerRequest mutableHttpServerRequest) {
+        public object RegisterRequestFuncV1(IMutableHttpServerRequest mutableHttpServerRequest) {
             var headerList = mutableHttpServerRequest.Headers.ToList();
             var item = headerList.Find(x => x.Name.Equals("host"));
             if (item == null) {
@@ -64,13 +64,40 @@ namespace UniversalSend.Services.Misc {
 
             _logger.Debug($"RegisterRequestFunc: {host} {ip} {portStr} {jsonStr}.");
 
-            IRegisterRequestData registerRequestData = JsonConvert.DeserializeObject<RegisterRequestData>(jsonStr);
+            IRegisterRequestDataV1 registerRequestData = JsonConvert.DeserializeObject<RegisterRequestDataV1>(jsonStr);
             if (registerRequestData == null) {
                 return null;
             }
 
-            IDevice device = _deviceManager.GetDeviceFromRequestData(registerRequestData, ip, port);
-            _register.NewDeviceRegisterV1Event(device);
+            IDevice device = _deviceManager.GetDeviceFromRequestDataV1(registerRequestData, ip, port);
+            _register.NewDeviceRegisterEvent(device);
+            return null;
+        }
+
+        // Handles registration request from remote device
+        public object RegisterRequestFuncV2(IMutableHttpServerRequest mutableHttpServerRequest) {
+            var headerList = mutableHttpServerRequest.Headers.ToList();
+            var item = headerList.Find(x => x.Name.Equals("host"));
+            if (item == null) {
+                return null;
+            }
+
+            string host = item.Value;
+            string ip = host.Substring(0, host.LastIndexOf(":"));
+            string portStr = host.Substring(host.LastIndexOf(":") + 1);
+            int port = Convert.ToInt32(portStr);
+
+            string jsonStr = StringHelper.ByteArrayToString(mutableHttpServerRequest.Content);
+
+            _logger.Debug($"RegisterRequestFunc: {host} {ip} {portStr} {jsonStr}.");
+
+            IRegisterRequestDataV2 registerRequestData = JsonConvert.DeserializeObject<RegisterRequestDataV2>(jsonStr);
+            if (registerRequestData == null) {
+                return null;
+            }
+
+            IDevice device = _deviceManager.GetDeviceFromRequestDataV2(registerRequestData, ip, port);
+            _register.NewDeviceRegisterEvent(device);
             return null;
         }
 
@@ -86,7 +113,7 @@ namespace UniversalSend.Services.Misc {
                 return null;
             }
 
-            IReceiveTask task = await _receiveTaskManager.WriteFileContentToReceivingTask(fileId, token, mutableHttpServerRequest.Content);
+            IReceiveTask task = await _receiveTaskManager.WriteFileContentToReceivingTaskV1(fileId, token, mutableHttpServerRequest.Content);
 
             if (task != null) {
                 _receiveManager.SendDataReceivedEvent(task);
@@ -107,6 +134,44 @@ namespace UniversalSend.Services.Misc {
             return null;
         }
 
+        // Handles incoming file from remote device
+        public async Task<object> UploadRequestFuncAsync(IMutableHttpServerRequest mutableHttpServerRequest) {
+
+            Dictionary<string, string> queryParameters = StringHelper.GetURLQueryParameters(mutableHttpServerRequest.Uri.ToString());
+            _logger.Debug($"SendRequestFuncAsync: Received file. URI: {mutableHttpServerRequest.Uri.ToString()}, Number of query parameters: {queryParameters.Count}.");
+
+            string sessionId, fileId, token;
+            if (
+                !queryParameters.TryGetValue("sessionId", out sessionId) ||
+                !queryParameters.TryGetValue("fileId", out fileId) ||
+                !queryParameters.TryGetValue("token", out token)
+            ) {
+                _receiveManager.SendDataReceivedEvent(null);
+                return null;
+            }
+
+            IReceiveTask task = await _receiveTaskManager.WriteFileContentToReceivingTaskV2(sessionId, fileId, token, mutableHttpServerRequest.Content);
+
+            if (task != null) {
+                _receiveManager.SendDataReceivedEvent(task);
+                _logger.Debug("Writing data to file.");
+                var headerList = mutableHttpServerRequest.Headers.ToList();
+                var item = headerList.Find(x => x.Name.Equals("host"));
+                if (item == null) {
+                    return null;
+                }
+
+                string host = item.Value;
+                string ip = host.Substring(0, host.LastIndexOf(":"));
+                await WriteFileAsync(task, ip);
+            } else {
+                _receiveManager.SendDataReceivedEvent(null);
+            }
+
+            return null;
+        }
+
+
         #endregion Public Methods
 
         #region Private Methods
@@ -114,16 +179,17 @@ namespace UniversalSend.Services.Misc {
         private async Task WriteFileAsync(IReceiveTask task, string ip) {
             IStorageFile file = null;
             try {
-                file = await _receiveTaskManager.WriteReceiveTaskToFileAsync(task);
+                file = await _receiveTaskManager.WriteReceiveTaskToFileV1Async(task);
             } catch (Exception ex) {
                 _logger.Error($"Exception trying to write file {ex.Message}");
             }
 
             if (file != null) {
                 var history = _historyManager.CreateHistory(
-                    task.File,
+                    task.FileV1,
                     StorageApplicationPermissions.FutureAccessList.Add(file),
-                    _deviceManager.CreateDeviceFromInfoData(task.Sender)
+                    //_deviceManager.CreateDeviceFromInfoDataV1(task.SenderV1)
+                    _deviceManager.CreateDeviceFromInfoDataV2(task.SenderV2)
                 );
 
                 _historyManager.AddHistoriesList(history);

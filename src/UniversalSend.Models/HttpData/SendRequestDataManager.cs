@@ -24,17 +24,30 @@ namespace UniversalSend.Models.HttpData {
 
         #region Public Methods
 
-        public async Task<ISendRequestData> CreateSendRequestDataAsync(List<IStorageFile> storageFiles) {
-            SendRequestData sendRequestData = new SendRequestData();
+        public async Task<ISendRequestDataV1> CreateSendRequestDataV1Async(List<IStorageFile> storageFiles) {
+            SendRequestDataV1 sendRequestData = new SendRequestDataV1();
             sendRequestData.Info.Alias = ProgramData.LocalDevice.Alias;
             sendRequestData.Info.DeviceModel = ProgramData.LocalDevice.DeviceModel;
             sendRequestData.Info.DeviceType = ProgramData.LocalDevice.DeviceType;
             foreach (var file in storageFiles) {
-                IFileRequestData fileRequestData = await _fileRequestDataManager.CreateFromStorageFileAsync(file);
-                sendRequestData.Files.Add(fileRequestData.FileName, (FileRequestData)fileRequestData);
+                IFileRequestDataV1 fileRequestData = await _fileRequestDataManager.CreateFromStorageFileV1Async(file);
+                sendRequestData.Files.Add(fileRequestData.FileName, (FileRequestDataV1)fileRequestData);
             }
             return sendRequestData;
         }
+
+        public async Task<ISendRequestDataV2> CreateSendRequestDataV2Async(List<IStorageFile> storageFiles) {
+            SendRequestDataV2 sendRequestData = new SendRequestDataV2();
+            sendRequestData.Info.Alias = ProgramData.LocalDevice.Alias;
+            sendRequestData.Info.DeviceModel = ProgramData.LocalDevice.DeviceModel;
+            sendRequestData.Info.DeviceType = ProgramData.LocalDevice.DeviceType;
+            foreach (var file in storageFiles) {
+                IFileRequestDataV2 fileRequestData = await _fileRequestDataManager.CreateFromStorageFileV2Async(file);
+                sendRequestData.Files.Add(fileRequestData.FileName, (FileRequestDataV2)fileRequestData);
+            }
+            return sendRequestData;
+        }
+
 
         #endregion Public Methods
 

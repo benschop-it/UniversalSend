@@ -3,7 +3,7 @@
 
         #region Public Methods
 
-        IRegisterData GetRegisterDataFromDevice();
+        IRegisterDataV2 GetRegisterDataV2FromDevice();
 
         #endregion Public Methods
     }

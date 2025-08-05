@@ -4,15 +4,15 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    public sealed class SendRequestData : ISendRequestData {
+    public sealed class SendRequestDataV1 : ISendRequestDataV1 {
 
         #region Public Properties
 
         [JsonProperty("files")]
-        public Dictionary<string, FileRequestData> Files { get; set; }
+        public Dictionary<string, FileRequestDataV1> Files { get; set; }
 
         [JsonProperty("info")]
-        public InfoData Info { get; set; }
+        public InfoDataV1 Info { get; set; }
 
         #endregion Public Properties
 

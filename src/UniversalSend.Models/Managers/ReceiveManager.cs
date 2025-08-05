@@ -74,8 +74,13 @@ namespace UniversalSend.Models.Managers {
             SendDataReceived?.Invoke(receiveTask, EventArgs.Empty);
         }
 
-        public void SendRequestEvent(ISendRequestData sendRequestData) {
-            Debug.WriteLine("SendRequestEvent");
+        public void SendRequestV1Event(ISendRequestDataV1 sendRequestData) {
+            Debug.WriteLine("SendRequestV1Event");
+            SendRequestReceived?.Invoke(sendRequestData, EventArgs.Empty);
+        }
+
+        public void SendRequestV2Event(ISendRequestDataV2 sendRequestData) {
+            Debug.WriteLine("SendRequestV2Event");
             SendRequestReceived?.Invoke(sendRequestData, EventArgs.Empty);
         }
 

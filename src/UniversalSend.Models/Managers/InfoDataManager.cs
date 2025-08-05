@@ -7,15 +7,31 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public InfoData GetInfoDataFromDevice() {
+        public InfoDataV1 GetInfoDataV1FromDevice() {
             var device = ProgramData.LocalDevice;
 
-            InfoData infoData = new InfoData();
+            InfoDataV1 infoData = new InfoDataV1();
             infoData.Alias = device.Alias;
-            infoData.DeviceType = device.DeviceType;
             infoData.DeviceModel = device.DeviceModel;
+            infoData.DeviceType = device.DeviceType;
             return infoData;
         }
+
+        public InfoDataV2 GetInfoDataV2FromDevice() {
+            var device = ProgramData.LocalDevice;
+
+            InfoDataV2 infoData = new InfoDataV2();
+            infoData.Alias = device.Alias;
+            infoData.Version = "2.1";
+            infoData.DeviceModel = device.DeviceModel;
+            infoData.DeviceType = device.DeviceType;
+            infoData.FingerPrint = device.Fingerprint;
+            infoData.Port = device.Port;
+            infoData.Protocol = device.ProtocolVersion;
+            infoData.Download = false;
+            return infoData;
+        }
+
 
         #endregion Public Methods
 

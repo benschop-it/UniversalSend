@@ -1,5 +1,6 @@
 ﻿namespace UniversalSend.Models.Interfaces {
-    public interface IRegisterRequestData {
+
+    public interface IRegisterResponseDataV1 {
 
         #region Public Properties
 

@@ -30,7 +30,9 @@ namespace UniversalSend.Models.Tasks {
             set => Set(ref _error, value);
         }
 
-        public IUniversalSendFile File { get; set; }
+        public IUniversalSendFileV1 FileV1 { get; set; }
+
+        public IUniversalSendFileV2 FileV2 { get; set; }
 
         public byte[] FileContent { get; set; }
 
@@ -53,7 +55,9 @@ namespace UniversalSend.Models.Tasks {
             foreach (var p in propertyNames) Notify(p);
         }
 
-        public IInfoData Sender { get; set; }
+        public IInfoDataV1 SenderV1 { get; set; }
+
+        public IInfoDataV2 SenderV2 { get; set; }
 
         public HttpParseProgressStatus Status {
             get { return _status; }

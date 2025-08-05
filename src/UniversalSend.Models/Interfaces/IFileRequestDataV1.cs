@@ -1,5 +1,5 @@
 ﻿namespace UniversalSend.Models.Interfaces {
-    public interface IFileRequestData {
+    public interface IFileRequestDataV1 {
 
         #region Public Properties
 

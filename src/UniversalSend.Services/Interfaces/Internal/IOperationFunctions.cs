@@ -6,9 +6,12 @@ namespace UniversalSend.Services.Interfaces.Internal {
 
         #region Public Methods
 
-        object RegisterRequestFunc(IMutableHttpServerRequest mutableHttpServerRequest);
+        object RegisterRequestFuncV1(IMutableHttpServerRequest mutableHttpServerRequest);
+        object RegisterRequestFuncV2(IMutableHttpServerRequest mutableHttpServerRequest);
 
         Task<object> SendRequestFuncAsync(IMutableHttpServerRequest mutableHttpServerRequest);
+
+        Task<object> UploadRequestFuncAsync(IMutableHttpServerRequest mutableHttpServerRequest);
 
         #endregion Public Methods
     }

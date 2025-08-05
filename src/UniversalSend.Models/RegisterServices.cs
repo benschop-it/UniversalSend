@@ -40,15 +40,18 @@ namespace UniversalSend.Models {
             services.AddTransient<IContentDialogManager, ContentDialogManager>();
             services.AddTransient<IDevice, Device>();
             services.AddTransient<IFavorite, Favorite>();
-            services.AddTransient<IFileRequestData, FileRequestData>();
+            services.AddTransient<IFileRequestDataV1, FileRequestDataV1>();
             services.AddTransient<IHistory, History>();
             services.AddTransient<IReceiveTask, ReceiveTask>();
-            services.AddTransient<IRegisterData, RegisterData>();
-            services.AddTransient<IRegisterRequestData, RegisterRequestData>();
-            services.AddTransient<IRegisterResponseData, RegisterResponseData>();
-            services.AddTransient<ISendTask, SendTask>();
-            services.AddTransient<IUniversalSendFile, UniversalSendFile>();
-            services.AddTransient<ISendRequestData, SendRequestData>();
+            services.AddTransient<IRegisterDataV2, RegisterDataV2>();
+            services.AddTransient<IRegisterRequestDataV1, RegisterRequestDataV1>();
+            services.AddTransient<IRegisterRequestDataV2, RegisterRequestDataV2>();
+            services.AddTransient<IAnnouncementV1, AnnouncementV1>();
+            services.AddTransient<IAnnouncementV2, AnnouncementV2>();
+            services.AddTransient<ISendTaskV1, SendTaskV1>();
+            services.AddTransient<IUniversalSendFileV1, UniversalSendFileV1>();
+            services.AddTransient<ISendRequestDataV1, SendRequestDataV1>();
+            services.AddTransient<ISendRequestDataV2, SendRequestDataV2>();
         }
     }
 }

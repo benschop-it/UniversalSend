@@ -16,13 +16,20 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Methods
 
-        Task CreateReceivingTaskFromUniversalSendFileAsync(IUniversalSendFile universalSendFile, IInfoData info);
+        Task CreateReceivingTaskFromUniversalSendFileV1Async(IUniversalSendFileV1 universalSendFile, IInfoDataV1 info);
 
-        void CreateReceivingTaskFromUniversalSendFile(IUniversalSendFile universalSendFile, IInfoData info);
+        void CreateReceivingTaskFromUniversalSendFileV1(IUniversalSendFileV1 universalSendFile, IInfoDataV1 info);
 
-        Task<IReceiveTask> WriteFileContentToReceivingTask(string fileId, string token, byte[] fileContent);
+        Task CreateReceivingTaskFromUniversalSendFileV2Async(IUniversalSendFileV2 universalSendFile, IInfoDataV2 info);
 
-        Task<IStorageFile> WriteReceiveTaskToFileAsync(IReceiveTask receiveTask);
+        void CreateReceivingTaskFromUniversalSendFileV2(IUniversalSendFileV2 universalSendFile, IInfoDataV2 info);
+
+        Task<IReceiveTask> WriteFileContentToReceivingTaskV1(string fileId, string token, byte[] fileContent);
+
+        Task<IReceiveTask> WriteFileContentToReceivingTaskV2(string sessionId, string fileId, string token, byte[] fileContent);
+
+        Task<IStorageFile> WriteReceiveTaskToFileV1Async(IReceiveTask receiveTask);
+        Task<IStorageFile> WriteReceiveTaskToFileV2Async(IReceiveTask receiveTask);
 
         #endregion Public Methods
     }

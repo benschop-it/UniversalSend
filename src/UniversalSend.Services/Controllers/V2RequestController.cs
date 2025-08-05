@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using UniversalSend.Models.Common;
+using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Attributes;
 using UniversalSend.Services.Models.Schemas;
-using Windows.Storage;
+using UniversalSend.Services.Rest.Models.Contracts;
+using Windows.Foundation;
 
 namespace UniversalSend.Services.Controllers {
 
@@ -14,69 +18,95 @@ namespace UniversalSend.Services.Controllers {
         #region Private Fields
 
         private readonly ILogger _logger;
-        private readonly IRegisterDataManager _registerDataManager;
-        private readonly IStorageHelper _storageHelper;
+        private readonly IInfoDataManager _infoDataManager;
+        private readonly IReceiveManager _receiveManager;
+        private readonly IReceiveTaskManager _receiveTaskManager;
+        private readonly IRegisterResponseDataManager _registerResponseDataManager;
+        private readonly ITokenFactory _tokenFactory;
+        private readonly IUniversalSendFileManager _universalSendFileManager;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public V2RequestController(IRegisterDataManager registerDataManager, IStorageHelper storageHelper) {
+        public V2RequestController(
+            IInfoDataManager infoDataManager,
+            IReceiveManager receiveManager,
+            ITokenFactory tokenFactory,
+            IUniversalSendFileManager universalSendFileManager,
+            IReceiveTaskManager receiveTaskManager,
+            IRegisterResponseDataManager registerResponseDataManager
+        ) {
             _logger = LogManager.GetLogger<V2RequestController>();
-            _registerDataManager = registerDataManager ?? throw new ArgumentNullException(nameof(registerDataManager));
-            _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
+            _infoDataManager = infoDataManager ?? throw new ArgumentNullException(nameof(infoDataManager));
+            _receiveManager = receiveManager ?? throw new ArgumentNullException(nameof(receiveManager));
+            _tokenFactory = tokenFactory ?? throw new ArgumentNullException(nameof(tokenFactory));
+            _universalSendFileManager = universalSendFileManager ?? throw new ArgumentNullException(nameof(universalSendFileManager));
+            _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
+            _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
         }
 
         #endregion Public Constructors
 
-        //[UriFormat("v2/hello")]
-        //public GetResponse GetHello()
-        //{
-        //    Debug.WriteLine("GET /hello called"); // Debug output
-        //    return new GetResponse(
-        //        GetResponse.ResponseStatus.OK,
-        //        new DataReceived() { ID = 1, PropName = "Hello from UWP REST Server!" });
-        //}
-
-        //// Handle POST /api/data
-        //[UriFormat("v2/data")]
-        //public IPostResponse PostData([FromContent] dynamic data)
-        //{
-        //    string receivedData = data?.input; // Get data from request body
-        //    return new PostResponse(
-        //        PostResponse.ResponseStatus.Created,
-        //        receivedData); // Fix: pass string directly instead of anonymous type
-        //}
-
         #region Public Methods
 
-        [UriFormat("v2/register")]
-        public PostResponse PostRegister([FromContent] IRegisterData data) {
-            _logger.Debug("POST /register called"); // Debug output
-            if (data != null) {
-                _logger.Debug(JsonConvert.SerializeObject(data));
-            }
+        [UriFormat("v2/info?fingerprint={fingerprint}")]
+        public GetResponse GetInfo(string fingerprint) {
+            _logger.Debug($"GET v2/info called with fingerprint: {fingerprint}.");
 
-            return new PostResponse(
-                PostResponse.ResponseStatus.Created,
-                "",
-                JsonConvert.SerializeObject(_registerDataManager.GetRegisterDataFromDevice()/*ProgramData.LocalDeviceRegisterData*/)); // Fix: pass string directly instead of anonymous type
+            return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
         }
 
-        //[UriFormat("v2/prepare-upload?fileId={fileId}&token={token}")]
-        //public IPostResponse PostSendRequest(string fileId, string token, [FromContent] byte[] data)
-        //{
-        //    Debug.WriteLine($"POST send Called\nfileId = {fileId},token = {token},dataLength = {data.Length}B");
-        //    SaveFileData(fileId, data);
-        //    return new PostResponse(
-        //        PostResponse.ResponseStatus.Created,
-        //        ""
-        //        );
-        //}
+        [UriFormat("v2/cancel?sessionId={sessionId}")]
+        public PostResponse PostCancel(string sessionId) {
+            _logger.Debug($"GET v2/Cancel called for sessionId {sessionId}.");
 
-        public async void SaveFileData(string fileId, byte[] data) {
-            StorageFile storageFile = await _storageHelper.CreateFileInAppLocalFolderAsync(fileId);
-            await _storageHelper.WriteBytesToFileAsync(storageFile, data);
+            _receiveManager.CancelReceivedEvent();
+            return new PostResponse(PostResponse.ResponseStatus.OK, "");
+        }
+
+        [UriFormat("v2/register")]
+        public PostResponse PostRegister([FromContent] RegisterRequestDataV2 registerRequestData) {
+            _logger.Debug($"POST v2 register request called with RegisterRequestData:\n{JsonConvert.SerializeObject(registerRequestData)}.");
+
+            IRegisterResponseDataV2 registerResponseData = _registerResponseDataManager.GetRegisterResponseDataV2(false);
+            return new PostResponse(PostResponse.ResponseStatus.OK, "", registerResponseData);
+        }
+
+        [UriFormat("v2/prepare-upload")]
+        public IAsyncOperation<IPostResponse> PostSendRequestAsync([FromContent] SendRequestDataV2 requestData) {
+            return AsyncInfo.Run(async ct => {
+                _logger.Debug($"POST v2 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
+
+                _receiveManager.SendRequestV2Event(requestData);
+
+                var responseData = new FileResponseData();
+                if (requestData?.Files != null && requestData.Files.Count != 0) {
+                    foreach (var item in requestData.Files) {
+                        var token = _tokenFactory.CreateToken();
+                        responseData.Add(item.Key, token);
+
+                        var file = _universalSendFileManager
+                            .GetUniversalSendFileFromFileRequestDataV2AndToken(item.Value, token);
+
+                        await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileV2Async(file, requestData.Info);
+                    }
+                }
+
+                return (IPostResponse)new PostResponse(PostResponse.ResponseStatus.OK, "", (object)responseData);
+            });
+        }
+
+        [UriFormat("v2/upload?sessionId={sessionId}&fileId={fileId}&token={token}")]
+        public IAsyncOperation<IPostResponse> PostSendRequest(string sessionId, string fileId, string token) {
+            _logger.Debug($"POST send called with sessionId = {sessionId} fileId = {fileId} and token = {token}.");
+
+            return Task.FromResult<IPostResponse>(
+                new PostResponse(
+                    PostResponse.ResponseStatus.OK,
+                    ""
+                )
+            ).AsAsyncOperation();
         }
 
         #endregion Public Methods

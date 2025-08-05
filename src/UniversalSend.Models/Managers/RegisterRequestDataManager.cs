@@ -8,8 +8,8 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public IRegisterRequestData CreateFromDevice(IDevice device) {
-            RegisterRequestData registerRequestData = new RegisterRequestData();
+        public IRegisterRequestDataV1 CreateFromDevice(IDevice device) {
+            RegisterRequestDataV1 registerRequestData = new RegisterRequestDataV1();
             registerRequestData.Alias = device.Alias;
             registerRequestData.DeviceModel = device.DeviceModel;
             registerRequestData.DeviceType = device.DeviceType;

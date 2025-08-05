@@ -30,9 +30,11 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Properties
 
-        IUniversalSendFile File { get; set; }
+        IUniversalSendFileV1 FileV1 { get; set; }
+        IUniversalSendFileV2 FileV2 { get; set; }
         byte[] FileContent { get; set; }
-        IInfoData Sender { get; set; }
+        IInfoDataV1 SenderV1 { get; set; }
+        IInfoDataV2 SenderV2 { get; set; }
         ReceiveTaskStates TaskState { get; set; }
         int Progress { get; set; }
         HttpParseProgressStatus Status { get; set; }

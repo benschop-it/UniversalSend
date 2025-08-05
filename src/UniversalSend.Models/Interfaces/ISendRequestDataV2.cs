@@ -3,12 +3,12 @@ using UniversalSend.Models.HttpData;
 
 namespace UniversalSend.Models.Interfaces {
 
-    public interface ISendRequestData {
+    public interface ISendRequestDataV2 {
 
         #region Public Properties
 
-        Dictionary<string, FileRequestData> Files { get; set; }
-        InfoData Info { get; set; }
+        Dictionary<string, FileRequestDataV2> Files { get; set; }
+        InfoDataV2 Info { get; set; }
 
         #endregion Public Properties
     }

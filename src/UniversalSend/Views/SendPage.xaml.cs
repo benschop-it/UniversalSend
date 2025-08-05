@@ -81,13 +81,13 @@ namespace UniversalSend.Views {
 
         #region Private Methods
 
-        private void AddItemToSendQueue(ISendTask task) {
-            _sendTaskManager.SendTasks.Add(task);
+        private void AddItemToSendQueue(ISendTaskV1 task) {
+            _sendTaskManager.SendTasksV1.Add(task);
             UpdateView();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            _sendTaskManager.SendTasks.Clear();
+            _sendTaskManager.SendTasksV1.Clear();
             SendQueueStackPanel.Visibility = Visibility.Collapsed;
             SelectSendItemButtons.Visibility = Visibility.Visible;
         }
@@ -152,7 +152,7 @@ namespace UniversalSend.Views {
         }
 
         private async void KnownDeviceListView_ItemClick(object sender, ItemClickEventArgs e) {
-            if (_sendTaskManager.SendTasks.Count == 0) {
+            if (_sendTaskManager.SendTasksV1.Count == 0) {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
@@ -199,7 +199,7 @@ namespace UniversalSend.Views {
         }
 
         private async void ManualSendButton_Click(object sender, RoutedEventArgs e) {
-            if (_sendTaskManager.SendTasks.Count == 0) {
+            if (_sendTaskManager.SendTasksV1.Count == 0) {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
@@ -219,7 +219,7 @@ namespace UniversalSend.Views {
                 List<StorageFile> files = filesReadonlyList.ToList();
                 foreach (var file in files) {
                     if (file != null) {
-                        AddItemToSendQueue(await _sendTaskManager.CreateSendTask(file));
+                        AddItemToSendQueue(await _sendTaskManager.CreateSendTaskV1(file));
                     }
                 }
             }
@@ -238,7 +238,7 @@ namespace UniversalSend.Views {
             if (folder != null) {
                 List<StorageFile> files = await _storageHelper.GetFilesInFolder(folder);
                 foreach (StorageFile file in files) {
-                    AddItemToSendQueue(await _sendTaskManager.CreateSendTask(file));
+                    AddItemToSendQueue(await _sendTaskManager.CreateSendTaskV1(file));
                 }
             }
             ProcessProgressBar.Visibility = Visibility.Collapsed;
@@ -317,7 +317,7 @@ namespace UniversalSend.Views {
             };
             control.ConfirmButton.Click += (sender, e) => {
                 if (!string.IsNullOrEmpty(control.MainTextBox.Text)) {
-                    AddItemToSendQueue(_sendTaskManager.CreateSendTask(control.MainTextBox.Text));
+                    AddItemToSendQueue(_sendTaskManager.CreateSendTaskV1(control.MainTextBox.Text));
                 }
                 _contentDialogManager.HideContentDialogAsync();
             };
@@ -325,16 +325,16 @@ namespace UniversalSend.Views {
         }
 
         private void UpdateView() {
-            if (_sendTaskManager.SendTasks.Count != 0) {
+            if (_sendTaskManager.SendTasksV1.Count != 0) {
                 SelectSendItemButtons.Visibility = Visibility.Collapsed;
                 SendQueueStackPanel.Visibility = Visibility.Visible;
                 long totalSize = 0;
                 SendQueueItemsStackpanel.Children.Clear();
-                foreach (var item in _sendTaskManager.SendTasks) {
+                foreach (var item in _sendTaskManager.SendTasksV1) {
                     SendQueueItemsStackpanel.Children.Add(new Border { Background = new SolidColorBrush { Color = Colors.DarkGray }, Height = 45, Width = 45, Margin = new Thickness(2) });
                     totalSize += item.File.Size;
                 }
-                FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{_sendTaskManager.SendTasks.Count}";
+                FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{_sendTaskManager.SendTasksV1.Count}";
                 FileSizeTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileSize")}{StringHelper.GetByteUnit(totalSize)}";
             } else {
                 SelectSendItemButtons.Visibility = Visibility.Visible;

@@ -1,6 +1,6 @@
 ﻿namespace UniversalSend.Models.Interfaces {
 
-    public interface IInfoData {
+    public interface IInfoDataV1 {
 
         #region Public Properties
 

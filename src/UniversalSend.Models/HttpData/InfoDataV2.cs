@@ -3,15 +3,15 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    internal sealed class RegisterData : IRegisterData {
+    public class InfoDataV2 : IInfoDataV2 {
 
         #region Public Properties
 
         [JsonProperty("alias")]
         public string Alias { get; set; }
 
-        [JsonProperty("announce")]
-        public bool Announce { get; set; }
+        [JsonProperty("version")]
+        public string Version { get; set; }
 
         [JsonProperty("deviceModel")]
         public string DeviceModel { get; set; }
@@ -19,11 +19,8 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("deviceType")]
         public string DeviceType { get; set; }
 
-        [JsonProperty("download")]
-        public bool Download { get; set; }
-
         [JsonProperty("fingerprint")]
-        public string Fingerprint { get; set; }
+        public string FingerPrint { get; set; }
 
         [JsonProperty("port")]
         public int Port { get; set; }
@@ -31,8 +28,8 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("protocol")]
         public string Protocol { get; set; }
 
-        [JsonProperty("version")]
-        public string Version { get; set; }
+        [JsonProperty("download")]
+        public bool Download { get; set; }
 
         #endregion Public Properties
 

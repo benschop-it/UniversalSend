@@ -94,7 +94,7 @@ namespace UniversalSend.Services.Misc {
 
             RestRouteHandler restRouteHandler = new RestRouteHandler(_configuration, _encodingCache, _instanceCreatorCache);
 
-            restRouteHandler.RegisterController<V1RequestController>(() => {
+            restRouteHandler.RegisterController<V2RequestController>(() => {
                 return new object[]
                 {
                     _infoDataManager,
@@ -130,7 +130,23 @@ namespace UniversalSend.Services.Misc {
                 _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/register");
                 OperationController.UriOperations.Add(
                     "/api/localsend/v1/register",
-                    _operationFunctions.RegisterRequestFunc
+                    _operationFunctions.RegisterRequestFuncV1
+                );
+            }
+
+            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v2/upload?sessionId={}&fileId={}&token={}")) {
+                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v2/upload");
+                OperationController.UriOperations.Add(
+                    "/api/localsend/v2/upload?sessionId={}&fileId={}&token={}",
+                    _operationFunctions.UploadRequestFuncAsync
+                );
+            }
+
+            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v2/register")) {
+                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v2/register");
+                OperationController.UriOperations.Add(
+                    "/api/localsend/v2/register",
+                    _operationFunctions.RegisterRequestFuncV2
                 );
             }
 
@@ -162,7 +178,7 @@ namespace UniversalSend.Services.Misc {
                     var receivingTasks = _receiveTaskManager.ReceivingTasks;
 
                     foreach (IReceiveTask task in receivingTasks) {
-                        IUniversalSendFile file = task.File;
+                        IUniversalSendFileV1 file = task.FileV1;
                         if (file.Id == fileId && file.TransferToken == token) {
                             if (_dispatcher.HasThreadAccess) {
                                 UpdateTask(task, e);

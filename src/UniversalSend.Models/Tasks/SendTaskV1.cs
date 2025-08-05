@@ -3,11 +3,11 @@ using Windows.Storage;
 
 namespace UniversalSend.Models.Tasks {
 
-    internal class SendTask : ISendTask {
+    internal class SendTaskV1 : ISendTaskV1 {
 
         #region Public Properties
 
-        public IUniversalSendFile File { get; set; }
+        public IUniversalSendFileV1 File { get; set; }
 
         public IStorageFile StorageFile { get; set; }
 

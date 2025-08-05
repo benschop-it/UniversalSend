@@ -3,11 +3,11 @@ using Windows.Storage;
 
 namespace UniversalSend.Models.Interfaces {
 
-    public interface ISendTask {
+    public interface ISendTaskV1 {
 
         #region Public Properties
 
-        IUniversalSendFile File { get; set; }
+        IUniversalSendFileV1 File { get; set; }
 
         IStorageFile StorageFile { get; set; }
 

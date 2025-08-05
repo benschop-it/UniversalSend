@@ -54,7 +54,7 @@ namespace UniversalSend.Services.Controllers {
         public GetResponse GetInfo(string fingerprint) {
             _logger.Debug($"GET v1/info called with fingerprint: {fingerprint}.");
 
-            return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataFromDevice());
+            return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV1FromDevice());
         }
 
         [UriFormat("v1/cancel")]
@@ -66,20 +66,20 @@ namespace UniversalSend.Services.Controllers {
         }
 
         [UriFormat("v1/register")]
-        public PostResponse PostRegister([FromContent] RegisterRequestData registerRequestData) {
+        public PostResponse PostRegister([FromContent] RegisterRequestDataV1 registerRequestData) {
             _logger.Debug($"POST v1 register request called with RegisterRequestData:\n{JsonConvert.SerializeObject(registerRequestData)}.");
 
-            IRegisterResponseData registerResponseData = _registerResponseDataManager.GetRegisterReponseData(false);
+            IRegisterResponseDataV1 registerResponseData = _registerResponseDataManager.GetRegisterResponseDataV1(false);
             return new PostResponse(PostResponse.ResponseStatus.OK, "", registerResponseData);
         }
 
         [UriFormat("v1/send-request")]
-        public IAsyncOperation<IPostResponse> PostSendRequestAsync([FromContent] SendRequestData requestData) {
+        public IAsyncOperation<IPostResponse> PostSendRequestAsync([FromContent] SendRequestDataV1 requestData) {
             return AsyncInfo.Run(async ct =>
             {
                 _logger.Debug($"POST v1 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
 
-                _receiveManager.SendRequestEvent(requestData);
+                _receiveManager.SendRequestV1Event(requestData);
 
                 var responseData = new FileResponseData();
                 if (requestData?.Files != null && requestData.Files.Count != 0) {
@@ -88,41 +88,15 @@ namespace UniversalSend.Services.Controllers {
                         responseData.Add(item.Key, token);
 
                         var file = _universalSendFileManager
-                            .GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token);
+                            .GetUniversalSendFileFromFileRequestDataV1AndToken(item.Value, token);
 
-                        await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileAsync(file, requestData.Info);
+                        await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileV1Async(file, requestData.Info);
                     }
                 }
 
                 return (IPostResponse)new PostResponse(PostResponse.ResponseStatus.OK, "", (object)responseData);
             });
         }
-
-        //public IAsyncOperation<IPostResponse> PostSendRequestAsync([FromContent] SendRequestData requestData) {
-        //    _logger.Debug($"POST v1 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
-
-        //    _receiveManager.SendRequestEvent(requestData);
-
-        //    FileResponseData responseData = new FileResponseData();
-        //    if (requestData != null && requestData.Files != null && requestData.Files.Count != 0) {
-        //        foreach (var item in requestData.Files) {
-        //            string token = _tokenFactory.CreateToken();
-        //            responseData.Add(item.Key, token);
-        //            _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileAsync(
-        //                _universalSendFileManager.GetUniversalSendFileFromFileRequestDataAndToken(item.Value, token),
-        //                requestData.Info
-        //            );
-        //        }
-        //    }
-
-        //    return Task.FromResult<IPostResponse>(
-        //        new PostResponse(
-        //            PostResponse.ResponseStatus.OK,
-        //            "",
-        //            (object)responseData // Cast to object otherwise the wrong method will be called!
-        //        )
-        //    ).AsAsyncOperation();
-        //}
 
         [UriFormat("v1/send?fileId={fileId}&token={token}")]
         public IAsyncOperation<IPostResponse> PostSendRequest(string fileId, string token) {

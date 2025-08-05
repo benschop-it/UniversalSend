@@ -3,7 +3,7 @@ using UniversalSend.Models.Interfaces;
 
 namespace UniversalSend.Models.HttpData {
 
-    public class InfoData : IInfoData {
+    public class InfoDataV1 : IInfoDataV1 {
 
         #region Public Properties
 

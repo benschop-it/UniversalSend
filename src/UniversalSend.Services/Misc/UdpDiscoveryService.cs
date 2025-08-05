@@ -46,8 +46,8 @@ namespace UniversalSend.Services.Misc {
 
         #region Public Methods
 
-        public async Task SendAnnouncementAsync() {
-            var payload = _registerResponseDataManager.GetRegisterReponseData(true);
+        public async Task SendAnnouncementAsyncV1() {
+            var payload = _registerResponseDataManager.GetAnnouncementV1(true);
 
             string json = JsonConvert.SerializeObject(payload);
             var port = _settings.GetSettingContentAsString(Constants.Network_Port);
@@ -70,9 +70,33 @@ namespace UniversalSend.Services.Misc {
             }
         }
 
+        public async Task SendAnnouncementAsyncV2() {
+            var payload = _registerResponseDataManager.GetAnnouncementV2(true);
+
+            string json = JsonConvert.SerializeObject(payload);
+
+            var port = payload.Port;
+            var multicast = _settings.GetSettingContentAsString(Constants.Network_MulticastAddress);
+
+            _logger.Debug($"SendAnnouncementAsync called. Port = {port}, Multicast = {multicast}.");
+
+            using (var socket = new DatagramSocket()) {
+                try {
+                    var outputStream = await socket.GetOutputStreamAsync(new HostName(multicast), port.ToString());
+
+                    using (var writer = new DataWriter(outputStream)) {
+                        writer.WriteString(json);
+                        await writer.StoreAsync();
+                    }
+                } catch (Exception ex) {
+                    _logger.Debug($"Failed to send UDP announcement: {ex.Message}");
+                }
+            }
+        }
+
         public async Task StartUdpListenerAsync() {
             _udpSocket = new DatagramSocket();
-            _udpSocket.MessageReceived += OnUdpMessageReceived;
+            _udpSocket.MessageReceived += OnUdpMessageReceivedV2;
 
             var port = _settings.GetSettingContentAsString(Constants.Network_Port);
             var multicast = _settings.GetSettingContentAsString("Network_MulticastAddress");
@@ -83,12 +107,12 @@ namespace UniversalSend.Services.Misc {
             // Join multicast group
             _udpSocket.JoinMulticastGroup(new HostName(multicast));
 
-            await SendAnnouncementAsync();
+            await SendAnnouncementAsyncV2();
         }
 
         public void StopUdpListener() {
             if (_udpSocket != null) {
-                _udpSocket.MessageReceived -= OnUdpMessageReceived;
+                _udpSocket.MessageReceived -= OnUdpMessageReceivedV2;
                 _udpSocket.Dispose();
                 _udpSocket = null;
             }
@@ -98,7 +122,7 @@ namespace UniversalSend.Services.Misc {
 
         #region Private Methods
 
-        private async void OnUdpMessageReceived(DatagramSocket sender, DatagramSocketMessageReceivedEventArgs args) {
+        private async void OnUdpMessageReceivedV1(DatagramSocket sender, DatagramSocketMessageReceivedEventArgs args) {
             using (var reader = new DataReader(args.GetDataStream())) {
                 reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
                 reader.InputStreamOptions = InputStreamOptions.Partial;
@@ -106,7 +130,7 @@ namespace UniversalSend.Services.Misc {
                 await reader.LoadAsync(1024);
                 string message = reader.ReadString(reader.UnconsumedBufferLength);
 
-                IRegisterResponseData payload = _registerResponseDataManager.DeserializeRegisterResponseData(message);
+                IAnnouncementV1 payload = _registerResponseDataManager.DeserializeAnnouncementV1(message);
                 if (payload == null) {
                     _logger.Debug("Ignore self!");
                     return;
@@ -117,22 +141,50 @@ namespace UniversalSend.Services.Misc {
                 if (payload.Announcement) {
                     // Send HTTP POST response
                     _logger.Debug("Register via HTTP");
-                    await RegisterViaHttpAsync(args.RemoteAddress.ToString(), payload.Fingerprint);
+                    await RegisterViaHttpAsync(args.RemoteAddress.ToString(), 53317, "v1");
                 } else {
                     _logger.Debug("Register new device, no announcement!");
-                    IDevice device = _deviceManager.GetDeviceFromResponseData(payload, args.RemoteAddress.CanonicalName);
-                    _register.NewDeviceRegisterV1Event(device);
+                    IDevice device = _deviceManager.GetDeviceFromResponseDataV1(payload, args.RemoteAddress.CanonicalName);
+                    _register.NewDeviceRegisterEvent(device);
                 }
             }
         }
 
-        private async Task RegisterViaHttpAsync(string ip, string remoteFingerprint) {
-            IRegisterResponseData payload = _registerResponseDataManager.GetRegisterReponseData(false);
+        private async void OnUdpMessageReceivedV2(DatagramSocket sender, DatagramSocketMessageReceivedEventArgs args) {
+            using (var reader = new DataReader(args.GetDataStream())) {
+                reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
+                reader.InputStreamOptions = InputStreamOptions.Partial;
+
+                await reader.LoadAsync(1024);
+                string message = reader.ReadString(reader.UnconsumedBufferLength);
+
+                IAnnouncementV2 payload = _registerResponseDataManager.DeserializeAnnouncementV2(message);
+                if (payload == null) {
+                    _logger.Debug("Ignore self!");
+                    return;
+                }
+
+                _logger.Debug($"UDP message received: {payload.Announce}, {payload.Alias}, {payload.DeviceModel}, {payload.DeviceType}, {payload.Fingerprint}");
+
+                if (payload.Announce) {
+                    // Send HTTP POST response
+                    _logger.Debug("Register via HTTP");
+                    await RegisterViaHttpAsync(args.RemoteAddress.ToString(), payload.Port, "v2");
+                } else {
+                    _logger.Debug("Register new device, no announcement!");
+                    IDevice device = _deviceManager.GetDeviceFromResponseDataV2(payload, args.RemoteAddress.CanonicalName);
+                    _register.NewDeviceRegisterEvent(device);
+                }
+            }
+        }
+
+        private async Task RegisterViaHttpAsync(string ip, int port, string version) {
+            IAnnouncementV1 payload = _registerResponseDataManager.GetAnnouncementV1(false);
             var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
             try {
                 using (var client = new HttpClient()) {
-                    await client.PostAsync($"http://{ip}:53317/api/localsend/v1/register", content);
+                    await client.PostAsync($"http://{ip}:{port.ToString()}/api/localsend/{version}/register", content);
                 }
             } catch (Exception ex) {
                 _logger.Debug($"RegisterViaHttpAsync failed: {ex.Message}");

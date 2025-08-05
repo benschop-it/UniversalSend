@@ -45,7 +45,7 @@ namespace UniversalSend.Views {
             base.OnNavigatedTo(e);
             Device = (IDevice)e.Parameter;
             UpdateUI();
-            MainProgressBar.Maximum = _sendTaskManager.SendTasks.Count;
+            MainProgressBar.Maximum = _sendTaskManager.SendTasksV1.Count;
             await StartTaskAsync();
         }
 
@@ -58,7 +58,7 @@ namespace UniversalSend.Views {
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e) {
-            _sendTaskManager.SendTasks.Clear();
+            _sendTaskManager.SendTasksV1.Clear();
             Frame.GoBack();
         }
 
@@ -72,20 +72,21 @@ namespace UniversalSend.Views {
         private async Task StartTaskAsync() {
             LocalDeviceGrid.Children.Add(new DeviceItemControl(_deviceManager.GetLocalDevice()));
             ReceiveDeviceGrid.Children.Add(new DeviceItemControl(Device));
-            bool sendSendRequestSuccess = await _sendTaskManager.SendSendRequestAsync(Device);
+            //bool sendSendRequestSuccess = await _sendTaskManager.SendSendRequestV1Async(Device);
+            bool sendSendRequestSuccess = await _sendTaskManager.SendSendRequestV2Async(Device);
             if (sendSendRequestSuccess == false) {
                 PrepareLabel.Text = "The receiver declined the transfer request.";
                 return;
             }
             PrepareControls.Visibility = Visibility.Collapsed;
             SendingControls.Visibility = Visibility.Visible;
-            await _sendTaskManager.SendSendTasksAsync(Device);
+            await _sendTaskManager.SendSendTasksV1Async(Device);
         }
 
         private void UpdateUI() {
             FileSendingListView.ItemsSource = null;
-            FileSendingListView.ItemsSource = _sendTaskManager.SendTasks;
-            if (_sendedItemsCount == _sendTaskManager.SendTasks.Count) {
+            FileSendingListView.ItemsSource = _sendTaskManager.SendTasksV1;
+            if (_sendedItemsCount == _sendTaskManager.SendTasksV1.Count) {
                 ProgressBarLabel.Text = "Completed";
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;

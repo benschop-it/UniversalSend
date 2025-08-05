@@ -10,10 +10,10 @@ namespace UniversalSend.Models.Managers {
         /// <summary>
         /// Gets RegisterData from a Device instance, commonly used to retrieve local device registration information
         /// </summary>
-        public IRegisterData GetRegisterDataFromDevice() {
+        public IRegisterDataV2 GetRegisterDataV2FromDevice() {
             var device = ProgramData.LocalDevice;
 
-            IRegisterData registerData = new RegisterData();
+            IRegisterDataV2 registerData = new RegisterDataV2();
             registerData.Alias = device.Alias;
             registerData.Version = device.ProtocolVersion;
             registerData.DeviceModel = device.DeviceModel;

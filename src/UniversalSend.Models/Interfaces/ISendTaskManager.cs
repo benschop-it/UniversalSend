@@ -10,18 +10,25 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Properties
 
-        List<ISendTask> SendTasks { get; }
+        List<ISendTaskV1> SendTasksV1 { get; }
+        List<ISendTaskV2> SendTasksV2 { get; }
 
         #endregion Public Properties
 
         #region Public Methods
 
-        Task<ISendTask> CreateSendTask(IStorageFile file);
-        ISendTask CreateSendTask(string text);
-        ISendTask CreateSendTaskFromFileRequestDataAndStorageFile(IFileRequestData fileRequestData, IStorageFile storageFile);
-        Task CreateSendTasks(List<IStorageFile> files);
-        Task<bool> SendSendRequestAsync(IDevice destinationDevice);
-        Task SendSendTasksAsync(IDevice destinationDevice);
+        Task<ISendTaskV1> CreateSendTaskV1(IStorageFile file);
+        Task<ISendTaskV2> CreateSendTaskV2(IStorageFile file);
+        ISendTaskV1 CreateSendTaskV1(string text);
+        ISendTaskV2 CreateSendTaskV2(string text);
+        ISendTaskV1 CreateSendTaskFromFileRequestDataAndStorageFileV1(IFileRequestDataV1 fileRequestData, IStorageFile storageFile);
+        ISendTaskV2 CreateSendTaskFromFileRequestDataAndStorageFileV2(IFileRequestDataV2 fileRequestData, IStorageFile storageFile);
+        Task CreateSendTasksV1(List<IStorageFile> files);
+        Task CreateSendTasksV2(List<IStorageFile> files);
+        Task<bool> SendSendRequestV1Async(IDevice destinationDevice);
+        Task<bool> SendSendRequestV2Async(IDevice destinationDevice);
+        Task SendSendTasksV1Async(IDevice destinationDevice);
+        Task SendSendTasksV2Async(IDevice destinationDevice);
 
         #endregion Public Methods
     }

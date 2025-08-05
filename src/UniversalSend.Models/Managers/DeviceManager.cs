@@ -74,7 +74,15 @@ namespace UniversalSend.Models.Managers {
             return device;
         }
 
-        public IDevice CreateDeviceFromInfoData(IInfoData info) {
+        public IDevice CreateDeviceFromInfoDataV1(IInfoDataV1 info) {
+            return new Device {
+                Alias = info.Alias,
+                DeviceModel = info.DeviceModel,
+                DeviceType = info.DeviceType
+            };
+        }
+
+        public IDevice CreateDeviceFromInfoDataV2(IInfoDataV2 info) {
             return new Device {
                 Alias = info.Alias,
                 DeviceModel = info.DeviceModel,
@@ -105,7 +113,7 @@ namespace UniversalSend.Models.Managers {
             Debug.WriteLine($"responseString: {responseString}");
 
             try {
-                RegisterResponseData registerResponseData = JsonConvert.DeserializeObject<RegisterResponseData>(responseString);
+                AnnouncementV1 registerResponseData = JsonConvert.DeserializeObject<AnnouncementV1>(responseString);
                 if (registerResponseData == null) {
                     return null;
                 }
@@ -123,7 +131,7 @@ namespace UniversalSend.Models.Managers {
             return null;
         }
 
-        public IDevice GetDeviceFromRequestData(IRegisterRequestData registerRequestData, string ip, int port) {
+        public IDevice GetDeviceFromRequestDataV1(IRegisterRequestDataV1 registerRequestData, string ip, int port) {
             IDevice device = new Device {
                 Alias = registerRequestData.Alias,
                 HttpProtocol = "http",
@@ -137,10 +145,37 @@ namespace UniversalSend.Models.Managers {
             return device;
         }
 
-        public IDevice GetDeviceFromResponseData(IRegisterResponseData responseData, string ip) {
+        public IDevice GetDeviceFromRequestDataV2(IRegisterRequestDataV2 registerRequestData, string ip, int port) {
+            IDevice device = new Device {
+                Alias = registerRequestData.Alias,
+                HttpProtocol = "http",
+                ProtocolVersion = "v2",
+                DeviceModel = registerRequestData.DeviceModel,
+                DeviceType = registerRequestData.DeviceType,
+                Fingerprint = registerRequestData.Fingerprint,
+                IP = ip,
+                Port = port
+            };
+            return device;
+        }
+
+
+        public IDevice GetDeviceFromResponseDataV1(IAnnouncementV1 responseData, string ip) {
             IDevice device = new Device();
             device.IP = ip;
             device.Port = ProgramData.LocalDevice.Port;
+            device.Alias = responseData.Alias;
+            device.DeviceModel = responseData.DeviceModel;
+            device.DeviceType = responseData.DeviceType;
+            device.Fingerprint = responseData.Fingerprint;
+
+            return device;
+        }
+
+        public IDevice GetDeviceFromResponseDataV2(IAnnouncementV2 responseData, string ip) {
+            IDevice device = new Device();
+            device.IP = ip;
+            device.Port = responseData.Port;
             device.Alias = responseData.Alias;
             device.DeviceModel = responseData.DeviceModel;
             device.DeviceType = responseData.DeviceType;

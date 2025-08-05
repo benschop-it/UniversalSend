@@ -31,7 +31,7 @@ namespace UniversalSend.Models.Misc {
 
         #region Public Methods
 
-        public void NewDeviceRegisterV1Event(IDevice device) {
+        public void NewDeviceRegisterEvent(IDevice device) {
             NewDeviceRegister?.Invoke(device, EventArgs.Empty);
         }
 

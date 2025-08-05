@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using UniversalSend.Models.Interfaces;
+using UniversalSend.Services.Interfaces;
 
-namespace UniversalSend.Models.HttpData {
+namespace UniversalSend.Models.Data {
 
-    public class FileRequestData : IFileRequestData {
+    internal class UniversalSendFileV1 : IUniversalSendFileV1 {
 
         #region Public Properties
 
@@ -16,11 +17,14 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("size")]
+        public long Size { get; set; }
+
         [JsonProperty("preview")]
         public string Preview { get; set; }
 
-        [JsonProperty("size")]
-        public long Size { get; set; }
+        [JsonProperty("transferToken")]
+        public string TransferToken { get; set; }
 
         #endregion Public Properties
 

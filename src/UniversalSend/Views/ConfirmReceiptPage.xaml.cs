@@ -21,7 +21,9 @@ namespace UniversalSend.Views {
 
         #region Private Properties
 
-        private ISendRequestData SendRequestData { get; set; }
+        private ISendRequestDataV1 SendRequestDataV1 { get; set; }
+
+        private ISendRequestDataV2 SendRequestDataV2 { get; set; }
 
         #endregion Private Properties
 

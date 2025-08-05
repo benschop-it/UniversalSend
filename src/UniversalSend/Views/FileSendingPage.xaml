@@ -40,7 +40,7 @@
             <TextBlock Name="PageHeader" Margin="24" Text="Sending files..." />
             <ListView Margin="24,0,24,0" Name="FileSendingListView" Grid.Row="1">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="interfaces:ISendTask">
+                    <DataTemplate x:DataType="interfaces:ISendTaskV1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />

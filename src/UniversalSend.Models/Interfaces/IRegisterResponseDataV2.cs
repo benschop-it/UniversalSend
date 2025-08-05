@@ -1,18 +1,19 @@
-﻿namespace UniversalSend.Models.Interfaces {
+﻿using Newtonsoft.Json;
 
-    public interface IRegisterData {
+namespace UniversalSend.Models.Interfaces {
+
+    public interface IRegisterResponseDataV2 {
 
         #region Public Properties
 
         string Alias { get; set; }
-        bool Announce { get; set; }
+        string Version { get; set; }
         string DeviceModel { get; set; }
         string DeviceType { get; set; }
-        bool Download { get; set; }
         string Fingerprint { get; set; }
         int Port { get; set; }
         string Protocol { get; set; }
-        string Version { get; set; }
+        string Download { get; set; }
 
         #endregion Public Properties
     }

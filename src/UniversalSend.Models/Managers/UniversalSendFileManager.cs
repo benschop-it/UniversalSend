@@ -9,31 +9,68 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public IUniversalSendFile CreateUniversalSendFileFromText(string text) {
-            UniversalSendFile universalSendFile = new UniversalSendFile();
-            universalSendFile.FileType = "text";
-            universalSendFile.Text = text;
-            universalSendFile.Size = Encoding.ASCII.GetBytes(text).Length;
+        public IUniversalSendFileV1 CreateUniversalSendFileFromTextV1(string text) {
+            UniversalSendFileV1 universalSendFile = new UniversalSendFileV1();
             universalSendFile.Id = Guid.NewGuid().ToString();
             universalSendFile.FileName = universalSendFile.Id + ".txt";
+            universalSendFile.Size = Encoding.ASCII.GetBytes(text).Length;
+            universalSendFile.FileType = "text";
+            universalSendFile.Preview = text;
             return universalSendFile;
         }
 
-        public IUniversalSendFile GetUniversalSendFileFromFileRequestData(IFileRequestData fileRequestData) {
-            UniversalSendFile universalSendFile = new UniversalSendFile();
-            universalSendFile.Id = fileRequestData.Id;
-            universalSendFile.FileName = fileRequestData.FileName;
-            universalSendFile.FileType = fileRequestData.FileType;
-            universalSendFile.Size = fileRequestData.Size;
+        public IUniversalSendFileV2 CreateUniversalSendFileFromTextV2(string text) {
+            UniversalSendFileV2 universalSendFile = new UniversalSendFileV2();
+            universalSendFile.Id = Guid.NewGuid().ToString();
+            universalSendFile.FileName = universalSendFile.Id + ".txt";
+            universalSendFile.Size = Encoding.ASCII.GetBytes(text).Length;
+            universalSendFile.FileType = "text";
+            universalSendFile.Sha256 = null;
+            universalSendFile.Preview = text;
             return universalSendFile;
         }
 
-        public IUniversalSendFile GetUniversalSendFileFromFileRequestDataAndToken(IFileRequestData fileRequestData, string token) {
-            UniversalSendFile universalSendFile = new UniversalSendFile();
+        public IUniversalSendFileV1 GetUniversalSendFileFromFileRequestDataV1(IFileRequestDataV1 fileRequestData) {
+            UniversalSendFileV1 universalSendFile = new UniversalSendFileV1();
             universalSendFile.Id = fileRequestData.Id;
             universalSendFile.FileName = fileRequestData.FileName;
-            universalSendFile.FileType = fileRequestData.FileType;
             universalSendFile.Size = fileRequestData.Size;
+            universalSendFile.FileType = fileRequestData.FileType;
+            universalSendFile.Preview = fileRequestData.Preview;
+            return universalSendFile;
+        }
+
+        public IUniversalSendFileV2 GetUniversalSendFileFromFileRequestDataV2(IFileRequestDataV2 fileRequestData) {
+            UniversalSendFileV2 universalSendFile = new UniversalSendFileV2();
+            universalSendFile.Id = fileRequestData.Id;
+            universalSendFile.FileName = fileRequestData.FileName;
+            universalSendFile.Size = fileRequestData.Size;
+            universalSendFile.FileType = fileRequestData.FileType;
+            universalSendFile.Sha256 = fileRequestData.Sha256;
+            universalSendFile.Preview = fileRequestData.Preview;
+
+            return universalSendFile;
+        }
+
+        public IUniversalSendFileV1 GetUniversalSendFileFromFileRequestDataV1AndToken(IFileRequestDataV1 fileRequestData, string token) {
+            UniversalSendFileV1 universalSendFile = new UniversalSendFileV1();
+            universalSendFile.Id = fileRequestData.Id;
+            universalSendFile.FileName = fileRequestData.FileName;
+            universalSendFile.Size = fileRequestData.Size;
+            universalSendFile.FileType = fileRequestData.FileType;
+            universalSendFile.Preview = fileRequestData.Preview;
+            universalSendFile.TransferToken = token;
+            return universalSendFile;
+        }
+
+        public IUniversalSendFileV2 GetUniversalSendFileFromFileRequestDataV2AndToken(IFileRequestDataV2 fileRequestData, string token) {
+            UniversalSendFileV2 universalSendFile = new UniversalSendFileV2();
+            universalSendFile.Id = fileRequestData.Id;
+            universalSendFile.FileName = fileRequestData.FileName;
+            universalSendFile.Size = fileRequestData.Size;
+            universalSendFile.FileType = fileRequestData.FileType;
+            universalSendFile.Sha256 = fileRequestData.Sha256;
+            universalSendFile.Preview = fileRequestData.Preview;
             universalSendFile.TransferToken = token;
             return universalSendFile;
         }

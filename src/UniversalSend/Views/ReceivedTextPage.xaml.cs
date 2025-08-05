@@ -22,9 +22,9 @@ namespace UniversalSend.Views {
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
-            IUniversalSendFile file = (IUniversalSendFile)e.Parameter;
+            IUniversalSendFileV1 file = (IUniversalSendFileV1)e.Parameter;
             SenderNameTextBlock.Text = "";
-            ContentTextBox.Text = file.Text;
+            ContentTextBox.Text = file.Preview;
         }
 
         #endregion Protected Methods

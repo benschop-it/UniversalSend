@@ -12,7 +12,7 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Methods
 
-        void NewDeviceRegisterV1Event(IDevice device);
+        void NewDeviceRegisterEvent(IDevice device);
         void StartRegister();
 
         #endregion Public Methods

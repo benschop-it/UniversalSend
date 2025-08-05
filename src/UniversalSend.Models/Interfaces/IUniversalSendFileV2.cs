@@ -1,15 +1,16 @@
 ﻿using UniversalSend.Services.Interfaces;
 
 namespace UniversalSend.Models.Interfaces {
-    public interface IUniversalSendFile {
+    public interface IUniversalSendFileV2 {
 
         #region Public Properties
 
-        string FileName { get; set; }
-        string FileType { get; set; }
         string Id { get; set; }
+        string FileName { get; set; }
         long Size { get; set; }
-        string Text { get; set; }
+        string FileType { get; set; }
+        string Sha256 { get; set; }
+        string Preview { get; set; }
         string TransferToken { get; set; }
 
         #endregion Public Properties

@@ -8,7 +8,7 @@ namespace UniversalSend.Models.Misc {
 
         #region Public Constructors
 
-        public ConcreteHistory(UniversalSendFile file, string futureAccessListToken, Device device) {
+        public ConcreteHistory(UniversalSendFileV1 file, string futureAccessListToken, Device device) {
             File = file;
             FutureAccessListToken = futureAccessListToken;
             Device = device;
@@ -22,7 +22,7 @@ namespace UniversalSend.Models.Misc {
 
         public Device Device { get; set; }
 
-        public UniversalSendFile File { get; set; }
+        public UniversalSendFileV1 File { get; set; }
 
         public string FutureAccessListToken { get; set; }
 
@@ -34,7 +34,7 @@ namespace UniversalSend.Models.Misc {
 
         #region Public Constructors
 
-        public History(IUniversalSendFile file, string futureAccessListToken, IDevice device) {
+        public History(IUniversalSendFileV1 file, string futureAccessListToken, IDevice device) {
             File = file;
             FutureAccessListToken = futureAccessListToken;
             Device = device;
@@ -48,7 +48,7 @@ namespace UniversalSend.Models.Misc {
 
         public IDevice Device { get; set; }
 
-        public IUniversalSendFile File { get; set; }
+        public IUniversalSendFileV1 File { get; set; }
 
         public string FutureAccessListToken { get; set; }
 
