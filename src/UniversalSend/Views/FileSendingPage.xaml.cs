@@ -45,7 +45,7 @@ namespace UniversalSend.Views {
             base.OnNavigatedTo(e);
             Device = (IDevice)e.Parameter;
             UpdateUI();
-            MainProgressBar.Maximum = _sendTaskManager.SendTasksV1.Count;
+            MainProgressBar.Maximum = _sendTaskManager.SendTasksV2.Count;
             await StartTaskAsync();
         }
 
@@ -58,7 +58,7 @@ namespace UniversalSend.Views {
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e) {
-            _sendTaskManager.SendTasksV1.Clear();
+            _sendTaskManager.SendTasksV2.Clear();
             Frame.GoBack();
         }
 
@@ -80,13 +80,13 @@ namespace UniversalSend.Views {
             }
             PrepareControls.Visibility = Visibility.Collapsed;
             SendingControls.Visibility = Visibility.Visible;
-            await _sendTaskManager.SendSendTasksV1Async(Device);
+            await _sendTaskManager.SendSendTasksV2Async(Device);
         }
 
         private void UpdateUI() {
             FileSendingListView.ItemsSource = null;
-            FileSendingListView.ItemsSource = _sendTaskManager.SendTasksV1;
-            if (_sendedItemsCount == _sendTaskManager.SendTasksV1.Count) {
+            FileSendingListView.ItemsSource = _sendTaskManager.SendTasksV2;
+            if (_sendedItemsCount == _sendTaskManager.SendTasksV2.Count) {
                 ProgressBarLabel.Text = "Completed";
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;

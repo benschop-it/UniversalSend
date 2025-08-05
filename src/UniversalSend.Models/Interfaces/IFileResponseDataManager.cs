@@ -6,7 +6,7 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Methods
 
-        FileResponseData CreateFromDictionary(Dictionary<string, string> keyValuePairs);
+        FileResponseDataV2 CreateFromDictionary(Dictionary<string, string> keyValuePairs);
 
         #endregion Public Methods
     }

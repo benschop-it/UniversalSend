@@ -22,6 +22,7 @@ namespace UniversalSend.Services {
             services.AddSingleton<IHttpServerResponseParser, HttpServerResponseParser>();
             services.AddSingleton<IServiceHttpServer, ServiceHttpServer>();
             services.AddSingleton<IInstanceCreatorCache, InstanceCreatorCache>();
+            services.AddSingleton<IUdpDiscoveryService, UdpDiscoveryService>();
         }
 
         #endregion Public Methods

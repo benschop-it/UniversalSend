@@ -31,13 +31,10 @@ namespace UniversalSend.Models.Interfaces {
         void AddKnownDevices(IDevice device);
         void ClearKnownDevices();
         IDevice CreateDevice(string alias, string ip, int port);
-        IDevice CreateDeviceFromInfoDataV1(IInfoDataV1 info);
         IDevice CreateDeviceFromInfoDataV2(IInfoDataV2 info);
         Task<IDevice> FindDeviceByHashTagAsync(string HashTag);
         Task<IDevice> FindDeviceByIPAsync(string IP);
-        IDevice GetDeviceFromRequestDataV1(IRegisterRequestDataV1 requestData, string ip, int port);
         IDevice GetDeviceFromRequestDataV2(IRegisterRequestDataV2 requestData, string ip, int port);
-        IDevice GetDeviceFromResponseDataV1(IAnnouncementV1 responseData, string ip);
         IDevice GetDeviceFromResponseDataV2(IAnnouncementV2 responseData, string ip);
         IDevice GetLocalDevice();
         Task SearchKnownDevicesAsync(List<string> ipList);

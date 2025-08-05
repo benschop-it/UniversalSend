@@ -7,7 +7,6 @@ namespace UniversalSend.Models.Interfaces.Internal {
 
         #region Public Methods
 
-        Task<ISendRequestDataV1> CreateSendRequestDataV1Async(List<IStorageFile> storageFiles);
         Task<ISendRequestDataV2> CreateSendRequestDataV2Async(List<IStorageFile> storageFiles);
 
         #endregion Public Methods

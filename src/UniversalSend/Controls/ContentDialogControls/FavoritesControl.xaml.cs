@@ -47,7 +47,7 @@ namespace UniversalSend.Controls.ContentDialogControls {
         }
 
         private async Task ListViewItemClickAsync(IFavorite item) {
-            if (_sendTaskManager.SendTasksV1.Count == 0) {
+            if (_sendTaskManager.SendTasksV2.Count == 0) {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }

@@ -30,28 +30,11 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Properties
 
-        //public List<IReceiveTask> ReceivingTasks { get; private set; } = new List<IReceiveTask>();
-
         public ObservableCollection<IReceiveTask> ReceivingTasks { get; } = new ObservableCollection<IReceiveTask>();
 
         #endregion Public Properties
 
         #region Public Methods
-
-        public async Task CreateReceivingTaskFromUniversalSendFileV1Async(IUniversalSendFileV1 file, IInfoDataV1 info) {
-            var task = new ReceiveTask { FileV1 = file, SenderV1 = info };
-
-            if (_dispatcher.HasThreadAccess) {
-                ReceivingTasks.Add(task);
-            } else {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ReceivingTasks.Add(task));
-            }
-        }
-
-        public void CreateReceivingTaskFromUniversalSendFileV1(IUniversalSendFileV1 universalSendFile, IInfoDataV1 info) {
-            IReceiveTask receiveTask = new ReceiveTask { FileV1 = universalSendFile, SenderV1 = info };
-            ReceivingTasks.Add(receiveTask);
-        }
 
         public async Task CreateReceivingTaskFromUniversalSendFileV2Async(IUniversalSendFileV2 file, IInfoDataV2 info) {
             var task = new ReceiveTask { FileV2 = file, SenderV2 = info };
@@ -66,27 +49,6 @@ namespace UniversalSend.Models.Managers {
         public void CreateReceivingTaskFromUniversalSendFileV2(IUniversalSendFileV2 universalSendFile, IInfoDataV2 info) {
             IReceiveTask receiveTask = new ReceiveTask { FileV2 = universalSendFile, SenderV2 = info };
             ReceivingTasks.Add(receiveTask);
-        }
-
-        public async Task<IReceiveTask> WriteFileContentToReceivingTaskV1(string fileId, string token, byte[] fileContent) {
-            IReceiveTask task = ReceivingTasks.FirstOrDefault(x =>
-                x.FileV1 != null &&
-                string.Equals(x.FileV1.Id, fileId, StringComparison.Ordinal) &&
-                string.Equals(x.FileV1.TransferToken, token, StringComparison.Ordinal));
-
-            if (task == null || task.FileV1.TransferToken != token) {
-                // task.TaskState = ReceiveTask.ReceiveTaskStates.Error;
-                return null;
-            }
-            task.FileContent = fileContent;
-
-            if (_dispatcher.HasThreadAccess) {
-                task.TaskState = ReceiveTaskStates.Done;
-            } else {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => task.TaskState = ReceiveTaskStates.Done);
-            }
-
-            return task;
         }
 
         public async Task<IReceiveTask> WriteFileContentToReceivingTaskV2(string sessionId, string fileId, string token, byte[] fileContent) {
@@ -110,18 +72,6 @@ namespace UniversalSend.Models.Managers {
             }
 
             return task;
-        }
-
-        public async Task<IStorageFile> WriteReceiveTaskToFileV1Async(IReceiveTask receiveTask) {
-            StorageFile storageFile;
-            StorageFolder folder = await _storageHelper.GetReceiveStorageFolderAsync();
-            if (folder == null) {
-                storageFile = await _storageHelper.CreateFileInDownloadsFolderAsync(receiveTask.FileV1.FileName);
-            } else {
-                storageFile = await folder.CreateFileAsync(receiveTask.FileV1.FileName, CreationCollisionOption.GenerateUniqueName);
-            }
-            await _storageHelper.WriteBytesToFileAsync(storageFile, receiveTask.FileContent);
-            return storageFile;
         }
 
         public async Task<IStorageFile> WriteReceiveTaskToFileV2Async(IReceiveTask receiveTask) {

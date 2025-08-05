@@ -10,7 +10,7 @@ namespace UniversalSend.Models {
 
         public static IDevice LocalDevice { get; set; } = new Device {
             //Alias = $"WindowsPhone (UWP)",
-            ProtocolVersion = "v1",
+            ProtocolVersion = "2.1",
             //DeviceModel = "Microsoft",
             //DeviceType = "Desktop",
             Fingerprint = Guid.NewGuid().ToString(),

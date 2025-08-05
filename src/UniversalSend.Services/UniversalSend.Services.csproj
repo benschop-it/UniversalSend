@@ -168,6 +168,7 @@
     <Compile Include="Interfaces\Internal\IMutableHttpServerRequest.cs" />
     <Compile Include="Interfaces\Internal\IOperationFunctions.cs" />
     <Compile Include="Interfaces\IServiceHttpServer.cs" />
+    <Compile Include="Interfaces\IUdpDiscoveryService.cs" />
     <Compile Include="RegisterServices.cs" />
     <Compile Include="Rest\Models\Contracts\IContentRestResponse.cs" />
     <Compile Include="Rest\Models\Contracts\IDeleteResponse.cs" />
@@ -259,7 +260,6 @@
     <Compile Include="Rest\UriParser.cs" />
     <Compile Include="Misc\ServiceHttpServer.cs" />
     <Compile Include="Misc\UdpDiscoveryService.cs" />
-    <Compile Include="Controllers\V1RequestController.cs" />
     <Compile Include="Controllers\V2RequestController.cs" />
     <EmbeddedResource Include="Properties\UniversalSend.Services.rd.xml" />
   </ItemGroup>

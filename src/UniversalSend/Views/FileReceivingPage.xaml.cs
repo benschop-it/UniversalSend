@@ -64,7 +64,11 @@ namespace UniversalSend.Views {
                 FinishButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;
             }
-            var progress = 100.0 - 100.0 * (double)unfinishedTasks / (double)tasksCount;
+            double progress = 0.0;
+            if (tasksCount != 0) {
+                progress = 100.0 - 100.0 * (double)unfinishedTasks / (double)tasksCount;
+            }
+
             //Debug.WriteLine($"Progress = {progress}");
 
             MainProgressBar.Value = progress;

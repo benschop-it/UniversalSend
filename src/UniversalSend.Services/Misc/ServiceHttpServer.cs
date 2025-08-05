@@ -118,22 +118,6 @@ namespace UniversalSend.Services.Misc {
                 return false;
             }
 
-            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/send?fileId={}&token={}")) {
-                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/send");
-                OperationController.UriOperations.Add(
-                    "/api/localsend/v1/send?fileId={}&token={}",
-                    _operationFunctions.SendRequestFuncAsync
-                );
-            }
-
-            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/register")) {
-                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/register");
-                OperationController.UriOperations.Add(
-                    "/api/localsend/v1/register",
-                    _operationFunctions.RegisterRequestFuncV1
-                );
-            }
-
             if (!OperationController.UriOperations.ContainsKey("/api/localsend/v2/upload?sessionId={}&fileId={}&token={}")) {
                 _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v2/upload");
                 OperationController.UriOperations.Add(
@@ -178,7 +162,7 @@ namespace UniversalSend.Services.Misc {
                     var receivingTasks = _receiveTaskManager.ReceivingTasks;
 
                     foreach (IReceiveTask task in receivingTasks) {
-                        IUniversalSendFileV1 file = task.FileV1;
+                        IUniversalSendFileV2 file = task.FileV2;
                         if (file.Id == fileId && file.TransferToken == token) {
                             if (_dispatcher.HasThreadAccess) {
                                 UpdateTask(task, e);

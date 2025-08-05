@@ -8,6 +8,9 @@ namespace UniversalSend.Models.Interfaces {
 
         bool Announce { get; set; }
 
+        int Port { get; set; }
+        string Protocol { get; set; }
+
         #endregion Public Properties
     }
 }

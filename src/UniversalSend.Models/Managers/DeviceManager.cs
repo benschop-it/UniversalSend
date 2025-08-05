@@ -70,23 +70,17 @@ namespace UniversalSend.Models.Managers {
                 Alias = "RM-1116_15169 (UWP)",
                 IP = "192.168.0.193",
                 Port = 53317,
+                ProtocolVersion = "2.1"
             };
             return device;
-        }
-
-        public IDevice CreateDeviceFromInfoDataV1(IInfoDataV1 info) {
-            return new Device {
-                Alias = info.Alias,
-                DeviceModel = info.DeviceModel,
-                DeviceType = info.DeviceType
-            };
         }
 
         public IDevice CreateDeviceFromInfoDataV2(IInfoDataV2 info) {
             return new Device {
                 Alias = info.Alias,
                 DeviceModel = info.DeviceModel,
-                DeviceType = info.DeviceType
+                DeviceType = info.DeviceType,
+                ProtocolVersion = info.Protocol
             };
         }
 
@@ -113,7 +107,7 @@ namespace UniversalSend.Models.Managers {
             Debug.WriteLine($"responseString: {responseString}");
 
             try {
-                AnnouncementV1 registerResponseData = JsonConvert.DeserializeObject<AnnouncementV1>(responseString);
+                AnnouncementV2 registerResponseData = JsonConvert.DeserializeObject<AnnouncementV2>(responseString);
                 if (registerResponseData == null) {
                     return null;
                 }
@@ -125,69 +119,44 @@ namespace UniversalSend.Models.Managers {
                 device.DeviceModel = registerResponseData.DeviceModel;
                 device.DeviceType = registerResponseData.DeviceType;
                 device.Fingerprint = registerResponseData.Fingerprint;
+                device.ProtocolVersion = registerResponseData.Protocol;
                 return device;
             } catch {
             }
             return null;
         }
 
-        public IDevice GetDeviceFromRequestDataV1(IRegisterRequestDataV1 registerRequestData, string ip, int port) {
-            IDevice device = new Device {
-                Alias = registerRequestData.Alias,
-                HttpProtocol = "http",
-                ProtocolVersion = "v1",
-                DeviceModel = registerRequestData.DeviceModel,
-                DeviceType = registerRequestData.DeviceType,
-                Fingerprint = registerRequestData.Fingerprint,
-                IP = ip,
-                Port = port
-            };
-            return device;
-        }
-
         public IDevice GetDeviceFromRequestDataV2(IRegisterRequestDataV2 registerRequestData, string ip, int port) {
             IDevice device = new Device {
                 Alias = registerRequestData.Alias,
                 HttpProtocol = "http",
-                ProtocolVersion = "v2",
+                ProtocolVersion = "2.1",
                 DeviceModel = registerRequestData.DeviceModel,
                 DeviceType = registerRequestData.DeviceType,
                 Fingerprint = registerRequestData.Fingerprint,
                 IP = ip,
                 Port = port
             };
-            return device;
-        }
-
-
-        public IDevice GetDeviceFromResponseDataV1(IAnnouncementV1 responseData, string ip) {
-            IDevice device = new Device();
-            device.IP = ip;
-            device.Port = ProgramData.LocalDevice.Port;
-            device.Alias = responseData.Alias;
-            device.DeviceModel = responseData.DeviceModel;
-            device.DeviceType = responseData.DeviceType;
-            device.Fingerprint = responseData.Fingerprint;
-
             return device;
         }
 
         public IDevice GetDeviceFromResponseDataV2(IAnnouncementV2 responseData, string ip) {
             IDevice device = new Device();
-            device.IP = ip;
-            device.Port = responseData.Port;
             device.Alias = responseData.Alias;
+            device.Version = responseData.Version;
             device.DeviceModel = responseData.DeviceModel;
             device.DeviceType = responseData.DeviceType;
             device.Fingerprint = responseData.Fingerprint;
-
+            device.Port = responseData.Port;
+            device.ProtocolVersion = responseData.Protocol;
+            device.IP = ip;
             return device;
         }
 
         public IDevice GetLocalDevice() {
             IDevice localDevice = new Device {
                 //Alias = $"WindowsPhone (UWP)",
-                ProtocolVersion = "v1",
+                ProtocolVersion = "2.1",
                 //DeviceModel = "Microsoft",
                 //DeviceType = "Desktop",
                 Fingerprint = Guid.NewGuid().ToString(),

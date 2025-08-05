@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -181,6 +182,26 @@ namespace UniversalSend.Services.Http {
                     //_logger.Debug($"RequestLog:\n{requestLog.ToString()}.");
                 }
             });
+        }
+
+        public string GetJsonStringFromBytes(byte[] contentBytes, long contentLength) {
+            if (contentLength < 1) {
+                return string.Empty;
+            }
+
+            if (contentBytes == null)
+                throw new ArgumentNullException(nameof(contentBytes));
+
+            if (contentBytes.Length < contentLength)
+                throw new ArgumentException("Content length does not match the byte array length.");
+
+            // Decode the byte[] to string using UTF-8
+            var jsonString = Encoding.UTF8.GetString(contentBytes, 0, (int)contentLength);
+
+            // Optionally validate it's proper JSON (throws if not valid)
+            JsonConvert.DeserializeObject(jsonString);
+
+            return jsonString;
         }
 
         #endregion Private Methods

@@ -14,6 +14,7 @@ namespace UniversalSend.Models.Data {
         public string IP { get; set; } = "";
         public int Port { get; set; } = -1;
         public string ProtocolVersion { get; set; } = "";
+        public string Version { get; set; }
 
         #endregion Public Properties
 

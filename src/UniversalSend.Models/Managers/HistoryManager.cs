@@ -36,7 +36,7 @@ namespace UniversalSend.Models.Managers {
             SaveHistoriesList();
         }
 
-        public IHistory CreateHistory(IUniversalSendFileV1 file, string futureAccessListToken, IDevice device) {
+        public IHistory CreateHistory(IUniversalSendFileV2 file, string futureAccessListToken, IDevice device) {
             var history = new History(file, futureAccessListToken, device);
             return history;
         }

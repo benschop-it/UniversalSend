@@ -64,7 +64,7 @@ namespace UniversalSend.Views {
         private async Task SendSendRequestAsync() {
             List<IStorageFile> files = new List<IStorageFile>();
             files.Add(await ApplicationData.Current.LocalFolder.GetFileAsync("test.txt"));
-            await _sendTaskManager.CreateSendTasksV1(files);
+            await _sendTaskManager.CreateSendTasksV2(files);
 
             // TODO: Replace with actual known device list
             IDevice device = _deviceManager.CreateDevice(
@@ -73,8 +73,8 @@ namespace UniversalSend.Views {
                 53317
             );
 
-            await _sendTaskManager.SendSendRequestV1Async(device);
-            await _sendTaskManager.SendSendTasksV1Async(device);
+            await _sendTaskManager.SendSendRequestV2Async(device);
+            await _sendTaskManager.SendSendTasksV2Async(device);
         }
 
         private async void SendSendRequestButton_Click(object sender, RoutedEventArgs e) {

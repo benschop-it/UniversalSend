@@ -65,8 +65,8 @@ namespace UniversalSend {
 
             if (e.Parameter is ShareOperation) {
                 _normalLaunch = false;
-                List<ISendTaskV1> sendTasks = await ProcessShareActivatedAsync(e.Parameter as ShareOperation);
-                _sendTaskManager.SendTasksV1.AddRange(sendTasks);
+                List<ISendTaskV2> sendTasks = await ProcessShareActivatedAsync(e.Parameter as ShareOperation);
+                _sendTaskManager.SendTasksV2.AddRange(sendTasks);
                 _sendManager.SendCreatedEvent();
             }
         }
@@ -114,19 +114,19 @@ namespace UniversalSend {
             }
         }
 
-        private async Task<List<ISendTaskV1>> ProcessShareActivatedAsync(ShareOperation shareOperation) {
-            List<ISendTaskV1> sendTasks = new List<ISendTaskV1>();
+        private async Task<List<ISendTaskV2>> ProcessShareActivatedAsync(ShareOperation shareOperation) {
+            List<ISendTaskV2> sendTasks = new List<ISendTaskV2>();
             if (shareOperation.Data.Contains(StandardDataFormats.Text)) {
                 string text = await shareOperation.Data.GetTextAsync();
 
                 // To output the text from this example, you need a TextBlock control
                 // with a name of "sharedContent".
                 Debug.WriteLine($"ShareActivated-Text:{text}");
-                sendTasks.Add(_sendTaskManager.CreateSendTaskV1(text));
+                sendTasks.Add(_sendTaskManager.CreateSendTaskV2(text));
             } else if (shareOperation.Data.Contains(StandardDataFormats.ApplicationLink)) {
                 Uri uri = await shareOperation.Data.GetApplicationLinkAsync();
                 Debug.WriteLine($"ShareActivated-ApplicationLink:{uri.ToString()}");
-                sendTasks.Add(_sendTaskManager.CreateSendTaskV1(uri.ToString()));
+                sendTasks.Add(_sendTaskManager.CreateSendTaskV2(uri.ToString()));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Bitmap)) {
                 RandomAccessStreamReference accessStreamReference = await shareOperation.Data.GetBitmapAsync();
                 Debug.WriteLine($"ShareActivated-Bitmap");
@@ -135,27 +135,27 @@ namespace UniversalSend {
                 await randomAccessStreamWithContentType.ReadAsync(buffer.AsBuffer(), (uint)randomAccessStreamWithContentType.Size, InputStreamOptions.None);
                 StorageFile storageFile = await _storageHelper.CreateTempFile(Guid.NewGuid().ToString() + randomAccessStreamWithContentType.ContentType);
                 await _storageHelper.WriteBytesToFileAsync(storageFile, buffer);
-                sendTasks.Add(await _sendTaskManager.CreateSendTaskV1(storageFile));
+                sendTasks.Add(await _sendTaskManager.CreateSendTaskV2(storageFile));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Html)) {
                 string htmlStr = await shareOperation.Data.GetHtmlFormatAsync();
                 Debug.WriteLine($"ShareActivated-Html:{htmlStr}");
-                sendTasks.Add(_sendTaskManager.CreateSendTaskV1(htmlStr));
+                sendTasks.Add(_sendTaskManager.CreateSendTaskV2(htmlStr));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Rtf)) {
                 string rtfStr = await shareOperation.Data.GetRtfAsync();
                 Debug.WriteLine($"ShareActivated-Rtf:{rtfStr}");
-                sendTasks.Add(_sendTaskManager.CreateSendTaskV1(rtfStr));
+                sendTasks.Add(_sendTaskManager.CreateSendTaskV2(rtfStr));
             } else if (shareOperation.Data.Contains(StandardDataFormats.StorageItems)) {
                 List<IStorageItem> items = (await shareOperation.Data.GetStorageItemsAsync()).ToList();
                 Debug.WriteLine($"ShareActivated-StorageItems: number of items: {items.Count}");
                 foreach (var item in items) {
                     if (item is StorageFile) {
-                        sendTasks.Add(await _sendTaskManager.CreateSendTaskV1(item as StorageFile));
+                        sendTasks.Add(await _sendTaskManager.CreateSendTaskV2(item as StorageFile));
                     }
                 }
             } else if (shareOperation.Data.Contains(StandardDataFormats.WebLink)) {
                 Uri uri = await shareOperation.Data.GetWebLinkAsync();
                 Debug.WriteLine($"ShareActivated-WebLink:{uri.ToString()}");
-                sendTasks.Add(_sendTaskManager.CreateSendTaskV1(uri.ToString()));
+                sendTasks.Add(_sendTaskManager.CreateSendTaskV2(uri.ToString()));
             }
             return sendTasks;
         }

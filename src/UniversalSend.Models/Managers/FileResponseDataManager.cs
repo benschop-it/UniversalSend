@@ -8,10 +8,10 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public FileResponseData CreateFromDictionary(Dictionary<string, string> keyValuePairs) {
-            FileResponseData fileResponseData = new FileResponseData();
+        public FileResponseDataV2 CreateFromDictionary(Dictionary<string, string> keyValuePairs) {
+            FileResponseDataV2 fileResponseData = new FileResponseDataV2();
             foreach (var item in keyValuePairs) {
-                fileResponseData.Add(item.Key, item.Value);
+                fileResponseData.Files.Add(item.Key, item.Value);
             }
             return fileResponseData;
         }

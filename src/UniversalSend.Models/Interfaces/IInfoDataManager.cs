@@ -6,8 +6,6 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Methods
 
-        InfoDataV1 GetInfoDataV1FromDevice();
-
         InfoDataV2 GetInfoDataV2FromDevice();
 
         #endregion Public Methods

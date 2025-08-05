@@ -10,6 +10,13 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("announce")]
         public bool Announce { get; set; }
 
+        [JsonProperty("port")]
+        public int Port { get; set; }
+
+        [JsonProperty("protocol")]
+        public string Protocol { get; set; }
+
+
         #endregion Public Properties
 
     }

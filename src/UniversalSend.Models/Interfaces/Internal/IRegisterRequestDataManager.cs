@@ -6,7 +6,7 @@ namespace UniversalSend.Models.Interfaces.Internal {
 
         #region Public Methods
 
-        IRegisterRequestDataV1 CreateFromDevice(IDevice device);
+        IRegisterRequestDataV2 CreateFromDevice(IDevice device);
 
         #endregion Public Methods
     }

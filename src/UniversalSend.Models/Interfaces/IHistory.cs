@@ -7,7 +7,7 @@ namespace UniversalSend.Models.Interfaces {
 
         DateTime DateTime { get; set; }
         IDevice Device { get; set; }
-        IUniversalSendFileV1 File { get; set; }
+        IUniversalSendFileV2 File { get; set; }
         string FutureAccessListToken { get; set; }
 
         #endregion Public Properties

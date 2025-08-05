@@ -10,33 +10,12 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public async Task<IFileRequestDataV1> CreateFromStorageFileV1Async(IStorageFile storageFile) {
-            FileRequestDataV1 fileRequestData = new FileRequestDataV1();
-            fileRequestData.FileType = storageFile.FileType;
-            fileRequestData.Size = (long)(await storageFile.GetBasicPropertiesAsync()).Size;
-            fileRequestData.FileName = storageFile.Name;
-            fileRequestData.Id = Guid.NewGuid().ToString();
-            return fileRequestData;
-        }
-
         public async Task<IFileRequestDataV2> CreateFromStorageFileV2Async(IStorageFile storageFile) {
             FileRequestDataV2 fileRequestData = new FileRequestDataV2();
             fileRequestData.FileType = storageFile.FileType;
             fileRequestData.Size = (long)(await storageFile.GetBasicPropertiesAsync()).Size;
             fileRequestData.FileName = storageFile.Name;
             fileRequestData.Id = Guid.NewGuid().ToString();
-            return fileRequestData;
-        }
-
-        public IFileRequestDataV1 CreateFromUniversalSendFileV1(IUniversalSendFileV1 universalSendFile) {
-            FileRequestDataV1 fileRequestData = new FileRequestDataV1();
-            fileRequestData.FileType = universalSendFile.FileType;
-            fileRequestData.FileName = universalSendFile.FileName;
-            fileRequestData.Size = universalSendFile.Size;
-            fileRequestData.Id = universalSendFile.Id;
-            if (!string.IsNullOrEmpty(universalSendFile.Preview)) {
-                fileRequestData.Preview = universalSendFile.Preview;
-            }
             return fileRequestData;
         }
 

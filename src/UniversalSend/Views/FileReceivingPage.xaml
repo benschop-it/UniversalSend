@@ -36,7 +36,7 @@
                         <Grid Grid.RowSpan="2">
                             <Image />
                         </Grid>
-                        <TextBlock Grid.Column="1" Text="{x:Bind FileV1.FileName,Mode=OneWay}" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind FileV2.FileName,Mode=OneWay}" />
                         <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{ThemeResource SystemAccentColor}" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}, Mode=OneWay}" />
                         <ProgressBar Grid.Column="1" Grid.Row="2" Minimum="0" Maximum="100" Value="{x:Bind Progress, Mode=OneWay}" />
                     </Grid>

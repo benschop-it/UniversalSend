@@ -69,7 +69,7 @@ namespace UniversalSend.Services.Controllers {
         public PostResponse PostRegister([FromContent] RegisterRequestDataV2 registerRequestData) {
             _logger.Debug($"POST v2 register request called with RegisterRequestData:\n{JsonConvert.SerializeObject(registerRequestData)}.");
 
-            IRegisterResponseDataV2 registerResponseData = _registerResponseDataManager.GetRegisterResponseDataV2(false);
+            IRegisterResponseDataV2 registerResponseData = _registerResponseDataManager.GetRegisterResponseDataV2();
             return new PostResponse(PostResponse.ResponseStatus.OK, "", registerResponseData);
         }
 
@@ -78,17 +78,17 @@ namespace UniversalSend.Services.Controllers {
             return AsyncInfo.Run(async ct => {
                 _logger.Debug($"POST v2 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
 
+                var sessionId = _tokenFactory.CreateToken();
                 _receiveManager.SendRequestV2Event(requestData);
 
-                var responseData = new FileResponseData();
+                FileResponseDataV2 responseData = new FileResponseDataV2();
+                responseData.SessionId = sessionId;
+
                 if (requestData?.Files != null && requestData.Files.Count != 0) {
                     foreach (var item in requestData.Files) {
                         var token = _tokenFactory.CreateToken();
-                        responseData.Add(item.Key, token);
-
-                        var file = _universalSendFileManager
-                            .GetUniversalSendFileFromFileRequestDataV2AndToken(item.Value, token);
-
+                        responseData.Files.Add(item.Key, token);
+                        var file = _universalSendFileManager.GetUniversalSendFileFromFileRequestDataV2AndToken(item.Value, token);
                         await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileV2Async(file, requestData.Info);
                     }
                 }

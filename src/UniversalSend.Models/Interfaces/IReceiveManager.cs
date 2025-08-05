@@ -41,8 +41,6 @@ namespace UniversalSend.Models.Interfaces {
 
         void SendProgressEvent(ISendRequestProgress sendRequestProgress);
 
-        void SendRequestV1Event(ISendRequestDataV1 sendRequestData);
-
         void SendRequestV2Event(ISendRequestDataV2 sendRequestData);
 
         #endregion Public Methods

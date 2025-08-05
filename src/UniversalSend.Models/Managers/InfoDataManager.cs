@@ -7,16 +7,6 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public InfoDataV1 GetInfoDataV1FromDevice() {
-            var device = ProgramData.LocalDevice;
-
-            InfoDataV1 infoData = new InfoDataV1();
-            infoData.Alias = device.Alias;
-            infoData.DeviceModel = device.DeviceModel;
-            infoData.DeviceType = device.DeviceType;
-            return infoData;
-        }
-
         public InfoDataV2 GetInfoDataV2FromDevice() {
             var device = ProgramData.LocalDevice;
 
