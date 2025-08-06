@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <!-- Computer Icon -->
-        <Viewbox Grid.Row="1" Width="64" Height="64" HorizontalAlignment="Center" Margin="0,0,0,12">
+        <Viewbox Grid.Row="1" Width="64" Height="64" HorizontalAlignment="Center" Margin="0,0,0,15">
             <Path Fill="{ThemeResource IconForegroundBrush}"
                   Data="M20,18C21.1,18,21.99,17.1,21.99,16L22,6C22,4.9,21.1,4,20,4L4,4C2.9,4,2,4.9,2,6L2,16C2,17.1,2.9,18,4,18L0,18 0,20 24,20 24,18 20,18z M4,6L20,6 20,16 4,16 4,6z"/>
         </Viewbox>
@@ -32,30 +32,30 @@
                    FontSize="24"
                    FontWeight="SemiBold"
                    HorizontalAlignment="Center"
-                   Margin="0,0,0,8" />
+                   Margin="0,0,0,12" />
 
         <!-- Tags -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <Border Background="{ThemeResource TagBackgroundBrush}" CornerRadius="12" Padding="8,2" Margin="0,0,8,0">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,30">
+            <Border Background="{ThemeResource TagBackgroundBrush}" CornerRadius="6" Padding="8,2" Margin="0,0,8,0">
                 <TextBlock Text="{Binding Host}" Foreground="{StaticResource SecondaryTextBrush}" FontSize="14" FontWeight="Bold"/>
             </Border>
-            <Border Background="{ThemeResource TagBackgroundBrush}" CornerRadius="12" Padding="8,2">
+            <Border Background="{ThemeResource TagBackgroundBrush}" CornerRadius="6" Padding="8,2">
                 <TextBlock Text="{Binding SendRequestDataV2.Info.DeviceModel}" Foreground="{StaticResource SecondaryTextBrush}" FontSize="14" FontWeight="Bold"/>
             </Border>
         </StackPanel>
 
         <!-- Transfer message -->
         <TextBlock Grid.Row="4" TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <Run Text="wants to send you " />
+            <Run Text="wants to send you " FontWeight="SemiBold" />
             <Run Text="{Binding SendRequestDataV2.Files.Count}" FontWeight="SemiBold" />
-            <Run Text=" file(s)" />
+            <Run Text=" file(s)" FontWeight="SemiBold" />
         </TextBlock>
 
         <!-- Options -->
         <StackPanel Grid.Row="6" HorizontalAlignment="Center" Margin="0,0,0,30">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <FontIcon Glyph="&#xE713;" Foreground="{StaticResource PrimaryTextBrush}" Margin="0,0,4,0"/>
-                <TextBlock Text="Options" />
+                <TextBlock Text="Options" FontWeight="Bold" />
             </StackPanel>
         </StackPanel>
 
