@@ -33,6 +33,7 @@ namespace UniversalSend.Services.Misc {
         private readonly ITokenFactory _tokenFactory;
         private readonly IUniversalSendFileManager _universalSendFileManager;
         private readonly CoreDispatcher _dispatcher;
+        private readonly IConfirmReceiptHandler _confirmReceiptHandler;
         private UdpDiscoveryService _udpDiscovery;
 
         #endregion Private Fields
@@ -54,7 +55,8 @@ namespace UniversalSend.Services.Misc {
             IConfiguration configuration,
             IEncodingCache encodingCache,
             IInstanceCreatorCache instanceCreatorCache,
-            IDispatcherProvider dispatcherProvider
+            IDispatcherProvider dispatcherProvider,
+            IConfirmReceiptHandler confirmReceiptHandler
         ) {
             _logger = LogManager.GetLogger<ServiceHttpServer>();
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
@@ -72,6 +74,7 @@ namespace UniversalSend.Services.Misc {
             _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
             _instanceCreatorCache = instanceCreatorCache ?? throw new ArgumentNullException(nameof(instanceCreatorCache));
             _dispatcher = dispatcherProvider?.Dispatcher ?? throw new ArgumentNullException(nameof(dispatcherProvider));
+            _confirmReceiptHandler = confirmReceiptHandler ?? throw new ArgumentNullException(nameof(confirmReceiptHandler));
         }
 
         #endregion Public Constructors
@@ -102,7 +105,8 @@ namespace UniversalSend.Services.Misc {
                     _tokenFactory,
                     _universalSendFileManager,
                     _receiveTaskManager,
-                    _registerResponseDataManager
+                    _registerResponseDataManager,
+                    _confirmReceiptHandler
                 };
             });
 

@@ -24,6 +24,7 @@ namespace UniversalSend.Services.Controllers {
         private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private readonly ITokenFactory _tokenFactory;
         private readonly IUniversalSendFileManager _universalSendFileManager;
+        private readonly IConfirmReceiptHandler _confirmReceiptHandler;
 
         #endregion Private Fields
 
@@ -35,7 +36,8 @@ namespace UniversalSend.Services.Controllers {
             ITokenFactory tokenFactory,
             IUniversalSendFileManager universalSendFileManager,
             IReceiveTaskManager receiveTaskManager,
-            IRegisterResponseDataManager registerResponseDataManager
+            IRegisterResponseDataManager registerResponseDataManager,
+            IConfirmReceiptHandler confirmReceiptHandler
         ) {
             _logger = LogManager.GetLogger<V2RequestController>();
             _infoDataManager = infoDataManager ?? throw new ArgumentNullException(nameof(infoDataManager));
@@ -44,6 +46,7 @@ namespace UniversalSend.Services.Controllers {
             _universalSendFileManager = universalSendFileManager ?? throw new ArgumentNullException(nameof(universalSendFileManager));
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
+            _confirmReceiptHandler = confirmReceiptHandler ?? throw new ArgumentNullException(nameof(confirmReceiptHandler));
         }
 
         #endregion Public Constructors
@@ -79,6 +82,12 @@ namespace UniversalSend.Services.Controllers {
                 _logger.Debug($"POST v2 send-request called with SendRequestData:\n{JsonConvert.SerializeObject(requestData)}.");
 
                 var sessionId = _tokenFactory.CreateToken();
+
+                var isAccepted = await _confirmReceiptHandler.ConfirmAsync(requestData);
+                if (!isAccepted) {
+                    return new PostResponse(PostResponse.ResponseStatus.Rejected);
+                }
+
                 _receiveManager.SendRequestV2Event(requestData);
 
                 FileResponseDataV2 responseData = new FileResponseDataV2();

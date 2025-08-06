@@ -2,22 +2,12 @@
 using System;
 using UniversalSend.Interfaces;
 using UniversalSend.Misc;
-using UniversalSend.Models;
 using UniversalSend.Models.Common;
-using UniversalSend.Models.Data;
-using UniversalSend.Models.Helpers;
-using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
-using UniversalSend.Models.Managers;
-using UniversalSend.Models.Tasks;
-using UniversalSend.Services;
-using UniversalSend.Services.HttpMessage.Plumbing;
-using UniversalSend.Services.HttpMessage.ServerRequestParsers;
-using UniversalSend.Services.Interfaces;
+using UniversalSend.Interfaces;
 using UniversalSend.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Services.Maps;
 using Windows.Storage.Pickers.Provider;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -34,7 +24,6 @@ namespace UniversalSend {
         #region Private Fields
 
         private Frame _rootFrame;
-        public static IServiceProvider Services { get; private set; }
 
         #endregion Private Fields
 
@@ -52,6 +41,12 @@ namespace UniversalSend {
         }
 
         #endregion Public Constructors
+
+        #region Public Properties
+
+        public static IServiceProvider Services { get; private set; }
+
+        #endregion Public Properties
 
         #region Protected Methods
 
@@ -105,6 +100,9 @@ namespace UniversalSend {
 
                 // Place the frame in the current Window
                 Window.Current.Content = _rootFrame;
+
+                var delegatingNav = Services.GetRequiredService<DelegatingNavigationService>();
+                delegatingNav.Initialize(_rootFrame);
             }
 
             // Initialize the dispatcher provider here
@@ -140,11 +138,23 @@ namespace UniversalSend {
 
         #region Private Methods
 
+        private void App_BackRequested(object sender, BackRequestedEventArgs e) {
+            if (_rootFrame != null && _rootFrame.CanGoBack && _rootFrame.Content is HistoryPage || _rootFrame.Content is ExplorerPage) {
+                e.Handled = true;
+                _rootFrame.GoBack();
+            }
+        }
+
         private void ConfigureServices() {
             var services = new ServiceCollection();
 
             // Register services
+            services.AddSingleton<DelegatingNavigationService>();
+            services.AddSingleton<INavigationService>(sp => sp.GetRequiredService<DelegatingNavigationService>());
+
             services.AddSingleton<IUIManager, UIManager>();
+            services.AddSingleton<IConfirmReceiptHandler, ConfirmReceiptHandler>();
+            services.AddSingleton<IConfirmReceiptViewModel, ConfirmReceiptViewModel>();
 
             // Models
             UniversalSend.Models.RegisterServices.Register(services);
@@ -154,14 +164,6 @@ namespace UniversalSend {
 
             Services = services.BuildServiceProvider();
         }
-
-        private void App_BackRequested(object sender, BackRequestedEventArgs e) {
-            if (_rootFrame != null && _rootFrame.CanGoBack && _rootFrame.Content is HistoryPage || _rootFrame.Content is ExplorerPage) {
-                e.Handled = true;
-                _rootFrame.GoBack();
-            }
-        }
-
         /// <summary>
         /// Invoked when navigation to a specific page fails
         /// </summary>
@@ -193,5 +195,6 @@ namespace UniversalSend {
         }
 
         #endregion Private Methods
+
     }
 }

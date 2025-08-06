@@ -130,6 +130,7 @@
     <Compile Include="HttpData\RegisterRequestDataV2.cs" />
     <Compile Include="HttpData\AnnouncementV2.cs" />
     <Compile Include="HttpData\SendRequestDataV2.cs" />
+    <Compile Include="Interfaces\IConfirmReceiptHandler.cs" />
     <Compile Include="Interfaces\IRegisterResponseDataV2.cs" />
     <Compile Include="Interfaces\IFileRequestDataV2.cs" />
     <Compile Include="Interfaces\IInfoDataV2.cs" />

@@ -11,8 +11,16 @@ namespace UniversalSend.Services.Models.Schemas {
         public enum ResponseStatus : int {
             OK = 200,
             Created = 201,
-            Conflict = 409
-        };
+            Finished = 204,
+            InvalidBody = 400,
+            MissingParameters = 400,
+            InvalidPin = 401,
+            Rejected = 403,
+            InvalidTokenOrIp = 403,
+            BlockedByOtherSession = 409,
+            TooManyRequests = 429,
+            Unknown = 500
+        }
 
         #endregion Public Enums
 

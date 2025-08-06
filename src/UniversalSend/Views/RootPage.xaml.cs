@@ -78,7 +78,7 @@ namespace UniversalSend.Views {
 
         private async void ReceiveManager_SendRequestReceived(object sender, EventArgs e) {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                if (/*ReceiveManager.QuickSave == ReceiveManager.QuickSaveMode.Off*/false) {
+                if (/*ReceiveManager.QuickSave == ReceiveManager.QuickSaveMode.Off*/true) {
                     Frame.Navigate(typeof(ConfirmReceiptPage));
                 } else {
                     Frame.Navigate(typeof(FileReceivingPage));

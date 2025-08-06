@@ -203,11 +203,15 @@
     <Compile Include="Converters\HistoryStringConverter.cs" />
     <Compile Include="DebugLogFactory.cs" />
     <Compile Include="DebugLogger.cs" />
+    <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Misc\ColorHelper.cs" />
     <Compile Include="Interfaces\IUIManager.cs" />
+    <Compile Include="Misc\ConfirmReceiptHandler.cs" />
+    <Compile Include="Misc\DelegatingNavigationService.cs" />
+    <Compile Include="Misc\FrameNavigationService.cs" />
     <Compile Include="Misc\LocalizeManager.cs" />
     <Compile Include="Misc\MessageDialogManager.cs" />
     <Compile Include="Misc\NavigateHelper.cs" />
@@ -216,6 +220,9 @@
     <Compile Include="Misc\UIManager.cs" />
     <Compile Include="Misc\ViewStorageItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Interfaces\IConfirmReceiptViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="ViewModels\ConfirmReceiptViewModel.cs" />
     <Compile Include="Views\ConfirmReceiptPage.xaml.cs">
       <DependentUpon>ConfirmReceiptPage.xaml</DependentUpon>
     </Compile>
@@ -475,6 +482,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
       <Version>7.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmLightLibs">
+      <Version>5.4.1.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>

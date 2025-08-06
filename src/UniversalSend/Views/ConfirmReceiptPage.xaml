@@ -2,7 +2,6 @@
     x:Class="UniversalSend.Views.ConfirmReceiptPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -20,26 +19,26 @@
 
         <FontIcon />
 
-        <TextBlock Grid.Row="1" Text="{x:Bind SendRequestDataV2.Info.Alias}" />
+        <TextBlock Grid.Row="1" Text="{Binding SendRequestDataV2.Info.Alias}" />
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <TextBlock Text="{x:Bind SendRequestDataV2.Info.DeviceModel}" />
+            <TextBlock Text="{Binding SendRequestDataV2.Info.DeviceModel}" />
         </StackPanel>
 
         <TextBlock Grid.Row="3">
             <Run Text="wants to send you " />
-            <Run Text="{x:Bind SendRequestDataV2.Files.Count}" />
+            <Run Text="{Binding SendRequestDataV2.Files.Count}" />
             <Run Text=" file(s)" />
         </TextBlock>
 
         <StackPanel Grid.Row="5" Orientation="Horizontal">
-            <Button Name="CancelButton" Click="CancelButton_Click">
+            <Button Name="CancelButton" Command="{Binding CancelCommand}">
                 <StackPanel>
                     <FontIcon Glyph="&#xE711;" />
                     <TextBlock Text="Reject" />
                 </StackPanel>
             </Button>
-            <Button Name="AcceptButton" Click="AcceptButton_Click">
+            <Button Name="AcceptButton" Command="{Binding AcceptCommand}">
                 <StackPanel>
                     <FontIcon Glyph="&#xE8FB;" />
                     <TextBlock Text="Accept" />
