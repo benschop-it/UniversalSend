@@ -44,8 +44,26 @@ namespace UniversalSend.Interfaces {
 
         public ISendRequestDataV2 SendRequestDataV2 {
             get => _sendRequestDataV2;
-            private set => Set(ref _sendRequestDataV2, value);
+            private set {
+                Set(ref _sendRequestDataV2, value);
+                RaisePropertyChanged(nameof(Host));
+            }
         }
+
+        public string Host {
+            get {
+                var fullHost = _sendRequestDataV2?.Host;
+                if (string.IsNullOrEmpty(fullHost)) return string.Empty;
+
+                var hostPart = fullHost.Split(':')[0]; // remove port
+                if (System.Net.IPAddress.TryParse(hostPart, out var ip)) {
+                    var octets = hostPart.Split('.');
+                    return "#" + octets[octets.Length - 1]; // return last octet
+                }
+                return hostPart; // hostname, e.g., 'somehost.local'
+            }
+        }
+
 
         #endregion Public Properties
 

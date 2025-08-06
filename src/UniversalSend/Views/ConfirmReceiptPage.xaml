@@ -9,39 +9,76 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
-        <FontIcon />
+        <!-- Computer Icon -->
+        <Viewbox Grid.Row="1" Width="64" Height="64" HorizontalAlignment="Center" Margin="0,0,0,12">
+            <Path Fill="{ThemeResource IconForegroundBrush}"
+                  Data="M20,18C21.1,18,21.99,17.1,21.99,16L22,6C22,4.9,21.1,4,20,4L4,4C2.9,4,2,4.9,2,6L2,16C2,17.1,2.9,18,4,18L0,18 0,20 24,20 24,18 20,18z M4,6L20,6 20,16 4,16 4,6z"/>
+        </Viewbox>
 
-        <TextBlock Grid.Row="1" Text="{Binding SendRequestDataV2.Info.Alias}" />
+        <!-- Device name -->
+        <TextBlock Grid.Row="2"
+                   Text="{Binding SendRequestDataV2.Info.Alias}"
+                   FontSize="24"
+                   FontWeight="SemiBold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,8" />
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <TextBlock Text="{Binding SendRequestDataV2.Info.DeviceModel}" />
+        <!-- Tags -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <Border Background="{ThemeResource TagBackgroundBrush}" CornerRadius="12" Padding="8,2" Margin="0,0,8,0">
+                <TextBlock Text="{Binding Host}" Foreground="{StaticResource SecondaryTextBrush}" FontSize="14" FontWeight="Bold"/>
+            </Border>
+            <Border Background="{ThemeResource TagBackgroundBrush}" CornerRadius="12" Padding="8,2">
+                <TextBlock Text="{Binding SendRequestDataV2.Info.DeviceModel}" Foreground="{StaticResource SecondaryTextBrush}" FontSize="14" FontWeight="Bold"/>
+            </Border>
         </StackPanel>
 
-        <TextBlock Grid.Row="3">
+        <!-- Transfer message -->
+        <TextBlock Grid.Row="4" TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,20">
             <Run Text="wants to send you " />
-            <Run Text="{Binding SendRequestDataV2.Files.Count}" />
+            <Run Text="{Binding SendRequestDataV2.Files.Count}" FontWeight="SemiBold" />
             <Run Text=" file(s)" />
         </TextBlock>
 
-        <StackPanel Grid.Row="5" Orientation="Horizontal">
-            <Button Name="CancelButton" Command="{Binding CancelCommand}">
-                <StackPanel>
-                    <FontIcon Glyph="&#xE711;" />
-                    <TextBlock Text="Reject" />
+        <!-- Options -->
+        <StackPanel Grid.Row="6" HorizontalAlignment="Center" Margin="0,0,0,30">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <FontIcon Glyph="&#xE713;" Foreground="{StaticResource PrimaryTextBrush}" Margin="0,0,4,0"/>
+                <TextBlock Text="Options" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center">
+            <!-- Decline -->
+            <Button Command="{Binding CancelCommand}"
+                    Style="{StaticResource RoundedButtonStyle}"
+                    Background="{ThemeResource DeclineButtonBrush}"
+                    Margin="0,0,16,0">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE711;" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,8,0"/>
+                    <TextBlock Text="Decline" Foreground="{StaticResource SecondaryTextBrush}" />
                 </StackPanel>
             </Button>
-            <Button Name="AcceptButton" Command="{Binding AcceptCommand}">
-                <StackPanel>
-                    <FontIcon Glyph="&#xE8FB;" />
-                    <TextBlock Text="Accept" />
+
+            <!-- Accept -->
+            <Button Command="{Binding AcceptCommand}"
+                    Style="{StaticResource RoundedButtonStyle}"
+                    Background="{ThemeResource AcceptButtonBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE8FB;" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,8,0"/>
+                    <TextBlock Text="Accept" Foreground="{StaticResource SecondaryTextBrush}" />
                 </StackPanel>
             </Button>
         </StackPanel>

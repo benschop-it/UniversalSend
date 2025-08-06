@@ -1,7 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using UniversalSend.Models.HttpData;
 using UniversalSend.Services.Http;
+using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.InstanceCreators;
 using UniversalSend.Services.Interfaces.Internal;
 using UniversalSend.Services.Models.Schemas;
@@ -54,6 +58,19 @@ namespace UniversalSend.Services.Rest {
                 return _responseFactory.CreateBadRequest();
             }
 
+            //TODO: Not the best place to do this, but we are losing the headers further down the line...
+            string host = string.Empty;
+            if (parameters.Length == 1) {
+                if (parameters[0] is SendRequestDataV2 sendRequestData) {
+                    IEnumerable<IHttpRequestHeader> headers = request.HttpServerRequest.Headers;
+                    foreach (var header in headers) {
+                        if (header.Name == "host") {
+                            sendRequestData.Host = header.Value;
+                            break;
+                        }
+                    }
+                }
+            }
             return info.MethodInfo.Invoke(
                     instantiator.Create(info.MethodInfo.DeclaringType, info.ControllerConstructorArgs()),
                     parameters);

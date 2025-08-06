@@ -9,6 +9,7 @@ namespace UniversalSend.Models.Interfaces {
 
         Dictionary<string, FileRequestDataV2> Files { get; set; }
         InfoDataV2 Info { get; set; }
+        string Host { get; set; }
 
         #endregion Public Properties
     }

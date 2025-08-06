@@ -14,6 +14,9 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("info")]
         public InfoDataV2 Info { get; set; }
 
+        [JsonIgnore]
+        public string Host { get; set; }
+
         #endregion Public Properties
 
     }
