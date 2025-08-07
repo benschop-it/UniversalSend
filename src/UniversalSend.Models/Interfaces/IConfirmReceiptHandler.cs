@@ -13,6 +13,8 @@ namespace UniversalSend.Models.Interfaces {
         /// <returns>True if accepted, false if rejected.</returns>
         Task<bool> ConfirmAsync(ISendRequestDataV2 sendRequest);
 
+        Task<bool> CancelAsync();
+
         #endregion Public Methods
     }
 }

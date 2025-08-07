@@ -52,15 +52,27 @@
         </TextBlock>
 
         <!-- Options -->
-        <StackPanel Grid.Row="6" HorizontalAlignment="Center" Margin="0,0,0,30">
+        <Button Grid.Row="6"
+            Command="{Binding ShowOptionsCommand}"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="0"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,30"
+            Visibility="{Binding IsCancelled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <FontIcon Glyph="&#xE713;" Foreground="{StaticResource PrimaryTextBrush}" Margin="0,0,4,0"/>
+                <FontIcon Glyph="&#xE713;"
+                  Foreground="{StaticResource PrimaryTextBrush}"
+                  Margin="0,0,4,0"/>
                 <TextBlock Text="Options" FontWeight="Bold" />
             </StackPanel>
-        </StackPanel>
+        </Button>
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center">
+        <!-- Accept/Decline -->
+        <StackPanel Grid.Row="7"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding IsCancelled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
             <!-- Decline -->
             <Button Command="{Binding CancelCommand}"
                     Style="{StaticResource RoundedButtonStyle}"
@@ -79,6 +91,27 @@
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE8FB;" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,8,0"/>
                     <TextBlock Text="Accept" Foreground="{StaticResource SecondaryTextBrush}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- Cancelled Message + Close -->
+        <StackPanel Grid.Row="7"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding IsCancelled, Converter={StaticResource BoolToVisibilityConverter}}">
+            <TextBlock Text="The sender has canceled the request."
+                       Foreground="Orange"
+                       FontWeight="Bold"
+                       FontSize="16"
+                       Margin="0,0,0,20"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"/>
+            <Button Command="{Binding CloseCommand}"
+                    Style="{StaticResource RoundedButtonStyle}"
+                    HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE001;" Margin="0,0,8,0"/>
+                    <TextBlock Text="Close" />
                 </StackPanel>
             </Button>
         </StackPanel>

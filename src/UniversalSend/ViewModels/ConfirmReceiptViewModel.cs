@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using UniversalSend.Misc;
 using UniversalSend.Models.Interfaces;
@@ -12,6 +13,7 @@ namespace UniversalSend.Interfaces {
         private readonly INavigationService _navigationService;
         private readonly IReceiveManager _receiveManager;
         private ISendRequestDataV2 _sendRequestDataV2;
+        private bool _isCancelled;
 
         #endregion Private Fields
 
@@ -22,14 +24,28 @@ namespace UniversalSend.Interfaces {
             _navigationService = navigationService;
 
             AcceptCommand = new RelayCommand(() => {
-                Parameter?.CompletionSource?.TrySetResult(true);
+                ConfirmReceiptPageParameter?.CompletionSource?.TrySetResult(true);
                 _navigationService.GoBack();
             });
 
             CancelCommand = new RelayCommand(() => {
-                Parameter?.CompletionSource?.TrySetResult(false);
+                ConfirmReceiptPageParameter?.CompletionSource?.TrySetResult(false);
                 _navigationService.GoBack();
             });
+
+            CloseCommand = new RelayCommand(() =>
+            {
+                IsCancelled = false;
+                _navigationService.GoBack();
+
+                ConfirmReceiptPageParameter?.CompletionSource?.TrySetResult(false);
+                _navigationService.GoBack();
+            });
+
+            ShowOptionsCommand = new RelayCommand(OnShowOptions);
+        }
+
+        private void OnShowOptions() {
         }
 
         #endregion Public Constructors
@@ -40,7 +56,11 @@ namespace UniversalSend.Interfaces {
 
         public RelayCommand CancelCommand { get; }
 
-        public ConfirmReceiptPageParameter Parameter { get; private set; }
+        public RelayCommand ShowOptionsCommand { get; }
+
+        public RelayCommand CloseCommand { get; }
+
+        public ConfirmReceiptPageParameter ConfirmReceiptPageParameter { get; private set; }
 
         public ISendRequestDataV2 SendRequestDataV2 {
             get => _sendRequestDataV2;
@@ -64,14 +84,23 @@ namespace UniversalSend.Interfaces {
             }
         }
 
+        public bool IsCancelled {
+            get => _isCancelled;
+            private set => Set(ref _isCancelled, value);
+        }
 
         #endregion Public Properties
 
         #region Public Methods
 
         public void Initialize(ConfirmReceiptPageParameter parameter) {
-            Parameter = parameter;
+            ConfirmReceiptPageParameter = parameter;
             SendRequestDataV2 = parameter.SendRequestData;
+        }
+
+        public void Cancel(CancelReceiptPageParameter parameter) {
+            IsCancelled = true;
+            parameter?.CompletionSource?.TrySetResult(true);
         }
 
         #endregion Public Methods

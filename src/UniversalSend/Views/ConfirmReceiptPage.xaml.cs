@@ -28,8 +28,11 @@ namespace UniversalSend.Views {
         #region Protected Methods
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
-            var parameter = e.Parameter as ConfirmReceiptPageParameter;
-            _viewModel.Initialize(parameter);
+            if (e.Parameter is ConfirmReceiptPageParameter confirmParameter) {
+                _viewModel.Initialize(confirmParameter);
+            } else if (e.Parameter is CancelReceiptPageParameter cancelParameter) {
+                _viewModel.Cancel(cancelParameter);
+            }
         }
 
         #endregion Protected Methods

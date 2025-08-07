@@ -60,6 +60,21 @@ namespace UniversalSend.Services.Controllers {
             return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
         }
 
+        [UriFormat("v2/cancel")]
+        public IAsyncOperation<IPostResponse> PostCancel() {
+            return AsyncInfo.Run(async ct => {
+                _logger.Debug($"GET v2/Cancel called.");
+
+                var isCanceled = await _confirmReceiptHandler.CancelAsync();
+                if (!isCanceled) {
+                    return new PostResponse(PostResponse.ResponseStatus.Rejected);
+                }
+                _receiveManager.CancelReceivedEvent();
+
+                return (IPostResponse)new PostResponse(PostResponse.ResponseStatus.OK, "");
+            });
+        }
+   
         [UriFormat("v2/cancel?sessionId={sessionId}")]
         public PostResponse PostCancel(string sessionId) {
             _logger.Debug($"GET v2/Cancel called for sessionId {sessionId}.");
@@ -67,6 +82,7 @@ namespace UniversalSend.Services.Controllers {
             _receiveManager.CancelReceivedEvent();
             return new PostResponse(PostResponse.ResponseStatus.OK, "");
         }
+
 
         [UriFormat("v2/register")]
         public PostResponse PostRegister([FromContent] RegisterRequestDataV2 registerRequestData) {

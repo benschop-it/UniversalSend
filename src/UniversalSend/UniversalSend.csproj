@@ -199,6 +199,7 @@
     <Compile Include="Controls\SettingsItemControl.xaml.cs">
       <DependentUpon>SettingsItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\HistoryStringConverter.cs" />
     <Compile Include="DebugLogFactory.cs" />

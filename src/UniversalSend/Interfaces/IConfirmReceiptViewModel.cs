@@ -7,9 +7,11 @@ namespace UniversalSend.Interfaces {
     public interface IConfirmReceiptViewModel {
         RelayCommand AcceptCommand { get; }
         RelayCommand CancelCommand { get; }
-        ConfirmReceiptPageParameter Parameter { get; }
+        ConfirmReceiptPageParameter ConfirmReceiptPageParameter { get; }
         ISendRequestDataV2 SendRequestDataV2 { get; }
 
         void Initialize(ConfirmReceiptPageParameter parameter);
+
+        void Cancel(CancelReceiptPageParameter parameter);
     }
 }
