@@ -90,6 +90,7 @@ namespace UniversalSend {
             ProgramData.LocalDevice.Alias = _settings.GetSettingContentAsString(Constants.Network_DeviceName);
             ProgramData.LocalDevice.DeviceModel = _settings.GetSettingContentAsString(Constants.Network_DeviceModel);
             ProgramData.LocalDevice.DeviceType = _settings.GetSettingContentAsString(Constants.Network_DeviceType);
+            ProgramData.LocalDevice.Fingerprint = _settings.GetSettingContentAsString(Constants.Network_Fingerprint);
             ProgramData.LocalDevice.Port = (int)_settings.GetSettingContent(Constants.Network_Port);
         }
 

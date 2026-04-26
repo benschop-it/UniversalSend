@@ -12,6 +12,7 @@ using UniversalSend.Services.HttpMessage;
 using UniversalSend.Services.HttpMessage.Headers.Response;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Models.Schemas;
+using UniversalSend.Services.Controllers;
 using UniversalSend.Services.Interfaces.Internal;
 using Windows.Networking.Sockets;
 
@@ -157,6 +158,8 @@ namespace UniversalSend.Services.Http {
                         MutableHttpServerRequest request = await _httpRequestParser.ParseRequestStream(inputStream) as MutableHttpServerRequest;
                         request.RemoteAddress = args.Socket.Information?.RemoteAddress?.CanonicalName;
                         request.RemotePort = TryParsePort(args.Socket.Information?.RemotePort);
+
+                        OperationController.TryRunOperationByRequestUri(request);
 
                         requestLog.AppendLine("[HttpServer.ProcessRequestAsync] [Request]");
                         requestLog.AppendLine($"    Uri = {request.Uri}");

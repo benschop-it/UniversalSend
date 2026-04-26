@@ -111,6 +111,9 @@ namespace UniversalSend.Models.Misc {
                 SetInitSetting(Constants.Network_DeviceModel, deviceInfo.SystemProductName);
             }
 
+            // Fingerprint
+            SetInitSetting(Constants.Network_Fingerprint, Guid.NewGuid().ToString("N"));
+
             // Port
             SetInitSetting(Constants.Network_Port, 53317);
 

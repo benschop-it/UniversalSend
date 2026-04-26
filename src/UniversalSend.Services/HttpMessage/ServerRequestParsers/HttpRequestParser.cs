@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
-using UniversalSend.Services.Controllers;
 using UniversalSend.Services.HttpMessage.Models.Contracts;
 using UniversalSend.Services.HttpMessage.Plumbing;
 using UniversalSend.Services.Interfaces;
@@ -156,10 +155,6 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
                 } else {
                     Report(HttpParseProgressStatus.Error, null, received, contentLength > 0 ? (long?)contentLength : null, request.Uri, "HTTP request parsing failed.");
                 }
-
-                //_logger.Debug($"[OperationController.TryRunOperationByRequestUri] URI:{request.Uri.ToString()}");
-
-                OperationController.TryRunOperationByRequestUri(request);  //Execute functionality based on the requested URI.
 
                 //if (request.Content != null) {
                 //    _logger.Debug($"RequestContentLength: {request.Content.Length}");

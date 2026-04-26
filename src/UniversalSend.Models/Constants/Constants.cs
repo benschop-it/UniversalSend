@@ -10,6 +10,7 @@
         public const string Network_DeviceModel = "Network_DeviceModel";
         public const string Network_DeviceName = "Network_DeviceName";
         public const string Network_DeviceType = "Network_DeviceType";
+        public const string Network_Fingerprint = "Network_Fingerprint";
         public const string Network_MulticastAddress = "Network_MulticastAddress";
         public const string Network_Port = "Network_Port";
         public const string Receive_Histories = "Receive_Histories";
