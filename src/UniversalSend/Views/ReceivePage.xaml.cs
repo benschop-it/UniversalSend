@@ -41,7 +41,7 @@ namespace UniversalSend.Views {
 
             List<string> IpAddrList = _networkHelper.GetIPv4AddrList();
             foreach (string ip in IpAddrList) {
-                Debug.WriteLine("IPv4 address: " + ip);
+                Debug.WriteLine("[ReceivePage.xaml.cs Page_Loaded] IPv4 address: " + ip);
                 HashtagTextBlock.Text += $"#{ip.Substring(ip.LastIndexOf(".") + 1)} ";
             }
         }

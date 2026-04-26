@@ -23,6 +23,8 @@ namespace UniversalSend.Services.Interfaces.Internal {
         bool IsComplete { get; }
         HttpMethod? Method { get; }
         string Origin { get; }
+        string RemoteAddress { get; }
+        int? RemotePort { get; }
         Uri Uri { get; }
         string ToString();
 

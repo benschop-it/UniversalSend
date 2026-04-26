@@ -43,11 +43,7 @@ namespace UniversalSend.Views {
 
         public SendPage() {
             this.InitializeComponent();
-            _register.NewDeviceRegister += Register_NewDeviceRegister;
-            _deviceManager.KnownDevicesChanged += DeviceManager_KnownDevicesChanged;
-            _sendManager.SendCreated += SendManager_SendCreated;
             RootGrid.Margin = _uiManager.RootElementMargin;
-            SearchFavoriteDevicesAsync();
         }
 
         #endregion Public Constructors
@@ -64,6 +60,16 @@ namespace UniversalSend.Views {
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
+
+            _register.NewDeviceRegister -= Register_NewDeviceRegister;
+            _deviceManager.KnownDevicesChanged -= DeviceManager_KnownDevicesChanged;
+            _sendManager.SendCreated -= SendManager_SendCreated;
+            _sendManager.SendPrepared -= SendManager_SendPrepared;
+
+            _register.NewDeviceRegister += Register_NewDeviceRegister;
+            _deviceManager.KnownDevicesChanged += DeviceManager_KnownDevicesChanged;
+            _sendManager.SendCreated += SendManager_SendCreated;
+
             if (e.Parameter == null) {
                 return;
             }
@@ -74,6 +80,14 @@ namespace UniversalSend.Views {
                     _sendManager.SendPrepared += SendManager_SendPrepared;
                 }
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e) {
+            _register.NewDeviceRegister -= Register_NewDeviceRegister;
+            _deviceManager.KnownDevicesChanged -= DeviceManager_KnownDevicesChanged;
+            _sendManager.SendCreated -= SendManager_SendCreated;
+            _sendManager.SendPrepared -= SendManager_SendPrepared;
+            base.OnNavigatedFrom(e);
         }
 
         #endregion Protected Methods
@@ -93,8 +107,8 @@ namespace UniversalSend.Views {
 
         private async void DeviceManager_KnownDevicesChanged(object sender, EventArgs e) {
             Debug.WriteLine("Refresh known device list");
+            await Task.Delay(1000);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                Task.Delay(1000);
                 KnownDeviceListView.ItemsSource = null;
                 KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             });
@@ -248,6 +262,7 @@ namespace UniversalSend.Views {
             KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             if (!Inited) {
                 InitButton();
+                _ = SearchFavoriteDevicesAsync();
             }
             Inited = true;
             UpdateView();
@@ -256,8 +271,8 @@ namespace UniversalSend.Views {
 
         private async void Register_NewDeviceRegister(object sender, EventArgs e) {
             Debug.WriteLine("Refresh known device list");
+            await Task.Delay(1000);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                Task.Delay(1000);
                 KnownDeviceListView.ItemsSource = null;
                 KnownDeviceListView.ItemsSource = _deviceManager.KnownDevices;
             });

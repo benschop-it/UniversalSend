@@ -17,7 +17,7 @@ namespace UniversalSend.Services.HttpMessage {
             string httpVersion, string contentTypeCharset, IEnumerable<string> acceptCharsets, int contentLength,
             string contentType, IEnumerable<string> acceptEncodings, IEnumerable<string> acceptMediaTypes,
             byte[] content, bool isComplete, HttpMethod? accessControlRequestMethod, IEnumerable<string> accessControlRequestHeaders,
-            string origin) {
+            string origin, string remoteAddress, int? remotePort) {
             Headers = headers;
             Method = method;
             Uri = uri;
@@ -33,6 +33,8 @@ namespace UniversalSend.Services.HttpMessage {
             AccessControlRequestMethod = accessControlRequestMethod;
             AccessControlRequestHeaders = accessControlRequestHeaders;
             Origin = origin;
+            RemoteAddress = remoteAddress;
+            RemotePort = remotePort;
         }
 
         #endregion Public Constructors
@@ -53,6 +55,8 @@ namespace UniversalSend.Services.HttpMessage {
         public bool IsComplete { get; }
         public HttpMethod? Method { get; }
         public string Origin { get; }
+        public string RemoteAddress { get; }
+        public int? RemotePort { get; }
         public Uri Uri { get; }
 
         public override string ToString() {
@@ -65,6 +69,8 @@ namespace UniversalSend.Services.HttpMessage {
               .Append("  HttpVersion: ").Append(HttpVersion ?? "<null>").Append(nl)
               .Append("  IsComplete: ").Append(IsComplete ? "true" : "false").Append(nl)
               .Append("  Origin: ").Append(Origin ?? "<null>").Append(nl)
+              .Append("  RemoteAddress: ").Append(RemoteAddress ?? "<null>").Append(nl)
+              .Append("  RemotePort: ").Append(RemotePort != null ? RemotePort.ToString() : "<null>").Append(nl)
               .Append("  ContentType: ").Append(ContentType ?? "<null>").Append(nl)
               .Append("  ContentTypeCharset: ").Append(ContentTypeCharset ?? "<null>").Append(nl)
               .Append("  ContentLength(header): ").Append(ContentLength.ToString(CultureInfo.InvariantCulture)).Append(nl)

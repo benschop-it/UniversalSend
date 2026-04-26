@@ -155,6 +155,8 @@ namespace UniversalSend.Services.Http {
                 try {
                     using (var inputStream = args.Socket.InputStream) {
                         MutableHttpServerRequest request = await _httpRequestParser.ParseRequestStream(inputStream) as MutableHttpServerRequest;
+                        request.RemoteAddress = args.Socket.Information?.RemoteAddress?.CanonicalName;
+                        request.RemotePort = TryParsePort(args.Socket.Information?.RemotePort);
 
                         requestLog.AppendLine("[HttpServer.ProcessRequestAsync] [Request]");
                         requestLog.AppendLine($"    Uri = {request.Uri}");
@@ -202,6 +204,18 @@ namespace UniversalSend.Services.Http {
             JsonConvert.DeserializeObject(jsonString);
 
             return jsonString;
+        }
+
+        private static int? TryParsePort(string port) {
+            if (string.IsNullOrWhiteSpace(port)) {
+                return null;
+            }
+
+            if (int.TryParse(port, out int result)) {
+                return result;
+            }
+
+            return null;
         }
 
         #endregion Private Methods

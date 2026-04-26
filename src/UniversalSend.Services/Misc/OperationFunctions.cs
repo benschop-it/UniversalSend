@@ -49,27 +49,30 @@ namespace UniversalSend.Services.Misc {
 
         // Handles registration request from remote device
         public object RegisterRequestFuncV2(IMutableHttpServerRequest mutableHttpServerRequest) {
-            var headerList = mutableHttpServerRequest.Headers.ToList();
-            var item = headerList.Find(x => x.Name.Equals("host"));
-            if (item == null) {
+            if (string.IsNullOrWhiteSpace(mutableHttpServerRequest.RemoteAddress)) {
+                _logger.Debug("RegisterRequestFuncV2: missing remote address.");
                 return null;
             }
 
-            string host = item.Value;
-            string ip = host.Substring(0, host.LastIndexOf(":"));
-            string portStr = host.Substring(host.LastIndexOf(":") + 1);
-            int port = Convert.ToInt32(portStr);
-
             string jsonStr = StringHelper.ByteArrayToString(mutableHttpServerRequest.Content);
 
-            _logger.Debug($"RegisterRequestFunc: {host} {ip} {portStr} {jsonStr}.");
+            _logger.Debug($"RegisterRequestFunc: {mutableHttpServerRequest.RemoteAddress} {jsonStr}.");
 
             IRegisterRequestDataV2 registerRequestData = JsonConvert.DeserializeObject<RegisterRequestDataV2>(jsonStr);
             if (registerRequestData == null) {
                 return null;
             }
 
-            IDevice device = _deviceManager.GetDeviceFromRequestDataV2(registerRequestData, ip, port);
+            if (!int.TryParse(registerRequestData.Port, out int port)) {
+                _logger.Debug($"RegisterRequestFuncV2: invalid remote port '{registerRequestData.Port}'.");
+                return null;
+            }
+
+            IDevice device = _deviceManager.GetDeviceFromRequestDataV2(
+                registerRequestData,
+                mutableHttpServerRequest.RemoteAddress,
+                port
+            );
             _register.NewDeviceRegisterEvent(device);
             return null;
         }

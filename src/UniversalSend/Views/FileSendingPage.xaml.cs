@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Controls;
 using UniversalSend.Models;
@@ -43,6 +44,12 @@ namespace UniversalSend.Views {
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
+            if (Device == null)
+            {
+                Debug.WriteLine("[FileSendingPage.xaml.cs OnNavigatedTo] No device parameter passed. Navigating back.");
+                Frame.GoBack();
+            }
+
             Device = (IDevice)e.Parameter;
             UpdateUI();
             MainProgressBar.Maximum = _sendTaskManager.SendTasksV2.Count;

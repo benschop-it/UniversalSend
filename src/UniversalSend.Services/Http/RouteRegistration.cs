@@ -84,7 +84,9 @@ namespace UniversalSend.Services.Http {
                 request.IsComplete,
                 request.AccessControlRequestMethod,
                 request.AccessControlRequestHeaders,
-                request.Origin);
+                request.Origin,
+                request.RemoteAddress,
+                request.RemotePort);
         }
 
         #endregion Private Methods

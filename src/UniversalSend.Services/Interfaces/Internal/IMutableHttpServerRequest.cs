@@ -27,6 +27,8 @@ namespace UniversalSend.Services.Interfaces.Internal {
         bool IsComplete { get; set; }
         HttpMethod? Method { get; set; }
         string Origin { get; set; }
+        string RemoteAddress { get; set; }
+        int? RemotePort { get; set; }
         Uri Uri { get; set; }
 
         #endregion Public Properties

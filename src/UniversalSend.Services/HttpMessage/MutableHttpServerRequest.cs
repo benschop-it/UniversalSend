@@ -50,6 +50,8 @@ namespace UniversalSend.Services.HttpMessage {
         public bool IsComplete { get; set; }
         public HttpMethod? Method { get; set; }
         public string Origin { get; set; }
+        public string RemoteAddress { get; set; }
+        public int? RemotePort { get; set; }
         public Uri Uri { get; set; }
 
         #endregion Public Properties

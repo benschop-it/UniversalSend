@@ -48,7 +48,7 @@ namespace UniversalSend.Controls {
                 IP += $"{ip}\n";
             }
 
-            Debug.WriteLine("IPv4 addresses: " + IP);
+            Debug.WriteLine("[DeviceInfoControl.xaml.cs UserControl_Loaded] IPv4 addresses: " + IP);
 
             if (IP.Length > 1) {
                 IP = IP.Substring(0, IP.Length - 1);
