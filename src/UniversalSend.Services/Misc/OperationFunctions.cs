@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UniversalSend.Models;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
@@ -46,6 +47,12 @@ namespace UniversalSend.Services.Misc {
         #endregion Public Constructors
 
         #region Public Methods
+
+        public object LegacyInfoRequestFuncV1(IMutableHttpServerRequest mutableHttpServerRequest) {
+            _logger.Debug($"LegacyInfoRequestFuncV1: remote={mutableHttpServerRequest?.RemoteAddress}, uri={mutableHttpServerRequest?.Uri}");
+            _ = TryRegisterLegacyCallerAsync(mutableHttpServerRequest);
+            return null;
+        }
 
         // Handles registration request from remote device
         public object RegisterRequestFuncV2(IMutableHttpServerRequest mutableHttpServerRequest) {
@@ -155,6 +162,42 @@ namespace UniversalSend.Services.Misc {
         #endregion Public Methods
 
         #region Private Methods
+
+        private async Task TryRegisterLegacyCallerAsync(IMutableHttpServerRequest request) {
+            if (request == null || string.IsNullOrWhiteSpace(request.RemoteAddress)) {
+                _logger.Debug("TryRegisterLegacyCallerAsync: missing request or remote address.");
+                return;
+            }
+
+            for (int attempt = 1; attempt <= 3; attempt++) {
+                try {
+                    if (attempt > 1) {
+                        await Task.Delay(attempt * 500);
+                    }
+
+                    _logger.Debug($"TryRegisterLegacyCallerAsync: attempt {attempt}, probing caller via FindDeviceByIPAsync for '{request.RemoteAddress}'.");
+
+                    IDevice device = await _deviceManager.FindDeviceByIPAsync(request.RemoteAddress);
+                    if (device == null) {
+                        _logger.Debug("TryRegisterLegacyCallerAsync: FindDeviceByIPAsync returned null.");
+                        continue;
+                    }
+
+                    if (device.Fingerprint == ProgramData.LocalDevice.Fingerprint) {
+                        _logger.Debug("TryRegisterLegacyCallerAsync: discovered device matched local fingerprint, skipping add.");
+                        return;
+                    }
+
+                    _logger.Debug($"TryRegisterLegacyCallerAsync: adding device alias='{device.Alias}', ip='{device.IP}', port={device.Port}, fingerprint='{device.Fingerprint}'.");
+                    _deviceManager.AddKnownDevices(device);
+                    return;
+                } catch (Exception ex) {
+                    _logger.Debug($"TryRegisterLegacyCallerAsync attempt {attempt} failed: {ex}");
+                }
+            }
+
+            _logger.Debug("TryRegisterLegacyCallerAsync: all attempts failed.");
+        }
 
         private async Task WriteFileAsync(IReceiveTask task, string ip) {
             IStorageFile file = null;

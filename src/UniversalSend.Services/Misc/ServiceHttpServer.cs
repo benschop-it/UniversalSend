@@ -141,10 +141,10 @@ namespace UniversalSend.Services.Misc {
                 );
             }
 
-            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/info")) {
-                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/info");
+            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/info?fingerprint={}")) {
+                _logger.Debug("[OperationController.UriOperations.Add] /api/localsend/v1/info?fingerprint={}");
                 OperationController.UriOperations.Add(
-                    "/api/localsend/v1/info",
+                    "/api/localsend/v1/info?fingerprint={}",
                     _operationFunctions.LegacyInfoRequestFuncV1
                 );
             }

@@ -26,11 +26,13 @@ namespace UniversalSend.Services.Controllers {
         public static void TryRunOperationByRequestUri(MutableHttpServerRequest mutableHttpServerRequest) {
             //_logger.Debug($"TryRunOperationByRequestUri for URI:{mutableHttpServerRequest.Uri.ToString()}.");
             string uri = StringHelper.GetURLFromURLWithQueryParmeters(mutableHttpServerRequest.Uri.ToString());
-            //_logger.Debug($"Looking for managed function for URI: {uri}.");
+            _logger.Debug($"TryRunOperationByRequestUri: raw='{mutableHttpServerRequest.Uri}', normalized='{uri}', registered=[{string.Join(", ", UriOperations.Keys)}]");
             if (UriOperations.ContainsKey(uri)) {
-                //_logger.Debug($"Preparing to execute managed function.");
+                _logger.Debug($"TryRunOperationByRequestUri: executing side-effect handler for '{uri}'.");
                 Func<MutableHttpServerRequest, object> func = UriOperations[uri];
                 func(mutableHttpServerRequest);
+            } else {
+                _logger.Debug($"TryRunOperationByRequestUri: no side-effect handler matched '{uri}'.");
             }
         }
 

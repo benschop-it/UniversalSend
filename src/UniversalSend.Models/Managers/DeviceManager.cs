@@ -50,14 +50,22 @@ namespace UniversalSend.Models.Managers {
         #region Public Methods
 
         public void AddKnownDevices(IDevice device) {
+            if (device == null) {
+                Debug.WriteLine("AddKnownDevices: device was null, skipping.");
+                return;
+            }
+
+            var existing = KnownDevices.Find(x => x.Fingerprint == device.Fingerprint);
             if (
-                KnownDevices.Find(x => x.Fingerprint == device.Fingerprint) != null ||
+                existing != null ||
                 ProgramData.LocalDevice.Fingerprint == device.Fingerprint
             ) {
+                Debug.WriteLine($"AddKnownDevices: skipping device alias='{device.Alias}', ip='{device.IP}', fingerprint='{device.Fingerprint}', existingMatch={(existing != null)}, localFingerprintMatch={ProgramData.LocalDevice.Fingerprint == device.Fingerprint}.");
                 return;
             }
 
             KnownDevices.Add(device);
+            Debug.WriteLine($"AddKnownDevices: added device alias='{device.Alias}', ip='{device.IP}', port={device.Port}, fingerprint='{device.Fingerprint}'. TotalKnownDevices={KnownDevices.Count}.");
             KnownDevicesChanged?.Invoke(null, EventArgs.Empty);
         }
 
