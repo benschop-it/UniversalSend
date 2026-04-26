@@ -21,6 +21,7 @@ namespace UniversalSend.Services.Misc {
         private readonly ILogger _logger;
         private readonly IDeviceManager _deviceManager;
         private readonly IRegister _register;
+        private readonly IRegisterDataManager _registerDataManager;
         private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private ISettings _settings;
         private DatagramSocket _udpSocket;
@@ -33,6 +34,7 @@ namespace UniversalSend.Services.Misc {
             IRegisterResponseDataManager registerResponseDataManager,
             IDeviceManager deviceManager,
             IRegister register,
+            IRegisterDataManager registerDataManager,
             ISettings settings
 
         ) {
@@ -40,6 +42,7 @@ namespace UniversalSend.Services.Misc {
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _register = register ?? throw new ArgumentNullException(nameof(register));
+            _registerDataManager = registerDataManager ?? throw new ArgumentNullException(nameof(registerDataManager));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
@@ -118,7 +121,7 @@ namespace UniversalSend.Services.Misc {
                 if (payload.Announce) {
                     // Send HTTP POST response
                     _logger.Debug("Register via HTTP");
-                    await RegisterViaHttpAsync(args.RemoteAddress.ToString(), payload.Port, "2.1");
+                    await RegisterViaHttpAsync(args.RemoteAddress.CanonicalName, payload.Port);
                 } else {
                     _logger.Debug("Register new device, no announcement!");
                     IDevice device = _deviceManager.GetDeviceFromResponseDataV2(payload, args.RemoteAddress.CanonicalName);
@@ -127,13 +130,13 @@ namespace UniversalSend.Services.Misc {
             }
         }
 
-        private async Task RegisterViaHttpAsync(string ip, int port, string version) {
-            IRegisterResponseDataV2 payload = _registerResponseDataManager.GetRegisterResponseDataV2();
+        private async Task RegisterViaHttpAsync(string ip, int port) {
+            IRegisterDataV2 payload = _registerDataManager.GetRegisterDataV2FromDevice();
             var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
             try {
                 using (var client = new HttpClient()) {
-                    await client.PostAsync($"http://{ip}:{port.ToString()}/api/localsend/{version}/register", content);
+                    await client.PostAsync($"http://{ip}:{port.ToString()}/api/localsend/v2/register", content);
                 }
             } catch (Exception ex) {
                 _logger.Debug($"RegisterViaHttpAsync failed: {ex.Message}");

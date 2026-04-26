@@ -17,7 +17,7 @@ namespace UniversalSend.Models.Managers {
             infoData.DeviceType = device.DeviceType;
             infoData.FingerPrint = device.Fingerprint;
             infoData.Port = device.Port;
-            infoData.Protocol = device.ProtocolVersion;
+            infoData.Protocol = device.HttpProtocol;
             infoData.Download = false;
             return infoData;
         }

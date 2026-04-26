@@ -161,7 +161,7 @@ namespace UniversalSend.Services.Http {
 
                         OperationController.TryRunOperationByRequestUri(request);
 
-                        requestLog.AppendLine("[HttpServer.ProcessRequestAsync] [Request]");
+                        requestLog.AppendLine($"[HttpServer.ProcessRequestAsync] {request}");
                         requestLog.AppendLine($"    Uri = {request.Uri}");
                         foreach (var header in request.Headers) {
                             requestLog.AppendLine($"    Header = {header.Name}: {header.Value}");
@@ -184,7 +184,7 @@ namespace UniversalSend.Services.Http {
                     try { args.Socket.Dispose(); } catch { }
 
                     // Emit full log block at once
-                    //_logger.Debug($"RequestLog:\n{requestLog.ToString()}.");
+                    _logger.Debug($"RequestLog:\n{requestLog.ToString()}.");
                 }
             });
         }

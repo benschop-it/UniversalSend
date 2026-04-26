@@ -28,6 +28,7 @@ namespace UniversalSend.Services.Misc {
         private readonly IReceiveManager _receiveManager;
         private readonly IReceiveTaskManager _receiveTaskManager;
         private readonly IRegister _register;
+        private readonly IRegisterDataManager _registerDataManager;
         private readonly IRegisterResponseDataManager _registerResponseDataManager;
         private readonly ISettings _settings;
         private readonly ITokenFactory _tokenFactory;
@@ -50,6 +51,7 @@ namespace UniversalSend.Services.Misc {
             ITokenFactory tokenFactory,
             IUniversalSendFileManager universalSendFileManager,
             IReceiveTaskManager receiveTaskManager,
+            IRegisterDataManager registerDataManager,
             IRegisterResponseDataManager registerResponseDataManager,
             IHttpRequestParser httpRequestParser,
             IConfiguration configuration,
@@ -68,6 +70,7 @@ namespace UniversalSend.Services.Misc {
             _tokenFactory = tokenFactory ?? throw new ArgumentNullException(nameof(tokenFactory));
             _universalSendFileManager = universalSendFileManager ?? throw new ArgumentNullException(nameof(universalSendFileManager));
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
+            _registerDataManager = registerDataManager ?? throw new ArgumentNullException(nameof(registerDataManager));
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
             _httpRequestParser = httpRequestParser ?? throw new ArgumentNullException(nameof(httpRequestParser));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -92,7 +95,7 @@ namespace UniversalSend.Services.Misc {
         public async Task<bool> StartHttpServerAsync(int port) {
             _httpRequestParser.ProgressChanged += OnParserProgressChanged;
 
-            _udpDiscovery = new UdpDiscoveryService(_registerResponseDataManager, _deviceManager, _register, _settings);
+            _udpDiscovery = new UdpDiscoveryService(_registerResponseDataManager, _deviceManager, _register, _registerDataManager, _settings);
             await _udpDiscovery.StartUdpListenerAsync();
 
             RestRouteHandler restRouteHandler = new RestRouteHandler(_configuration, _encodingCache, _instanceCreatorCache);
@@ -135,6 +138,14 @@ namespace UniversalSend.Services.Misc {
                 OperationController.UriOperations.Add(
                     "/api/localsend/v2/register",
                     _operationFunctions.RegisterRequestFuncV2
+                );
+            }
+
+            if (!OperationController.UriOperations.ContainsKey("/api/localsend/v1/info")) {
+                _logger.Debug($"[OperationController.UriOperations.Add] /api/localsend/v1/info");
+                OperationController.UriOperations.Add(
+                    "/api/localsend/v1/info",
+                    _operationFunctions.LegacyInfoRequestFuncV1
                 );
             }
 

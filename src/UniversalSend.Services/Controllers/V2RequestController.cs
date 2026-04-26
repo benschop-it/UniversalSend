@@ -60,6 +60,13 @@ namespace UniversalSend.Services.Controllers {
             return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
         }
 
+        [UriFormat("v1/info?fingerprint={fingerprint}")]
+        public GetResponse GetInfoV1(string fingerprint) {
+            _logger.Debug($"GET v1/info called with fingerprint: {fingerprint}.");
+
+            return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
+        }
+
         [UriFormat("v2/cancel")]
         public IAsyncOperation<IPostResponse> PostCancel() {
             return AsyncInfo.Run(async ct => {
