@@ -24,6 +24,9 @@
                 <TextBlock Text="Network" Style="{ThemeResource SubtitleTextBlockStyle}" />
                 <StackPanel Name="NetworkSettingsStackPanel">
                 </StackPanel>
+                <TextBlock Text="Web Share" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <StackPanel Name="WebShareSettingsStackPanel">
+                </StackPanel>
                 <TextBlock Text="Experimental" Style="{ThemeResource SubtitleTextBlockStyle}" />
                 <StackPanel Name="LabSettingsStackPanel">
                 </StackPanel>

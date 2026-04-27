@@ -15,6 +15,8 @@
         public const string Network_Port = "Network_Port";
         public const string Receive_Histories = "Receive_Histories";
         public const string Receive_SaveToFolder = "Receive_SaveToFolder";
+        public const string WebShare_RequirePin = "WebShare_RequirePin";
+        public const string WebShare_Pin = "WebShare_Pin";
 
         #endregion Public Fields
     }

@@ -124,6 +124,12 @@ namespace UniversalSend.Models.Misc {
 
             // Lab - Use internal file manager
             SetInitSetting(Constants.Lab_UseInternalExplorer, "False");
+
+            // Web share - Require PIN (default: on)
+            SetInitSetting(Constants.WebShare_RequirePin, true);
+
+            // Web share - PIN (default: random 6-digit)
+            SetInitSetting(Constants.WebShare_Pin, new Random().Next(100000, 999999).ToString());
         }
 
         #endregion Private Methods

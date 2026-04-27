@@ -25,6 +25,7 @@ namespace UniversalSend.Models.Managers {
         private INetworkHelper _networkHelper;
         private ISendManager _sendManager;
         private ISendTaskV2 _sendTask;
+        private ISettings _settings;
         private IStorageHelper _storageHelper;
         private IUniversalSendFileManager _universalSendFileManager;
         private IWebSendManager _webSendManager;
@@ -42,7 +43,8 @@ namespace UniversalSend.Models.Managers {
             ISendManager sendManager,
             IHttpClientHelper httpClientHelper,
             IFileRequestDataManager fileRequestDataManager,
-            IWebSendManager webSendManager
+            IWebSendManager webSendManager,
+            ISettings settings
         ) {
             _logger = LogManager.GetLogger<SendTaskManager>();
             _universalSendFileManager = universalSendFileManager ?? throw new System.ArgumentNullException(nameof(universalSendFileManager));
@@ -53,6 +55,7 @@ namespace UniversalSend.Models.Managers {
             _sendManager = sendManager ?? throw new System.ArgumentNullException(nameof(sendManager));
             _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _fileRequestDataManager = fileRequestDataManager ?? throw new ArgumentNullException(nameof(fileRequestDataManager));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _webSendManager = webSendManager ?? throw new ArgumentNullException(nameof(webSendManager));
         }
 
@@ -115,8 +118,18 @@ namespace UniversalSend.Models.Managers {
                 ProgramData.LocalDevice.IP = ipAddress;
             }
 
-            // Generate a random 6-digit PIN for the web share session
-            string pin = new Random().Next(100000, 999999).ToString();
+            // Read PIN from settings — only if "Require PIN" is enabled
+            string pin = null;
+            var requirePinSetting = _settings.GetSettingContent(Strings.Constants.WebShare_RequirePin);
+            bool requirePin = requirePinSetting is bool b ? b : bool.TryParse(requirePinSetting?.ToString(), out bool parsed) && parsed;
+            if (requirePin) {
+                pin = _settings.GetSettingContentAsString(Strings.Constants.WebShare_Pin);
+                if (string.IsNullOrWhiteSpace(pin)) {
+                    // Generate a new PIN if none is set
+                    pin = new Random().Next(100000, 999999).ToString();
+                    _settings.SetSetting(Strings.Constants.WebShare_Pin, pin);
+                }
+            }
 
             bool created = _webSendManager.BeginShare(SendTasksV2, pin);
             LastWebShareUrl = created ? _webSendManager.GetBrowserDownloadUrl(ProgramData.LocalDevice.Port, ipAddress) : string.Empty;
