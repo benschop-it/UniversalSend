@@ -138,8 +138,19 @@ namespace UniversalSend.Views {
         private async void ReceiveManager_SendDataReceived(object sender, EventArgs e) {
             _receivedItemsCount++;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
+                if (IsTextTask(sender as IReceiveTask)) {
+                    Frame.Navigate(typeof(ReceivedTextPage), sender);
+                    return;
+                }
+
                 UpdateUI();
             });
+        }
+
+        private static bool IsTextTask(IReceiveTask task) {
+            return task?.FileV2 != null &&
+                   !string.IsNullOrWhiteSpace(task.FileV2.FileType) &&
+                   task.FileV2.FileType.StartsWith("text/", StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion Private Methods

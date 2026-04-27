@@ -206,6 +206,17 @@ namespace UniversalSend.Services.Misc {
         }
 
         private async Task WriteFileAsync(IReceiveTask task, string ip) {
+            if (IsTextTask(task)) {
+                var textHistory = _historyManager.CreateHistory(
+                    task.FileV2,
+                    string.Empty,
+                    _deviceManager.CreateDeviceFromInfoDataV2(task.SenderV2)
+                );
+
+                _historyManager.AddHistoriesList(textHistory);
+                return;
+            }
+
             IStorageFile file = null;
             try {
                 file = await _receiveTaskManager.WriteReceiveTaskToFileV2Async(task);
@@ -223,6 +234,12 @@ namespace UniversalSend.Services.Misc {
 
                 _historyManager.AddHistoriesList(history);
             }
+        }
+
+        private static bool IsTextTask(IReceiveTask task) {
+            return task?.FileV2 != null &&
+                   !string.IsNullOrWhiteSpace(task.FileV2.FileType) &&
+                   task.FileV2.FileType.StartsWith("text/", StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion Private Methods

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Tasks;
@@ -124,6 +125,11 @@ namespace UniversalSend.Models.Managers {
                 // task.TaskState = ReceiveTask.ReceiveTaskStates.Error;
                 return null;
             }
+
+            if (IsTextTask(task) && string.IsNullOrEmpty(task.FileV2.Preview) && fileContent != null) {
+                task.FileV2.Preview = Encoding.UTF8.GetString(fileContent);
+            }
+
             task.FileContent = fileContent;
 
             if (_dispatcher.HasThreadAccess) {
@@ -153,6 +159,12 @@ namespace UniversalSend.Models.Managers {
         #endregion Public Methods
 
         #region Private Methods
+
+        private static bool IsTextTask(IReceiveTask task) {
+            return task?.FileV2 != null &&
+                   !string.IsNullOrWhiteSpace(task.FileV2.FileType) &&
+                   task.FileV2.FileType.StartsWith("text/", StringComparison.OrdinalIgnoreCase);
+        }
 
         private void CompleteSessionIfFinished(string sessionId) {
             lock (_sessionLock) {

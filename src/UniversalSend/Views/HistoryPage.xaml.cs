@@ -98,7 +98,7 @@ namespace UniversalSend.Views {
             if (history == null)
                 return;
             if (String.IsNullOrEmpty(history.FutureAccessListToken)) {
-                Frame.Navigate(typeof(ReceivedTextPage), history.File);
+                Frame.Navigate(typeof(ReceivedTextPage), history);
             } else {
                 await LaunchFileAsync(history);
             }
