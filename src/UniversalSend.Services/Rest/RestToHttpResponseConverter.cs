@@ -66,9 +66,13 @@ namespace UniversalSend.Services.Rest {
             var defaultResponse = GetDefaultResponse(response);
 
             if (response.ContentData != null) {
-                defaultResponse.ContentType = GetMediaTypeAsString(restReq.AcceptMediaType);
-                defaultResponse.ContentCharset = restReq.AcceptCharset;
-                defaultResponse.Content = _contentSerializer.ToAcceptContent(response.ContentData, restReq);
+                if (response.ContentData is byte[] binaryContent) {
+                    defaultResponse.Content = binaryContent;
+                } else {
+                    defaultResponse.ContentType = GetMediaTypeAsString(restReq.AcceptMediaType);
+                    defaultResponse.ContentCharset = restReq.AcceptCharset;
+                    defaultResponse.Content = _contentSerializer.ToAcceptContent(response.ContentData, restReq);
+                }
             }
 
             return defaultResponse;

@@ -20,6 +20,11 @@ namespace UniversalSend.Models.Helpers {
             return AddrList;
         }
 
+        public string GetPrimaryIPv4Address() {
+            var addresses = GetIPv4AddrList();
+            return addresses.Count > 0 ? addresses[0] : string.Empty;
+        }
+
         public List<string> GetIPv4AddrList() {
             var hosts = NetworkInformation.GetHostNames();
             List<string> AddrList = new List<string>();

@@ -14,6 +14,8 @@ namespace UniversalSend.Models.Interfaces {
 
         int LastPrepareUploadStatusCode { get; }
 
+        string LastWebShareErrorMessage { get; }
+
         string LastWebShareUrl { get; }
 
         List<ISendTaskV2> SendTasksV2 { get; }

@@ -21,6 +21,7 @@ namespace UniversalSend.Models.Managers {
         private IFileRequestDataManager _fileRequestDataManager;
         private IHttpClientHelper _httpClientHelper;
         private IInfoDataManager _infoDataManager;
+        private INetworkHelper _networkHelper;
         private ISendManager _sendManager;
         private ISendTaskV2 _sendTask;
         private IStorageHelper _storageHelper;
@@ -34,6 +35,7 @@ namespace UniversalSend.Models.Managers {
         public SendTaskManager(
             IUniversalSendFileManager universalSendFileManager,
             IInfoDataManager infoDataManager,
+            INetworkHelper networkHelper,
             IStorageHelper storageHelper,
             ISendTaskV2 sendTask,
             ISendManager sendManager,
@@ -44,6 +46,7 @@ namespace UniversalSend.Models.Managers {
             _logger = LogManager.GetLogger<SendTaskManager>();
             _universalSendFileManager = universalSendFileManager ?? throw new System.ArgumentNullException(nameof(universalSendFileManager));
             _infoDataManager = infoDataManager ?? throw new System.ArgumentNullException(nameof(infoDataManager));
+            _networkHelper = networkHelper ?? throw new ArgumentNullException(nameof(networkHelper));
             _storageHelper = storageHelper ?? throw new System.ArgumentNullException(nameof(storageHelper));
             _sendTask = sendTask ?? throw new System.ArgumentNullException(nameof(sendTask));
             _sendManager = sendManager ?? throw new System.ArgumentNullException(nameof(sendManager));
@@ -59,6 +62,8 @@ namespace UniversalSend.Models.Managers {
         public string LastPrepareUploadErrorMessage { get; private set; }
 
         public int LastPrepareUploadStatusCode { get; private set; }
+
+        public string LastWebShareErrorMessage { get; private set; }
 
         public string LastWebShareUrl { get; private set; }
 
@@ -100,8 +105,22 @@ namespace UniversalSend.Models.Managers {
 
         public void PublishForWebShare() {
             ClearWebShare();
+
+            string ipAddress = ProgramData.LocalDevice.IP;
+            if (string.IsNullOrWhiteSpace(ipAddress)) {
+                ipAddress = _networkHelper.GetPrimaryIPv4Address();
+                ProgramData.LocalDevice.IP = ipAddress;
+            }
+
             bool created = _webSendManager.BeginShare(SendTasksV2);
-            LastWebShareUrl = created ? _webSendManager.GetBrowserDownloadUrl(ProgramData.LocalDevice.Port, ProgramData.LocalDevice.IP) : string.Empty;
+            LastWebShareUrl = created ? _webSendManager.GetBrowserDownloadUrl(ProgramData.LocalDevice.Port, ipAddress) : string.Empty;
+            LastWebShareErrorMessage = created
+                ? string.Empty
+                : "Unable to create a browser download share.";
+
+            if (created && string.IsNullOrWhiteSpace(LastWebShareUrl)) {
+                LastWebShareErrorMessage = "Unable to determine a reachable local IP address for the browser download share.";
+            }
         }
 
         public void ClearWebShare(string sessionId = null) {
@@ -109,6 +128,7 @@ namespace UniversalSend.Models.Managers {
             if (string.IsNullOrWhiteSpace(sessionId) || string.IsNullOrWhiteSpace(LastWebShareUrl)) {
                 LastWebShareUrl = string.Empty;
             }
+            LastWebShareErrorMessage = string.Empty;
         }
 
         public async Task<bool> SendSendRequestV2Async(IDevice destinationDevice) {

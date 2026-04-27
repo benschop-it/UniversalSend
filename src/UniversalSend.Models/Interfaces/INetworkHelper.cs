@@ -7,6 +7,7 @@ namespace UniversalSend.Models.Interfaces {
 
         List<string> GetIPAddrList();
         List<string> GetIPv4AddrList();
+        string GetPrimaryIPv4Address();
 
         #endregion Public Methods
     }

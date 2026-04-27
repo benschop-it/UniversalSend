@@ -229,7 +229,11 @@ namespace UniversalSend.Views {
             _sendTaskManager.PublishForWebShare();
 
             if (string.IsNullOrWhiteSpace(_sendTaskManager.LastWebShareUrl)) {
-                await MessageDialogManager.ShowMessageAsync("Unable to create a browser download share.", "Web Share");
+                await MessageDialogManager.ShowMessageAsync(
+                    string.IsNullOrWhiteSpace(_sendTaskManager.LastWebShareErrorMessage)
+                        ? "Unable to create a browser download share."
+                        : _sendTaskManager.LastWebShareErrorMessage,
+                    "Web Share");
                 return;
             }
 
