@@ -18,6 +18,8 @@ namespace UniversalSend.Models.Interfaces {
 
         string LastWebShareUrl { get; }
 
+        string LastWebSharePin { get; }
+
         List<ISendTaskV2> SendTasksV2 { get; }
 
         #endregion Public Properties

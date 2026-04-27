@@ -7,10 +7,12 @@ namespace UniversalSend.Models.Managers {
 
     internal class WebSendManager : IWebSendManager {
 
+        private const int MaxPinAttempts = 3;
         private readonly object _syncRoot = new object();
         private WebSendSession _activeShare;
+        private int _pinAttempts;
 
-        public bool BeginShare(IEnumerable<ISendTaskV2> sendTasks) {
+        public bool BeginShare(IEnumerable<ISendTaskV2> sendTasks, string pin = null) {
             if (sendTasks == null) {
                 return false;
             }
@@ -20,10 +22,14 @@ namespace UniversalSend.Models.Managers {
                 return false;
             }
 
-            var session = new WebSendSession(Guid.NewGuid().ToString("N"), tasks.ToDictionary(x => x.File.Id, x => x));
+            var session = new WebSendSession(
+                Guid.NewGuid().ToString("N"),
+                tasks.ToDictionary(x => x.File.Id, x => x),
+                string.IsNullOrWhiteSpace(pin) ? null : pin.Trim());
 
             lock (_syncRoot) {
                 _activeShare = session;
+                _pinAttempts = 0;
                 return true;
             }
         }
@@ -55,6 +61,7 @@ namespace UniversalSend.Models.Managers {
                 }
 
                 _activeShare = null;
+                _pinAttempts = 0;
             }
         }
 
@@ -64,16 +71,53 @@ namespace UniversalSend.Models.Managers {
             }
         }
 
+        public WebSendPinResult ValidatePin(string pin) {
+            lock (_syncRoot) {
+                if (_activeShare == null) {
+                    return WebSendPinResult.InvalidPin;
+                }
+
+                // No PIN set — always allow
+                if (string.IsNullOrEmpty(_activeShare.Pin)) {
+                    return WebSendPinResult.OK;
+                }
+
+                // Check attempt count first
+                if (_pinAttempts >= MaxPinAttempts) {
+                    return WebSendPinResult.TooManyAttempts;
+                }
+
+                // Correct PIN
+                if (string.Equals(pin, _activeShare.Pin, StringComparison.Ordinal)) {
+                    return WebSendPinResult.OK;
+                }
+
+                // Wrong PIN — only count as an attempt if something was actually submitted
+                if (!string.IsNullOrEmpty(pin)) {
+                    _pinAttempts++;
+
+                    if (_pinAttempts >= MaxPinAttempts) {
+                        return WebSendPinResult.TooManyAttempts;
+                    }
+                }
+
+                return WebSendPinResult.InvalidPin;
+            }
+        }
+
         private sealed class WebSendSession : IWebSendSession {
 
-            public WebSendSession(string sessionId, IReadOnlyDictionary<string, ISendTaskV2> files) {
+            public WebSendSession(string sessionId, IReadOnlyDictionary<string, ISendTaskV2> files, string pin) {
                 SessionId = sessionId;
                 Files = files;
+                Pin = pin;
             }
 
             public IReadOnlyDictionary<string, ISendTaskV2> Files { get; }
 
             public string SessionId { get; }
+
+            public string Pin { get; }
         }
     }
 }

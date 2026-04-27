@@ -199,15 +199,25 @@ namespace UniversalSend.Services.Controllers {
 
         [UriFormat("v2/prepare-download")]
         public PostResponse PostPrepareDownload() {
-            return HandlePrepareDownload(null);
+            return HandlePrepareDownload(null, null);
+        }
+
+        [UriFormat("v2/prepare-download?pin={pin}")]
+        public PostResponse PostPrepareDownloadWithPin(string pin) {
+            return HandlePrepareDownload(null, pin);
         }
 
         [UriFormat("v2/prepare-download?sessionId={sessionId}")]
         public PostResponse PostPrepareDownloadWithSession(string sessionId) {
-            return HandlePrepareDownload(sessionId);
+            return HandlePrepareDownload(sessionId, null);
         }
 
-        private PostResponse HandlePrepareDownload(string sessionId) {
+        [UriFormat("v2/prepare-download?sessionId={sessionId}&pin={pin}")]
+        public PostResponse PostPrepareDownloadWithSessionAndPin(string sessionId, string pin) {
+            return HandlePrepareDownload(sessionId, pin);
+        }
+
+        private PostResponse HandlePrepareDownload(string sessionId, string pin) {
             var share = _webSendManager.GetActiveShare();
             if (share == null) {
                 return new PostResponse(PostResponse.ResponseStatus.Rejected);
@@ -217,6 +227,15 @@ namespace UniversalSend.Services.Controllers {
             // This supports the browser-refresh scenario described in the protocol spec (section 5.2).
             if (!string.IsNullOrWhiteSpace(sessionId) && !string.Equals(share.SessionId, sessionId, StringComparison.Ordinal)) {
                 return new PostResponse(PostResponse.ResponseStatus.Rejected);
+            }
+
+            // Validate PIN — per protocol spec section 5.2, returns 401 or 429.
+            var pinResult = _webSendManager.ValidatePin(pin);
+            switch (pinResult) {
+                case WebSendPinResult.InvalidPin:
+                    return new PostResponse(PostResponse.ResponseStatus.InvalidPin);
+                case WebSendPinResult.TooManyAttempts:
+                    return new PostResponse(PostResponse.ResponseStatus.TooManyRequests);
             }
 
             var responseData = new DownloadPrepareResponseData {

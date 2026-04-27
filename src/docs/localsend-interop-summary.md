@@ -66,21 +66,22 @@ Key Dart files relevant to interop:
 
 **Fixed.** The `GET /v2/download` endpoint now sets `Content-Disposition: attachment; filename="..."` with URI-encoded filename, matching the Dart `send_controller.dart` behavior. This ensures browsers show the correct filename.
 
-### 4. Reverse download / web share is a partial approximation
+### 4. Reverse download / web share
 
-LocalSend (Dart) has a richer browser/web-share lifecycle and session model.
-UniversalSend currently supports:
+**Fixed.** UniversalSend now supports:
 
 - active web share state
-- `prepare-download` (with session reuse via `?sessionId=...` for browser refresh — **Fixed**)
-- `download`
+- `prepare-download` with session reuse via `?sessionId=...` for browser refresh
+- `prepare-download` with PIN validation via `?pin=123456` (6-digit PIN auto-generated per session, 3-attempt lockout returning 429, invalid/missing PIN returns 401)
+- `download` with `Content-Disposition` header
 - browser share URL creation
+- PIN displayed to user in the web share dialog
 - basic lifecycle cleanup
 
 Still missing compared to LocalSend (Dart):
 
-- PIN support on `prepare-download` (`?pin=123456` query parameter). The Dart `send_controller.dart` calls `checkPin()` (from `common.dart`), which enforces PIN with 3-attempt lockout (429 Too Many Requests).
-- Per-session IP tracking and auto-accept mode for web share.
+- Per-IP attempt tracking (UniversalSend uses a global attempt counter per session, which is adequate for the typical 1–2 device scenario on a Lumia 950XL).
+- Auto-accept mode for web share sessions.
 
 ### 5. `Content-Length` header on download responses
 
@@ -145,6 +146,7 @@ The Dart `scan_facade.dart` implements a multi-phase discovery: multicast first,
 - ~~Add self-discovery rejection on HTTP endpoints~~ — **Done**
 - ~~Normalize `DeviceType` values~~ — **Done**
 - ~~Add session reuse on `prepare-download`~~ — **Done**
+- ~~Add PIN support on `prepare-download`~~ — **Done**
 - Improve temp-file cleanup for all exceptional paths
 - Consider better temp-to-final move behavior
 - Consider optional parallel uploads if device stability allows

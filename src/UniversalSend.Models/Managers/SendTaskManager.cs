@@ -68,6 +68,8 @@ namespace UniversalSend.Models.Managers {
 
         public string LastWebShareUrl { get; private set; }
 
+        public string LastWebSharePin { get; private set; }
+
         public List<ISendTaskV2> SendTasksV2 { get; private set; } = new List<ISendTaskV2>();
 
         #endregion Public Properties
@@ -113,8 +115,12 @@ namespace UniversalSend.Models.Managers {
                 ProgramData.LocalDevice.IP = ipAddress;
             }
 
-            bool created = _webSendManager.BeginShare(SendTasksV2);
+            // Generate a random 6-digit PIN for the web share session
+            string pin = new Random().Next(100000, 999999).ToString();
+
+            bool created = _webSendManager.BeginShare(SendTasksV2, pin);
             LastWebShareUrl = created ? _webSendManager.GetBrowserDownloadUrl(ProgramData.LocalDevice.Port, ipAddress) : string.Empty;
+            LastWebSharePin = created ? pin : string.Empty;
             LastWebShareErrorMessage = created
                 ? string.Empty
                 : "Unable to create a browser download share.";
@@ -128,6 +134,7 @@ namespace UniversalSend.Models.Managers {
             _webSendManager.ClearShare(sessionId);
             if (string.IsNullOrWhiteSpace(sessionId) || string.IsNullOrWhiteSpace(LastWebShareUrl)) {
                 LastWebShareUrl = string.Empty;
+                LastWebSharePin = string.Empty;
             }
             LastWebShareErrorMessage = string.Empty;
         }

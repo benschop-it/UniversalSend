@@ -241,7 +241,11 @@ namespace UniversalSend.Views {
             dataPackage.SetText(_sendTaskManager.LastWebShareUrl);
             Clipboard.SetContent(dataPackage);
 
-            await MessageDialogManager.ShowMessageAsync($"Browser download share created. URL copied to clipboard:\n{_sendTaskManager.LastWebShareUrl}", "Web Share");
+            string pinMessage = string.IsNullOrWhiteSpace(_sendTaskManager.LastWebSharePin)
+                ? string.Empty
+                : $"\nPIN: {_sendTaskManager.LastWebSharePin}";
+
+            await MessageDialogManager.ShowMessageAsync($"Browser download share created. URL copied to clipboard:\n{_sendTaskManager.LastWebShareUrl}{pinMessage}", "Web Share");
         }
 
         private async Task OpenFileAsync() {
