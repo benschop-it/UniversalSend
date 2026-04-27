@@ -1,0 +1,55 @@
+<UserControl
+    x:Class="UniversalSend.Controls.ContentDialogControls.WebShareControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="400"
+    d:DesignWidth="400"
+    Loaded="UserControl_Loaded">
+
+    <StackPanel MinWidth="320">
+        <TextBlock Text="Share via Link" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,12" />
+
+        <!-- URL row -->
+        <TextBlock Text="Open this link on the other device:" Margin="0,0,0,4" TextWrapping="Wrap" />
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="UrlTextBlock" VerticalAlignment="Center" IsTextSelectionEnabled="True"
+                       TextWrapping="Wrap" FontWeight="SemiBold" />
+            <Button Grid.Column="1" Name="CopyUrlButton" Click="CopyUrlButton_Click"
+                    ToolTipService.ToolTip="Copy URL to clipboard" Margin="8,0,0,0">
+                <FontIcon Glyph="&#xE8C8;" FontSize="16" />
+            </Button>
+        </Grid>
+
+        <!-- Requests -->
+        <TextBlock Text="Requests" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4" />
+        <TextBlock Name="RequestsTextBlock" Text="No requests yet."
+                   Foreground="{ThemeResource SystemBaseMediumColor}" Margin="0,0,0,16" />
+
+        <!-- Options -->
+        <ToggleSwitch Name="AutoAcceptToggle" Header="Automatically accept requests"
+                      IsOn="False" Toggled="AutoAcceptToggle_Toggled" Margin="0,0,0,4" />
+
+        <ToggleSwitch Name="RequirePinToggle" Header="Require PIN"
+                      IsOn="True" Toggled="RequirePinToggle_Toggled" Margin="0,0,0,4" />
+
+        <StackPanel Name="PinDisplayPanel" Orientation="Horizontal" Margin="0,0,0,16" Visibility="Collapsed">
+            <TextBlock Text="PIN: " VerticalAlignment="Center" />
+            <TextBlock Name="PinValueTextBlock" VerticalAlignment="Center" FontWeight="SemiBold" />
+            <Button Name="ChangePinButton" Click="ChangePinButton_Click" Margin="8,0,0,0"
+                    ToolTipService.ToolTip="Change PIN">
+                <FontIcon Glyph="&#xE70F;" FontSize="14" />
+            </Button>
+        </StackPanel>
+
+        <!-- Stop sharing button -->
+        <Button Name="StopSharingButton" Content="Stop sharing" Click="StopSharingButton_Click"
+                HorizontalAlignment="Stretch" Margin="0,4,0,0" />
+    </StackPanel>
+</UserControl>

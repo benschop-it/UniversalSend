@@ -67,7 +67,7 @@
             <Button Name="FavoriteButton" ToolTipService.ToolTip="Favorites" Click="FavoriteButton_Click">
                 <FontIcon Glyph="&#xEB51;" />
             </Button>
-            <Button Name="WebShareButton" Click="WebShareButton_Click" ToolTipService.ToolTip="Create browser download share">
+            <Button Name="WebShareButton" Click="WebShareButton_Click" ToolTipService.ToolTip="Share via link">
                 <FontIcon Glyph="&#xE71B;" />
             </Button>
             <Button ToolTipService.ToolTip="Send mode (Feature under development...)">

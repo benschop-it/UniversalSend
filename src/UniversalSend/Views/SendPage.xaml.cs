@@ -237,15 +237,11 @@ namespace UniversalSend.Views {
                 return;
             }
 
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.SetText(_sendTaskManager.LastWebShareUrl);
-            Clipboard.SetContent(dataPackage);
-
-            string pinMessage = string.IsNullOrWhiteSpace(_sendTaskManager.LastWebSharePin)
-                ? string.Empty
-                : $"\nPIN: {_sendTaskManager.LastWebSharePin}";
-
-            await MessageDialogManager.ShowMessageAsync($"Browser download share created. URL copied to clipboard:\n{_sendTaskManager.LastWebShareUrl}{pinMessage}", "Web Share");
+            var webShareControl = new WebShareControl();
+            webShareControl.StopSharing += (s, args) => {
+                _contentDialogManager.HideContentDialogAsync();
+            };
+            await _contentDialogManager.ShowContentDialogAsync(webShareControl);
         }
 
         private async Task OpenFileAsync() {

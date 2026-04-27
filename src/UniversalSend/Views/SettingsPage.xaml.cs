@@ -35,7 +35,6 @@ namespace UniversalSend.Views {
         private void InitControls() {
             InitNetworkControls();
             InitReceiveControls();
-            InitWebShareControls();
             InitAboutControls();
             InitLabControls();
         }
@@ -62,11 +61,6 @@ namespace UniversalSend.Views {
 
         private void InitReceiveControls() {
             ReceiveSettingsStackPanel.Children.Add(new SettingsItemControl(LocalizeManager.GetLocalizedString("SettingsPage_Receive_SaveToFolder_Header")/*"Save directory"*/, new SaveLocationSettingControl()));
-        }
-
-        private void InitWebShareControls() {
-            WebShareSettingsStackPanel.Children.Add(new SettingsItemControl("Require PIN"/*TODO: localize*/, new ToggleSwitchSettingsControl(Constants.WebShare_RequirePin)));
-            WebShareSettingsStackPanel.Children.Add(new SettingsItemControl("PIN"/*TODO: localize*/, new TextSettingControl(Constants.WebShare_Pin)));
         }
 
         private void NavigateToDevPageButton_Click(object sender, RoutedEventArgs e) {

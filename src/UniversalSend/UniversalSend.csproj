@@ -160,6 +160,9 @@
     <Compile Include="Controls\ContentDialogControls\StorageItemPropertiesControl.xaml.cs">
       <DependentUpon>StorageItemPropertiesControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContentDialogControls\WebShareControl.xaml.cs">
+      <DependentUpon>WebShareControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DeviceInfoControl.xaml.cs">
       <DependentUpon>DeviceInfoControl.xaml</DependentUpon>
     </Compile>
@@ -366,6 +369,10 @@
     <Page Include="Controls\ContentDialogControls\StorageItemPropertiesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentDialogControls\WebShareControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\DeviceInfoControl.xaml">
       <SubType>Designer</SubType>
