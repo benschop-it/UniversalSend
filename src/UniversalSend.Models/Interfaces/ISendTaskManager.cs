@@ -10,6 +10,10 @@ namespace UniversalSend.Models.Interfaces {
 
         #region Public Properties
 
+        string LastPrepareUploadErrorMessage { get; }
+
+        int LastPrepareUploadStatusCode { get; }
+
         List<ISendTaskV2> SendTasksV2 { get; }
 
         #endregion Public Properties

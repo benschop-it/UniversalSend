@@ -84,7 +84,9 @@ namespace UniversalSend.Views {
             //bool sendSendRequestSuccess = await _sendTaskManager.SendSendRequestV1Async(Device);
             bool sendSendRequestSuccess = await _sendTaskManager.SendSendRequestV2Async(Device);
             if (sendSendRequestSuccess == false) {
-                PrepareLabel.Text = "The receiver declined the transfer request.";
+                PrepareLabel.Text = string.IsNullOrWhiteSpace(_sendTaskManager.LastPrepareUploadErrorMessage)
+                    ? "The transfer request failed."
+                    : _sendTaskManager.LastPrepareUploadErrorMessage;
                 return;
             }
             PrepareControls.Visibility = Visibility.Collapsed;

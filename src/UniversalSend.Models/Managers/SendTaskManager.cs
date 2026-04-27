@@ -53,6 +53,10 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Properties
 
+        public string LastPrepareUploadErrorMessage { get; private set; }
+
+        public int LastPrepareUploadStatusCode { get; private set; }
+
         public List<ISendTaskV2> SendTasksV2 { get; private set; } = new List<ISendTaskV2>();
 
         #endregion Public Properties
@@ -89,6 +93,9 @@ namespace UniversalSend.Models.Managers {
             _sendManager.SendCreatedEvent();
         }
         public async Task<bool> SendSendRequestV2Async(IDevice destinationDevice) {
+            LastPrepareUploadStatusCode = 0;
+            LastPrepareUploadErrorMessage = null;
+
             SendRequestDataV2 sendRequestData = new SendRequestDataV2();
             sendRequestData.Files = new Dictionary<string, FileRequestDataV2>();
             sendRequestData.Info = _infoDataManager.GetInfoDataV2FromDevice();
@@ -106,13 +113,17 @@ namespace UniversalSend.Models.Managers {
             );
             _logger.Debug("SendSendRequestV2Async received status {0} and response: {1}", response.StatusCode, response.Content);
 
+            LastPrepareUploadStatusCode = response.StatusCode;
+
             if (!response.IsSuccessStatusCode) {
+                LastPrepareUploadErrorMessage = GetPrepareUploadErrorMessage(response.StatusCode);
                 return false;
             }
 
             try {
                 FileResponseDataV2 fileResponseData = JsonConvert.DeserializeObject<FileResponseDataV2>(response.Content);
                 if (fileResponseData == null) {
+                    LastPrepareUploadErrorMessage = "The receiver returned an invalid response.";
                     return false;
                 }
 
@@ -125,6 +136,7 @@ namespace UniversalSend.Models.Managers {
                 }
                 return true;
             } catch (JsonException) {
+                LastPrepareUploadErrorMessage = "The receiver returned an invalid response.";
                 return false;
             }
         }
@@ -167,6 +179,27 @@ namespace UniversalSend.Models.Managers {
 
         private static bool IsTextSendTask(ISendTaskV2 task) {
             return task.StorageFile == null || string.Equals(task.File.FileType, "text/plain", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetPrepareUploadErrorMessage(int statusCode) {
+            switch (statusCode) {
+                case 400:
+                    return "The receiver rejected the transfer request because it was invalid.";
+                case 401:
+                    return "The receiver requires a PIN or rejected the provided PIN.";
+                case 403:
+                    return "The receiver declined the transfer request.";
+                case 409:
+                    return "The receiver is busy with another transfer session.";
+                case 429:
+                    return "The receiver is temporarily rate limiting transfer requests.";
+                case 500:
+                    return "The receiver encountered an internal error while preparing the transfer.";
+                case 0:
+                    return "Failed to contact the receiver.";
+                default:
+                    return "The transfer request failed.";
+            }
         }
 
         #endregion Private Methods
