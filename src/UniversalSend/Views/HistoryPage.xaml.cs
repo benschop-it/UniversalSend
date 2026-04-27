@@ -29,7 +29,7 @@ namespace UniversalSend.Views {
         public HistoryPage() {
             this.InitializeComponent();
             UseInternalExplorer = Convert.ToBoolean(_settings.GetSettingContentAsString(Constants.Lab_UseInternalExplorer));
-            initAsync();
+            _ = initAsync();
         }
 
         #endregion Public Constructors

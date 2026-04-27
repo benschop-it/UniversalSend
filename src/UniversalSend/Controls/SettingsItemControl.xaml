@@ -15,7 +15,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Name="HeaderTestBlock" Margin="0,0,0,4" Text="{x:Bind Header,Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
+        <TextBlock Name="HeaderTestBlock" Margin="0,0,0,4" Text="{x:Bind Header,Mode=OneTime}" Style="{ThemeResource BodyTextBlockStyle}" />
         <Grid Grid.Row="1" Name="SettingControlGrid" Margin="0,0,0,8">
         </Grid>
     </Grid>

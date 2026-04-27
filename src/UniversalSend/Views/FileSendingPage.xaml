@@ -53,7 +53,7 @@
                             <Grid Grid.RowSpan="2">
                                 <Image />
                             </Grid>
-                            <TextBlock Grid.Column="1" Text="{x:Bind File.FileName,Mode=OneWay}" />
+                            <TextBlock Grid.Column="1" Text="{Binding File.FileName}" />
                             <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{ThemeResource SystemAccentColor}" Text="{x:Bind TaskState, Converter={StaticResource EnumDescriptionConverter}}" />
                         </Grid>
                     </DataTemplate>

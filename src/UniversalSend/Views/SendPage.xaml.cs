@@ -25,8 +25,6 @@ namespace UniversalSend.Views {
 
         private bool Inited = false;
 
-        private bool ShareActivated = false;
-
         private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
         private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
         private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
@@ -50,8 +48,8 @@ namespace UniversalSend.Views {
 
         #region Public Methods
 
-        public void TextButton_Click(object sender, RoutedEventArgs e) {
-            TypeTextAsync();
+        public async void TextButton_Click(object sender, RoutedEventArgs e) {
+            await TypeTextAsync();
         }
 
         #endregion Public Methods
@@ -76,7 +74,6 @@ namespace UniversalSend.Views {
 
             if (e.Parameter is string) {
                 if (e.Parameter.ToString() == "ShareActivated") {
-                    ShareActivated = true;
                     _sendManager.SendPrepared += SendManager_SendPrepared;
                 }
             }
@@ -325,13 +322,13 @@ namespace UniversalSend.Views {
         private async Task TypeTextAsync() {
             CreateTextSendTaskControl control = new CreateTextSendTaskControl();
             control.CancelButton.Click += (sender, e) => {
-                _contentDialogManager.HideContentDialogAsync();
+                _ = _contentDialogManager.HideContentDialogAsync();
             };
             control.ConfirmButton.Click += (sender, e) => {
                 if (!string.IsNullOrEmpty(control.MainTextBox.Text)) {
                     AddItemToSendQueue(_sendTaskManager.CreateSendTaskV2(control.MainTextBox.Text));
                 }
-                _contentDialogManager.HideContentDialogAsync();
+                _ = _contentDialogManager.HideContentDialogAsync();
             };
             await _contentDialogManager.ShowContentDialogAsync(control);
         }

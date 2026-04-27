@@ -20,7 +20,7 @@ namespace UniversalSend.Controls.SettingControls {
 
         public SaveLocationSettingControl() {
             InitializeComponent();
-            InitAsync();
+            _ = InitAsync();
         }
 
         #endregion Public Constructors

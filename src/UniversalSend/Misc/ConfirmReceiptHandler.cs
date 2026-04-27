@@ -29,7 +29,6 @@ namespace UniversalSend.Misc {
         }
 
         public async Task<bool> CancelAsync() {
-            bool isProcess = false;
             var tcs = new TaskCompletionSource<bool>();
 
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher

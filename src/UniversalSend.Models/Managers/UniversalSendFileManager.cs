@@ -13,8 +13,8 @@ namespace UniversalSend.Models.Managers {
             UniversalSendFileV2 universalSendFile = new UniversalSendFileV2();
             universalSendFile.Id = Guid.NewGuid().ToString();
             universalSendFile.FileName = universalSendFile.Id + ".txt";
-            universalSendFile.Size = Encoding.ASCII.GetBytes(text).Length;
-            universalSendFile.FileType = "text";
+            universalSendFile.Size = Encoding.UTF8.GetBytes(text).Length;
+            universalSendFile.FileType = "text/plain";
             universalSendFile.Sha256 = null;
             universalSendFile.Preview = text;
             universalSendFile.Metadata = null;
