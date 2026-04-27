@@ -10,7 +10,8 @@ namespace UniversalSend.Services.Models.Schemas {
 
         public enum ResponseStatus : int {
             OK = 200,
-            NotFound = 404
+            NotFound = 404,
+            PreconditionFailed = 412
         };
 
         #endregion Public Enums

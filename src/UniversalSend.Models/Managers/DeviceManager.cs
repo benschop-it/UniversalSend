@@ -92,7 +92,7 @@ namespace UniversalSend.Models.Managers {
             return new Device {
                 Alias = info.Alias,
                 DeviceModel = info.DeviceModel,
-                DeviceType = info.DeviceType,
+                DeviceType = NormalizeDeviceType(info.DeviceType),
                 ProtocolVersion = info.Protocol
             };
         }
@@ -157,7 +157,7 @@ namespace UniversalSend.Models.Managers {
                 HttpProtocol = registerRequestData.Protocol,
                 ProtocolVersion = registerRequestData.Version,
                 DeviceModel = registerRequestData.DeviceModel,
-                DeviceType = registerRequestData.DeviceType,
+                DeviceType = NormalizeDeviceType(registerRequestData.DeviceType),
                 Fingerprint = registerRequestData.Fingerprint,
                 IP = ip,
                 Port = port,
@@ -171,7 +171,7 @@ namespace UniversalSend.Models.Managers {
             device.Alias = responseData.Alias;
             device.Version = responseData.Version;
             device.DeviceModel = responseData.DeviceModel;
-            device.DeviceType = responseData.DeviceType;
+            device.DeviceType = NormalizeDeviceType(responseData.DeviceType);
             device.Fingerprint = responseData.Fingerprint;
             device.Port = responseData.Port;
             device.ProtocolVersion = responseData.Version;
@@ -208,7 +208,7 @@ namespace UniversalSend.Models.Managers {
                 Alias = infoData.Alias,
                 Version = infoData.Version,
                 DeviceModel = infoData.DeviceModel,
-                DeviceType = infoData.DeviceType,
+                DeviceType = NormalizeDeviceType(infoData.DeviceType),
                 Fingerprint = infoData.Fingerprint,
                 HttpProtocol = string.IsNullOrWhiteSpace(infoData.Protocol) ? "http" : infoData.Protocol,
                 IP = ip,
@@ -222,7 +222,7 @@ namespace UniversalSend.Models.Managers {
                 Alias = registerResponseData.Alias,
                 Version = registerResponseData.Version,
                 DeviceModel = registerResponseData.DeviceModel,
-                DeviceType = registerResponseData.DeviceType,
+                DeviceType = NormalizeDeviceType(registerResponseData.DeviceType),
                 Fingerprint = registerResponseData.Fingerprint,
                 HttpProtocol = "http",
                 IP = ip,
@@ -235,6 +235,29 @@ namespace UniversalSend.Models.Managers {
             IDevice device = await FindDeviceByIPAsync(ip);
             if (device != null) {
                 AddKnownDevices(device);
+            }
+        }
+
+        /// <summary>
+        /// Normalizes a device type string to a known protocol value.
+        /// Per the LocalSend protocol spec (section 7.1), unknown values should fall back to "desktop".
+        /// Valid values: mobile, desktop, web, headless, server.
+        /// </summary>
+        private static string NormalizeDeviceType(string deviceType) {
+            if (string.IsNullOrWhiteSpace(deviceType)) {
+                return "desktop";
+            }
+
+            var lower = deviceType.Trim().ToLowerInvariant();
+            switch (lower) {
+                case "mobile":
+                case "desktop":
+                case "web":
+                case "headless":
+                case "server":
+                    return lower;
+                default:
+                    return "desktop";
             }
         }
 

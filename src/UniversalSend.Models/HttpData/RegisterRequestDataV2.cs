@@ -19,12 +19,12 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("deviceType")]
         public string DeviceType { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("fingerprint")]
         public string Fingerprint { get; set; }
 
+        /// <summary>Accepts v3 "token" field as alias for fingerprint during deserialization.</summary>
         [JsonProperty("token")]
-        public string Token {
-            get => Fingerprint;
+        private string Token {
             set {
                 if (string.IsNullOrWhiteSpace(Fingerprint)) {
                     Fingerprint = value;
@@ -38,12 +38,12 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("protocol")]
         public string Protocol { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("download")]
         public bool Download { get; set; }
 
+        /// <summary>Accepts v3 "hasWebInterface" field as alias for download during deserialization.</summary>
         [JsonProperty("hasWebInterface")]
-        public bool HasWebInterface {
-            get => Download;
+        private bool HasWebInterface {
             set {
                 Download = value;
             }

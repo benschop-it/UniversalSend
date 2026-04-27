@@ -22,6 +22,16 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("sha256")]
         public string Sha256 { get; set; }
 
+        /// <summary>Accepts the "hash" field used by LocalSend Dart as alias for sha256.</summary>
+        [JsonProperty("hash")]
+        private string Hash {
+            set {
+                if (string.IsNullOrWhiteSpace(Sha256)) {
+                    Sha256 = value;
+                }
+            }
+        }
+
         [JsonProperty("preview")]
         public string Preview { get; set; }
 

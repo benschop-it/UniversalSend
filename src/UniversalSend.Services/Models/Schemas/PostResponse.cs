@@ -18,6 +18,7 @@ namespace UniversalSend.Services.Models.Schemas {
             Rejected = 403,
             InvalidTokenOrIp = 403,
             BlockedByOtherSession = 409,
+            PreconditionFailed = 412,
             TooManyRequests = 429,
             Unknown = 500
         }

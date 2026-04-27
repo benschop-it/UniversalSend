@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
@@ -73,6 +74,10 @@ namespace UniversalSend.Services.Controllers {
         public GetResponse GetInfoWithFingerprint(string fingerprint) {
             _logger.Debug($"GET v2/info called with fingerprint: {fingerprint}.");
 
+            if (IsSelfDiscovery(fingerprint)) {
+                return new GetResponse(GetResponse.ResponseStatus.PreconditionFailed);
+            }
+
             return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
         }
 
@@ -80,13 +85,17 @@ namespace UniversalSend.Services.Controllers {
         public GetResponse GetInfoV1(string fingerprint) {
             _logger.Debug($"GET v1/info called with fingerprint: {fingerprint}.");
 
+            if (IsSelfDiscovery(fingerprint)) {
+                return new GetResponse(GetResponse.ResponseStatus.PreconditionFailed);
+            }
+
             return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
         }
 
         [UriFormat("v2/cancel")]
         public IAsyncOperation<IPostResponse> PostCancel() {
             return AsyncInfo.Run(async ct => {
-                _logger.Debug($"GET v2/Cancel called.");
+                _logger.Debug("POST v2/cancel called.");
 
                 var isCanceled = await _confirmReceiptHandler.CancelAsync();
                 if (!isCanceled) {
@@ -100,7 +109,7 @@ namespace UniversalSend.Services.Controllers {
    
         [UriFormat("v2/cancel?sessionId={sessionId}")]
         public PostResponse PostCancel(string sessionId) {
-            _logger.Debug($"GET v2/Cancel called for sessionId {sessionId}.");
+            _logger.Debug($"POST v2/cancel called for sessionId {sessionId}.");
 
             if (!_receiveTaskManager.CancelReceivingSession(sessionId)) {
                 return new PostResponse(PostResponse.ResponseStatus.InvalidTokenOrIp);
@@ -114,6 +123,10 @@ namespace UniversalSend.Services.Controllers {
         [UriFormat("v2/register")]
         public PostResponse PostRegister([FromContent] RegisterRequestDataV2 registerRequestData) {
             _logger.Debug($"POST v2 register request called with RegisterRequestData:\n{JsonConvert.SerializeObject(registerRequestData)}.");
+
+            if (registerRequestData != null && IsSelfDiscovery(registerRequestData.Fingerprint)) {
+                return new PostResponse(PostResponse.ResponseStatus.PreconditionFailed);
+            }
 
             IRegisterResponseDataV2 registerResponseData = _registerResponseDataManager.GetRegisterResponseDataV2();
             return new PostResponse(PostResponse.ResponseStatus.OK, "", registerResponseData);
@@ -186,8 +199,23 @@ namespace UniversalSend.Services.Controllers {
 
         [UriFormat("v2/prepare-download")]
         public PostResponse PostPrepareDownload() {
+            return HandlePrepareDownload(null);
+        }
+
+        [UriFormat("v2/prepare-download?sessionId={sessionId}")]
+        public PostResponse PostPrepareDownloadWithSession(string sessionId) {
+            return HandlePrepareDownload(sessionId);
+        }
+
+        private PostResponse HandlePrepareDownload(string sessionId) {
             var share = _webSendManager.GetActiveShare();
             if (share == null) {
+                return new PostResponse(PostResponse.ResponseStatus.Rejected);
+            }
+
+            // If the caller supplies a sessionId, allow reuse only if it matches the active session.
+            // This supports the browser-refresh scenario described in the protocol spec (section 5.2).
+            if (!string.IsNullOrWhiteSpace(sessionId) && !string.Equals(share.SessionId, sessionId, StringComparison.Ordinal)) {
                 return new PostResponse(PostResponse.ResponseStatus.Rejected);
             }
 
@@ -210,18 +238,32 @@ namespace UniversalSend.Services.Controllers {
                 return new GetResponse(GetResponse.ResponseStatus.NotFound);
             }
 
+            var downloadHeaders = new Dictionary<string, string> {
+                ["Content-Disposition"] = $"attachment; filename=\"{Uri.EscapeDataString(sendTask.File.FileName)}\"",
+            };
+
             if (sendTask.StorageFile == null) {
-                return new BinaryGetResponse(GetResponse.ResponseStatus.OK, System.Text.Encoding.UTF8.GetBytes(sendTask.File.Preview ?? string.Empty), sendTask.File.FileType);
+                return new BinaryGetResponse(GetResponse.ResponseStatus.OK, System.Text.Encoding.UTF8.GetBytes(sendTask.File.Preview ?? string.Empty), sendTask.File.FileType, downloadHeaders);
             }
 
             return new BinaryGetResponse(
                 GetResponse.ResponseStatus.OK,
                 _storageHelper.OpenReadStreamAsync(sendTask.StorageFile).GetAwaiter().GetResult(),
                 sendTask.File.Size,
-                sendTask.File.FileType);
+                sendTask.File.FileType,
+                downloadHeaders);
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private static bool IsSelfDiscovery(string fingerprint) {
+            return !string.IsNullOrWhiteSpace(fingerprint) &&
+                   string.Equals(fingerprint, UniversalSend.Models.ProgramData.LocalDevice.Fingerprint, StringComparison.Ordinal);
+        }
+
+        #endregion Private Methods
 
     }
 }
