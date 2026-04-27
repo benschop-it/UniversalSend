@@ -32,7 +32,7 @@ namespace UniversalSend.Models.Managers {
             infoData.Fingerprint = device.Fingerprint;
             infoData.Port = device.Port;
             infoData.Protocol = device.HttpProtocol;
-            infoData.Download = _webSendManager.GetActiveShare() != null;
+            infoData.Download = _webSendManager.HasActiveShare;
             return infoData;
         }
 

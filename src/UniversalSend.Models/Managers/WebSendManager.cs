@@ -28,6 +28,22 @@ namespace UniversalSend.Models.Managers {
             }
         }
 
+        public bool HasActiveShare {
+            get {
+                lock (_syncRoot) {
+                    return _activeShare != null;
+                }
+            }
+        }
+
+        public string GetBrowserDownloadUrl(int port, string ipAddress) {
+            if (!HasActiveShare || string.IsNullOrWhiteSpace(ipAddress) || port <= 0) {
+                return string.Empty;
+            }
+
+            return $"http://{ipAddress}:{port}";
+        }
+
         public void ClearShare(string sessionId = null) {
             lock (_syncRoot) {
                 if (_activeShare == null) {

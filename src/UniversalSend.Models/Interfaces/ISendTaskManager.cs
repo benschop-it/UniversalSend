@@ -14,6 +14,8 @@ namespace UniversalSend.Models.Interfaces {
 
         int LastPrepareUploadStatusCode { get; }
 
+        string LastWebShareUrl { get; }
+
         List<ISendTaskV2> SendTasksV2 { get; }
 
         #endregion Public Properties
@@ -25,6 +27,7 @@ namespace UniversalSend.Models.Interfaces {
         ISendTaskV2 CreateSendTaskFromFileRequestDataAndStorageFileV2(IFileRequestDataV2 fileRequestData, IStorageFile storageFile);
         Task CreateSendTasksV2(List<IStorageFile> files);
         void PublishForWebShare();
+        void ClearWebShare(string sessionId = null);
         Task<bool> SendSendRequestV2Async(IDevice destinationDevice);
         Task SendSendTasksV2Async(IDevice destinationDevice);
 

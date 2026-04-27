@@ -11,6 +11,7 @@ using UniversalSend.Misc;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Interfaces;
 using Windows.Storage;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -92,11 +93,13 @@ namespace UniversalSend.Views {
         #region Private Methods
 
         private void AddItemToSendQueue(ISendTaskV2 task) {
+            _sendTaskManager.ClearWebShare();
             _sendTaskManager.SendTasksV2.Add(task);
             UpdateView();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
+            _sendTaskManager.ClearWebShare();
             _sendTaskManager.SendTasksV2.Clear();
             SendQueueStackPanel.Visibility = Visibility.Collapsed;
             SelectSendItemButtons.Visibility = Visibility.Visible;
@@ -165,6 +168,8 @@ namespace UniversalSend.Views {
                 await MessageDialogManager.EmptySendTaskAsync();
                 return;
             }
+
+            _sendTaskManager.ClearWebShare();
             IDevice device = (IDevice)e.ClickedItem;
             _sendManager.SendPreparedEvent(device);
         }
@@ -213,6 +218,26 @@ namespace UniversalSend.Views {
                 return;
             }
             await ManualSendAsync();
+        }
+
+        private async void WebShareButton_Click(object sender, RoutedEventArgs e) {
+            if (_sendTaskManager.SendTasksV2.Count == 0) {
+                await MessageDialogManager.EmptySendTaskAsync();
+                return;
+            }
+
+            _sendTaskManager.PublishForWebShare();
+
+            if (string.IsNullOrWhiteSpace(_sendTaskManager.LastWebShareUrl)) {
+                await MessageDialogManager.ShowMessageAsync("Unable to create a browser download share.", "Web Share");
+                return;
+            }
+
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetText(_sendTaskManager.LastWebShareUrl);
+            Clipboard.SetContent(dataPackage);
+
+            await MessageDialogManager.ShowMessageAsync($"Browser download share created. URL copied to clipboard:\n{_sendTaskManager.LastWebShareUrl}", "Web Share");
         }
 
         private async Task OpenFileAsync() {

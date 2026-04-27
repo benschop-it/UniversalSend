@@ -6,6 +6,10 @@ namespace UniversalSend.Models.Interfaces {
 
         bool BeginShare(IEnumerable<ISendTaskV2> sendTasks);
 
+        bool HasActiveShare { get; }
+
+        string GetBrowserDownloadUrl(int port, string ipAddress);
+
         void ClearShare(string sessionId = null);
 
         IWebSendSession GetActiveShare();

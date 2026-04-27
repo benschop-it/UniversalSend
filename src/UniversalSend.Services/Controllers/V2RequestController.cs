@@ -210,7 +210,7 @@ namespace UniversalSend.Services.Controllers {
                 return new GetResponse(GetResponse.ResponseStatus.NotFound);
             }
 
-            return new BinaryGetResponse(GetResponse.ResponseStatus.OK, GetDownloadContent(sendTask));
+            return new BinaryGetResponse(GetResponse.ResponseStatus.OK, GetDownloadContent(sendTask), sendTask.File.FileType);
         }
 
         #endregion Public Methods

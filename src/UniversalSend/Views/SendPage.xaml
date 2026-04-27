@@ -5,7 +5,6 @@
     xmlns:local="using:UniversalSend.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:UniversalSend.Models.Data"
     xmlns:interfaces="using:UniversalSend.Models.Interfaces"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -67,6 +66,9 @@
             </Button>
             <Button Name="FavoriteButton" ToolTipService.ToolTip="Favorites" Click="FavoriteButton_Click">
                 <FontIcon Glyph="&#xEB51;" />
+            </Button>
+            <Button Name="WebShareButton" Click="WebShareButton_Click" ToolTipService.ToolTip="Create browser download share">
+                <FontIcon Glyph="&#xE71B;" />
             </Button>
             <Button ToolTipService.ToolTip="Send mode (Feature under development...)">
                 <FontIcon Glyph="&#xE713;" Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" />

@@ -18,6 +18,11 @@ namespace UniversalSend.Misc {
             return await messageDialog.ShowAsync();
         }
 
+        public static async Task<IUICommand> ShowMessageAsync(string message, string title) {
+            var messageDialog = new MessageDialog(message, title);
+            return await messageDialog.ShowAsync();
+        }
+
         #endregion Public Methods
     }
 }

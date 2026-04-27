@@ -60,6 +60,8 @@ namespace UniversalSend.Models.Managers {
 
         public int LastPrepareUploadStatusCode { get; private set; }
 
+        public string LastWebShareUrl { get; private set; }
+
         public List<ISendTaskV2> SendTasksV2 { get; private set; } = new List<ISendTaskV2>();
 
         #endregion Public Properties
@@ -97,10 +99,20 @@ namespace UniversalSend.Models.Managers {
         }
 
         public void PublishForWebShare() {
-            _webSendManager.BeginShare(SendTasksV2);
+            ClearWebShare();
+            bool created = _webSendManager.BeginShare(SendTasksV2);
+            LastWebShareUrl = created ? _webSendManager.GetBrowserDownloadUrl(ProgramData.LocalDevice.Port, ProgramData.LocalDevice.IP) : string.Empty;
+        }
+
+        public void ClearWebShare(string sessionId = null) {
+            _webSendManager.ClearShare(sessionId);
+            if (string.IsNullOrWhiteSpace(sessionId) || string.IsNullOrWhiteSpace(LastWebShareUrl)) {
+                LastWebShareUrl = string.Empty;
+            }
         }
 
         public async Task<bool> SendSendRequestV2Async(IDevice destinationDevice) {
+            ClearWebShare();
             LastPrepareUploadStatusCode = 0;
             LastPrepareUploadErrorMessage = null;
 
@@ -156,6 +168,7 @@ namespace UniversalSend.Models.Managers {
 
         public async Task SendSendTasksV2Async(IDevice destinationDevice) {
             // /api/localsend/v2/upload?sessionId=some session id&fileId=some file id&token=some token
+            ClearWebShare();
             _sendManager.SendStartedEvent();
             foreach (ISendTaskV2 task in SendTasksV2) {
                 if (string.IsNullOrEmpty(task.File.TransferToken)) {
@@ -184,6 +197,8 @@ namespace UniversalSend.Models.Managers {
                 task.TaskState = uploadResponse.IsSuccessStatusCode ? ReceiveTaskStates.Done : ReceiveTaskStates.Error;
                 _sendManager.SendStateChangedEvent();
             }
+
+            ClearWebShare();
         }
 
         #endregion Public Methods
