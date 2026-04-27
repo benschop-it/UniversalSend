@@ -19,11 +19,12 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("deviceType")]
         public string DeviceType { get; set; }
 
-        [JsonProperty("fingerprint")]
+        [JsonIgnore]
         public string Fingerprint { get; set; }
 
         [JsonProperty("token")]
-        private string Token {
+        public string Token {
+            get => Fingerprint;
             set {
                 if (string.IsNullOrWhiteSpace(Fingerprint)) {
                     Fingerprint = value;
@@ -37,11 +38,12 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("protocol")]
         public string Protocol { get; set; }
 
-        [JsonProperty("download")]
+        [JsonIgnore]
         public bool Download { get; set; }
 
         [JsonProperty("hasWebInterface")]
-        private bool HasWebInterface {
+        public bool HasWebInterface {
+            get => Download;
             set {
                 Download = value;
             }
