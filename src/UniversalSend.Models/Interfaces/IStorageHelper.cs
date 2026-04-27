@@ -17,6 +17,7 @@ namespace UniversalSend.Models.Interfaces {
         Task<StorageFolder> GetReceiveStorageFolderAsync();
         Task<bool> IsItemExsitAsync(StorageFolder parentFolder, string itemName);
         void LaunchAppLocalFolder();
+        Task MoveFileAsync(IStorageFile sourceFile, IStorageFile destinationFile);
         Task<byte[]> ReadBytesFromFileAsync(IStorageFile file);
         Task<Stream> OpenReadStreamAsync(IStorageFile file);
         Task WriteBytesToFileAsync(IStorageFile file, byte[] data);

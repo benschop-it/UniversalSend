@@ -130,7 +130,12 @@ namespace UniversalSend.Models.Managers {
                 task.FileV2.Preview = Encoding.UTF8.GetString(fileContent);
             }
 
-            task.FileContent = fileContent;
+            if (IsTextTask(task)) {
+                task.FileContent = fileContent;
+            } else {
+                task.TempStorageFile = await PersistToTempFileAsync(task, fileContent);
+                task.FileContent = null;
+            }
 
             if (_dispatcher.HasThreadAccess) {
                 task.TaskState = ReceiveTaskStates.Done;
@@ -151,7 +156,13 @@ namespace UniversalSend.Models.Managers {
             } else {
                 storageFile = await folder.CreateFileAsync(receiveTask.FileV2.FileName, CreationCollisionOption.GenerateUniqueName);
             }
-            await _storageHelper.WriteBytesToFileAsync(storageFile, receiveTask.FileContent);
+
+            if (receiveTask.TempStorageFile != null) {
+                await _storageHelper.MoveFileAsync(receiveTask.TempStorageFile, storageFile);
+                receiveTask.TempStorageFile = null;
+            } else {
+                await _storageHelper.WriteBytesToFileAsync(storageFile, receiveTask.FileContent);
+            }
             return storageFile;
         }
 
@@ -164,6 +175,12 @@ namespace UniversalSend.Models.Managers {
             return task?.FileV2 != null &&
                    !string.IsNullOrWhiteSpace(task.FileV2.FileType) &&
                    task.FileV2.FileType.StartsWith("text/", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private async Task<IStorageFile> PersistToTempFileAsync(IReceiveTask task, byte[] fileContent) {
+            var tempFile = await _storageHelper.CreateTempFile(task.FileV2.FileName);
+            await _storageHelper.WriteBytesToFileAsync(tempFile, fileContent);
+            return tempFile;
         }
 
         private void CompleteSessionIfFinished(string sessionId) {

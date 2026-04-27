@@ -2,6 +2,7 @@
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Tasks;
 using UniversalSend.Services.Interfaces;
+using Windows.Storage;
 
 namespace UniversalSend.Models.Interfaces {
 
@@ -32,6 +33,7 @@ namespace UniversalSend.Models.Interfaces {
 
         IUniversalSendFileV2 FileV2 { get; set; }
         byte[] FileContent { get; set; }
+        IStorageFile TempStorageFile { get; set; }
         IInfoDataV2 SenderV2 { get; set; }
         string SessionId { get; set; }
         ReceiveTaskStates TaskState { get; set; }

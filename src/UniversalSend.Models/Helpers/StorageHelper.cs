@@ -113,6 +113,20 @@ namespace UniversalSend.Models.Helpers {
             await Launcher.LaunchFolderAsync(folder, t);
         }
 
+        public async Task MoveFileAsync(IStorageFile sourceFile, IStorageFile destinationFile) {
+            if (sourceFile == null || destinationFile == null) {
+                return;
+            }
+
+            var buffer = await FileIO.ReadBufferAsync(sourceFile);
+            await FileIO.WriteBufferAsync(destinationFile, buffer);
+
+            try {
+                await sourceFile.DeleteAsync();
+            } catch {
+            }
+        }
+
         public async Task<byte[]> ReadBytesFromFileAsync(IStorageFile file) {
             if (file != null) {
                 IBuffer buffer = await FileIO.ReadBufferAsync(file);

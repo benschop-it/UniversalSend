@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Interfaces;
+using Windows.Storage;
 
 namespace UniversalSend.Models.Tasks {
 
@@ -33,6 +34,8 @@ namespace UniversalSend.Models.Tasks {
         public IUniversalSendFileV2 FileV2 { get; set; }
 
         public byte[] FileContent { get; set; }
+
+        public IStorageFile TempStorageFile { get; set; }
 
         public string SessionId { get; set; }
 
