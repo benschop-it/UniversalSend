@@ -149,9 +149,22 @@ namespace UniversalSend.Services.Controllers {
         public IAsyncOperation<IPostResponse> PostSendRequest(string sessionId, string fileId, string token) {
             _logger.Debug($"POST send called with sessionId = {sessionId} fileId = {fileId} and token = {token}.");
 
+            PostResponse.ResponseStatus status = PostResponse.ResponseStatus.OK;
+            switch (_receiveTaskManager.ValidateUploadRequest(sessionId, fileId, token)) {
+                case UploadRequestValidationResult.MissingParameters:
+                    status = PostResponse.ResponseStatus.MissingParameters;
+                    break;
+                case UploadRequestValidationResult.InvalidTokenOrSession:
+                    status = PostResponse.ResponseStatus.InvalidTokenOrIp;
+                    break;
+                case UploadRequestValidationResult.BlockedByOtherSession:
+                    status = PostResponse.ResponseStatus.BlockedByOtherSession;
+                    break;
+            }
+
             return Task.FromResult<IPostResponse>(
                 new PostResponse(
-                    PostResponse.ResponseStatus.OK,
+                    status,
                     ""
                 )
             ).AsAsyncOperation();

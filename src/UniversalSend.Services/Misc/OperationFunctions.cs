@@ -96,7 +96,10 @@ namespace UniversalSend.Services.Misc {
                 !queryParameters.TryGetValue("fileId", out fileId) || 
                 !queryParameters.TryGetValue("token", out token)
             ) {
-                _receiveManager.SendDataReceivedEvent(null);
+                return null;
+            }
+
+            if (_receiveTaskManager.ValidateUploadRequest(sessionId, fileId, token) != UploadRequestValidationResult.Valid) {
                 return null;
             }
 
@@ -133,7 +136,10 @@ namespace UniversalSend.Services.Misc {
                 !queryParameters.TryGetValue("fileId", out fileId) ||
                 !queryParameters.TryGetValue("token", out token)
             ) {
-                _receiveManager.SendDataReceivedEvent(null);
+                return null;
+            }
+
+            if (_receiveTaskManager.ValidateUploadRequest(sessionId, fileId, token) != UploadRequestValidationResult.Valid) {
                 return null;
             }
 

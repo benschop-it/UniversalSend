@@ -6,6 +6,13 @@ using UniversalSend.Models.Tasks;
 using Windows.Storage;
 
 namespace UniversalSend.Models.Interfaces {
+    public enum UploadRequestValidationResult {
+        Valid,
+        MissingParameters,
+        InvalidTokenOrSession,
+        BlockedByOtherSession
+    }
+
     public interface IReceiveTaskManager {
 
         #region Public Properties
@@ -23,6 +30,8 @@ namespace UniversalSend.Models.Interfaces {
         bool TryStartReceivingSession(string sessionId);
 
         bool CancelReceivingSession(string sessionId);
+
+        UploadRequestValidationResult ValidateUploadRequest(string sessionId, string fileId, string token);
 
         Task<IReceiveTask> WriteFileContentToReceivingTaskV2(string sessionId, string fileId, string token, byte[] fileContent);
 

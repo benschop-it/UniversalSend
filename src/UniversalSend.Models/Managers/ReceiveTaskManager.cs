@@ -83,8 +83,34 @@ namespace UniversalSend.Models.Managers {
             }
         }
 
+        public UploadRequestValidationResult ValidateUploadRequest(string sessionId, string fileId, string token) {
+            if (string.IsNullOrWhiteSpace(sessionId) || string.IsNullOrWhiteSpace(fileId) || string.IsNullOrWhiteSpace(token)) {
+                return UploadRequestValidationResult.MissingParameters;
+            }
+
+            lock (_sessionLock) {
+                if (string.IsNullOrWhiteSpace(_activeSessionId)) {
+                    return UploadRequestValidationResult.InvalidTokenOrSession;
+                }
+
+                if (!string.Equals(_activeSessionId, sessionId, StringComparison.Ordinal)) {
+                    return UploadRequestValidationResult.BlockedByOtherSession;
+                }
+            }
+
+            bool matchingTaskExists = ReceivingTasks.Any(x =>
+                string.Equals(x.SessionId, sessionId, StringComparison.Ordinal) &&
+                x.FileV2 != null &&
+                string.Equals(x.FileV2.Id, fileId, StringComparison.Ordinal) &&
+                string.Equals(x.FileV2.TransferToken, token, StringComparison.Ordinal));
+
+            return matchingTaskExists
+                ? UploadRequestValidationResult.Valid
+                : UploadRequestValidationResult.InvalidTokenOrSession;
+        }
+
         public async Task<IReceiveTask> WriteFileContentToReceivingTaskV2(string sessionId, string fileId, string token, byte[] fileContent) {
-            if (!IsActiveSession(sessionId)) {
+            if (ValidateUploadRequest(sessionId, fileId, token) != UploadRequestValidationResult.Valid) {
                 return null;
             }
 
@@ -143,12 +169,6 @@ namespace UniversalSend.Models.Managers {
                 if (!hasPendingTasks) {
                     _activeSessionId = null;
                 }
-            }
-        }
-
-        private bool IsActiveSession(string sessionId) {
-            lock (_sessionLock) {
-                return !string.IsNullOrWhiteSpace(_activeSessionId) && string.Equals(_activeSessionId, sessionId, StringComparison.Ordinal);
             }
         }
 
