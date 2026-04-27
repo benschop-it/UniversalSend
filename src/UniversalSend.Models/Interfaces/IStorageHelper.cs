@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -17,6 +18,7 @@ namespace UniversalSend.Models.Interfaces {
         Task<bool> IsItemExsitAsync(StorageFolder parentFolder, string itemName);
         void LaunchAppLocalFolder();
         Task<byte[]> ReadBytesFromFileAsync(IStorageFile file);
+        Task<Stream> OpenReadStreamAsync(IStorageFile file);
         Task WriteBytesToFileAsync(IStorageFile file, byte[] data);
         Task WriteTestFileAsync(byte[] content);
 

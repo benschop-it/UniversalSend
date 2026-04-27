@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
@@ -119,6 +120,15 @@ namespace UniversalSend.Models.Helpers {
                 return bytes;
             }
             return null;
+        }
+
+        public async Task<Stream> OpenReadStreamAsync(IStorageFile file) {
+            if (file == null) {
+                return null;
+            }
+
+            var randomAccessStream = await file.OpenReadAsync();
+            return randomAccessStream.AsStreamForRead();
         }
 
         public async Task WriteBytesToFileAsync(IStorageFile file, byte[] data) {

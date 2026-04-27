@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
@@ -14,7 +14,8 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
 
         #region Private Fields
 
-        private List<byte> _content;
+        private byte[] _content;
+        private int _offset;
 
         #endregion Private Fields
 
@@ -23,7 +24,6 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
         public ContentParser() {
             // Incoming data is read entirely, always, so there will never be any unparsed data
             UnparsedData = new byte[0];
-            _content = new List<byte>();
         }
 
         #endregion Public Constructors
@@ -35,14 +35,29 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
                 IsFinished = true;
                 IsSucceeded = stream.Length == 0;
             } else {
-                _content.AddRange(stream);
-                if (_content.Count == resultThisFar.ContentLength) {
-                    resultThisFar.Content = _content.ToArray();
+                EnsureContentBuffer(resultThisFar.ContentLength);
+
+                int remaining = resultThisFar.ContentLength - _offset;
+                int bytesToCopy = Math.Min(stream.Length, remaining);
+                Array.Copy(stream, 0, _content, _offset, bytesToCopy);
+                _offset += bytesToCopy;
+
+                if (_offset == resultThisFar.ContentLength) {
+                    resultThisFar.Content = _content;
                     IsFinished = true;
                     IsSucceeded = true;
                 }
                 // else if content is bigger, finished will never be set, badrequest will happen
             }
+        }
+
+        private void EnsureContentBuffer(int contentLength) {
+            if (_content != null && _content.Length == contentLength) {
+                return;
+            }
+
+            _content = new byte[contentLength];
+            _offset = 0;
         }
 
         #endregion Public Methods

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
@@ -207,11 +208,12 @@ namespace UniversalSend.Models.Managers {
                         new StringContent(task.File.Preview)
                     );
                 } else {
-                    byte[] bytes = await _storageHelper.ReadBytesFromFileAsync(task.StorageFile);
-                    uploadResponse = await _httpClientHelper.PostAsync(
-                        $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/upload?sessionId={task.SessionId}&fileId={task.File.Id}&token={task.File.TransferToken}",
-                        new ByteArrayContent(bytes)
-                    );
+                    using (Stream stream = await _storageHelper.OpenReadStreamAsync(task.StorageFile)) {
+                        uploadResponse = await _httpClientHelper.PostAsync(
+                            $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/upload?sessionId={task.SessionId}&fileId={task.File.Id}&token={task.File.TransferToken}",
+                            new StreamContent(stream)
+                        );
+                    }
                 }
 
                 task.TaskState = uploadResponse.IsSuccessStatusCode ? ReceiveTaskStates.Done : ReceiveTaskStates.Error;
