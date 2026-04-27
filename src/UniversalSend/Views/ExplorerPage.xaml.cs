@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ContentDialogControls;
 using UniversalSend.Misc;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
 using UniversalSend.Strings;
@@ -32,6 +33,7 @@ namespace UniversalSend.Views {
         private FileOpenPickerUI _fileOpenPickerUI;
         private FileSavePickerUI _fileSavePickerUI;
         private List<StorageFolder> _folderStack = new List<StorageFolder>();
+        private readonly ILogger _logger;
         private IStorageItem _rightTabedItem = null;
         private List<ViewStorageItem> _viewItems = new List<ViewStorageItem>();
         private IContentDialogManager _contentDialogManager => App.Services.GetRequiredService<IContentDialogManager>();
@@ -53,6 +55,7 @@ namespace UniversalSend.Views {
 
         public ExplorerPage() {
             InitializeComponent();
+            _logger = LogManager.GetLogger<ExplorerPage>();
             ContentDialogManager = _contentDialogManager;
 
             string ViewMode = _settings.GetSettingContentAsString(Constants.ExplorerPage_ViewMode);
