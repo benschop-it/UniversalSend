@@ -113,6 +113,17 @@ namespace UniversalSend.Models.Helpers {
             await Launcher.LaunchFolderAsync(folder, t);
         }
 
+        public async Task DeleteFileAsync(IStorageFile file) {
+            if (file == null) {
+                return;
+            }
+
+            try {
+                await file.DeleteAsync();
+            } catch {
+            }
+        }
+
         public async Task MoveFileAsync(IStorageFile sourceFile, IStorageFile destinationFile) {
             if (sourceFile == null || destinationFile == null) {
                 return;

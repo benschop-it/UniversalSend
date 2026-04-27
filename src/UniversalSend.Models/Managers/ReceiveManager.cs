@@ -50,7 +50,7 @@ namespace UniversalSend.Models.Managers {
         #region Public Methods
 
         public void CancelReceivedEvent() {
-            _receiveTaskManager.ReceivingTasks.Clear();
+            _receiveTaskManager.ClearReceivingTasks();
             CancelReceived?.Invoke(null, EventArgs.Empty);
         }
 

@@ -84,7 +84,7 @@ namespace UniversalSend.Views {
 
         private void FinishButton_Click(object sender, RoutedEventArgs e) {
             //To-Do: Add to history
-            _receiveTaskManager.ReceivingTasks.Clear();
+            _receiveTaskManager.ClearReceivingTasks();
             Frame.GoBack();
         }
 

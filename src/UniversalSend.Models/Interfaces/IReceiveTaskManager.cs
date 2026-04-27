@@ -31,6 +31,8 @@ namespace UniversalSend.Models.Interfaces {
 
         bool CancelReceivingSession(string sessionId);
 
+        void ClearReceivingTasks();
+
         UploadRequestValidationResult ValidateUploadRequest(string sessionId, string fileId, string token);
 
         Task<IReceiveTask> WriteFileContentToReceivingTaskV2(string sessionId, string fileId, string token, byte[] fileContent);

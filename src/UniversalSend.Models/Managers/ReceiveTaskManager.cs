@@ -79,8 +79,18 @@ namespace UniversalSend.Models.Managers {
                     return false;
                 }
 
+                CleanupSessionResources(_activeSessionId);
                 _activeSessionId = null;
                 return true;
+            }
+        }
+
+        public void ClearReceivingTasks() {
+            CleanupAllTempFiles();
+            ReceivingTasks.Clear();
+
+            lock (_sessionLock) {
+                _activeSessionId = null;
             }
         }
 
@@ -199,6 +209,28 @@ namespace UniversalSend.Models.Managers {
                     _activeSessionId = null;
                 }
             }
+        }
+
+        private void CleanupAllTempFiles() {
+            foreach (var task in ReceivingTasks.ToList()) {
+                CleanupTempFile(task);
+            }
+        }
+
+        private void CleanupSessionResources(string sessionId) {
+            foreach (var task in ReceivingTasks.Where(x => string.Equals(x.SessionId, sessionId, StringComparison.Ordinal)).ToList()) {
+                CleanupTempFile(task);
+                task.TaskState = ReceiveTaskStates.Canceled;
+            }
+        }
+
+        private void CleanupTempFile(IReceiveTask task) {
+            if (task?.TempStorageFile == null) {
+                return;
+            }
+
+            _storageHelper.DeleteFileAsync(task.TempStorageFile).GetAwaiter().GetResult();
+            task.TempStorageFile = null;
         }
 
         #endregion Private Methods
