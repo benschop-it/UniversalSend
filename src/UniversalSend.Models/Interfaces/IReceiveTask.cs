@@ -33,6 +33,7 @@ namespace UniversalSend.Models.Interfaces {
         IUniversalSendFileV2 FileV2 { get; set; }
         byte[] FileContent { get; set; }
         IInfoDataV2 SenderV2 { get; set; }
+        string SessionId { get; set; }
         ReceiveTaskStates TaskState { get; set; }
         int Progress { get; set; }
         HttpParseProgressStatus Status { get; set; }

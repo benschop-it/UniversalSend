@@ -14,8 +14,10 @@ namespace UniversalSend.Models.Managers {
 
         #region Private Fields
 
+        private string _activeSessionId;
         private readonly IStorageHelper _storageHelper;
         private readonly CoreDispatcher _dispatcher;
+        private readonly object _sessionLock = new object();
 
         #endregion Private Fields
 
@@ -36,8 +38,8 @@ namespace UniversalSend.Models.Managers {
 
         #region Public Methods
 
-        public async Task CreateReceivingTaskFromUniversalSendFileV2Async(IUniversalSendFileV2 file, IInfoDataV2 info) {
-            var task = new ReceiveTask { FileV2 = file, SenderV2 = info };
+        public async Task CreateReceivingTaskFromUniversalSendFileV2Async(IUniversalSendFileV2 file, IInfoDataV2 info, string sessionId) {
+            var task = new ReceiveTask { FileV2 = file, SenderV2 = info, SessionId = sessionId };
 
             if (_dispatcher.HasThreadAccess) {
                 ReceivingTasks.Add(task);
@@ -46,15 +48,48 @@ namespace UniversalSend.Models.Managers {
             }
         }
 
-        public void CreateReceivingTaskFromUniversalSendFileV2(IUniversalSendFileV2 universalSendFile, IInfoDataV2 info) {
-            IReceiveTask receiveTask = new ReceiveTask { FileV2 = universalSendFile, SenderV2 = info };
+        public void CreateReceivingTaskFromUniversalSendFileV2(IUniversalSendFileV2 universalSendFile, IInfoDataV2 info, string sessionId) {
+            IReceiveTask receiveTask = new ReceiveTask { FileV2 = universalSendFile, SenderV2 = info, SessionId = sessionId };
             ReceivingTasks.Add(receiveTask);
         }
 
+        public bool TryStartReceivingSession(string sessionId) {
+            if (string.IsNullOrWhiteSpace(sessionId)) {
+                return false;
+            }
+
+            lock (_sessionLock) {
+                if (string.IsNullOrWhiteSpace(_activeSessionId) || string.Equals(_activeSessionId, sessionId, StringComparison.Ordinal)) {
+                    _activeSessionId = sessionId;
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool CancelReceivingSession(string sessionId) {
+            lock (_sessionLock) {
+                if (string.IsNullOrWhiteSpace(_activeSessionId)) {
+                    return false;
+                }
+
+                if (!string.IsNullOrWhiteSpace(sessionId) && !string.Equals(_activeSessionId, sessionId, StringComparison.Ordinal)) {
+                    return false;
+                }
+
+                _activeSessionId = null;
+                return true;
+            }
+        }
+
         public async Task<IReceiveTask> WriteFileContentToReceivingTaskV2(string sessionId, string fileId, string token, byte[] fileContent) {
-            //TODO: do something with the session Id.
+            if (!IsActiveSession(sessionId)) {
+                return null;
+            }
 
             IReceiveTask task = ReceivingTasks.FirstOrDefault(x =>
+                string.Equals(x.SessionId, sessionId, StringComparison.Ordinal) &&
                 x.FileV2 != null &&
                 string.Equals(x.FileV2.Id, fileId, StringComparison.Ordinal) &&
                 string.Equals(x.FileV2.TransferToken, token, StringComparison.Ordinal));
@@ -70,6 +105,8 @@ namespace UniversalSend.Models.Managers {
             } else {
                 await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => task.TaskState = ReceiveTaskStates.Done);
             }
+
+            CompleteSessionIfFinished(sessionId);
 
             return task;
         }
@@ -88,6 +125,34 @@ namespace UniversalSend.Models.Managers {
 
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void CompleteSessionIfFinished(string sessionId) {
+            lock (_sessionLock) {
+                if (!string.Equals(_activeSessionId, sessionId, StringComparison.Ordinal)) {
+                    return;
+                }
+
+                bool hasPendingTasks = ReceivingTasks.Any(x =>
+                    string.Equals(x.SessionId, sessionId, StringComparison.Ordinal) &&
+                    x.TaskState != ReceiveTaskStates.Done &&
+                    x.TaskState != ReceiveTaskStates.Canceled &&
+                    x.TaskState != ReceiveTaskStates.Error);
+
+                if (!hasPendingTasks) {
+                    _activeSessionId = null;
+                }
+            }
+        }
+
+        private bool IsActiveSession(string sessionId) {
+            lock (_sessionLock) {
+                return !string.IsNullOrWhiteSpace(_activeSessionId) && string.Equals(_activeSessionId, sessionId, StringComparison.Ordinal);
+            }
+        }
+
+        #endregion Private Methods
 
     }
 }

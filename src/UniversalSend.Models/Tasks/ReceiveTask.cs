@@ -34,6 +34,8 @@ namespace UniversalSend.Models.Tasks {
 
         public byte[] FileContent { get; set; }
 
+        public string SessionId { get; set; }
+
         public int Progress {
             get => _progress;
             set => Set(ref _progress, value);

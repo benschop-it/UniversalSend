@@ -93,6 +93,10 @@ namespace UniversalSend.Services.Controllers {
         public PostResponse PostCancel(string sessionId) {
             _logger.Debug($"GET v2/Cancel called for sessionId {sessionId}.");
 
+            if (!_receiveTaskManager.CancelReceivingSession(sessionId)) {
+                return new PostResponse(PostResponse.ResponseStatus.InvalidTokenOrIp);
+            }
+
             _receiveManager.CancelReceivedEvent();
             return new PostResponse(PostResponse.ResponseStatus.OK, "");
         }
@@ -113,8 +117,13 @@ namespace UniversalSend.Services.Controllers {
 
                 var sessionId = _tokenFactory.CreateToken();
 
+                if (!_receiveTaskManager.TryStartReceivingSession(sessionId)) {
+                    return new PostResponse(PostResponse.ResponseStatus.BlockedByOtherSession);
+                }
+
                 var isAccepted = await _confirmReceiptHandler.ConfirmAsync(requestData);
                 if (!isAccepted) {
+                    _receiveTaskManager.CancelReceivingSession(sessionId);
                     return new PostResponse(PostResponse.ResponseStatus.Rejected);
                 }
 
@@ -128,7 +137,7 @@ namespace UniversalSend.Services.Controllers {
                         var token = _tokenFactory.CreateToken();
                         responseData.Files.Add(item.Key, token);
                         var file = _universalSendFileManager.GetUniversalSendFileFromFileRequestDataV2AndToken(item.Value, token);
-                        await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileV2Async(file, requestData.Info);
+                        await _receiveTaskManager.CreateReceivingTaskFromUniversalSendFileV2Async(file, requestData.Info, sessionId);
                     }
                 }
 
