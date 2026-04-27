@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using UniversalSend.Models.Common;
 using UniversalSend.Interfaces;
 using UniversalSend.Misc;
 using UniversalSend.Models.Helpers;
@@ -15,6 +15,7 @@ namespace UniversalSend.Views {
 
     public sealed partial class ReceivePage : Page {
 
+        private readonly ILogger _logger;
         private ISettings _settings => App.Services.GetRequiredService<ISettings>();
         private INetworkHelper _networkHelper => App.Services.GetRequiredService<INetworkHelper>();
         private IUIManager _uiManager => App.Services.GetRequiredService<IUIManager>();
@@ -23,6 +24,7 @@ namespace UniversalSend.Views {
 
         public ReceivePage() {
             InitializeComponent();
+            _logger = LogManager.GetLogger<ReceivePage>();
             RootGrid.Margin = _uiManager.RootElementMargin;
         }
 
@@ -41,7 +43,7 @@ namespace UniversalSend.Views {
 
             List<string> IpAddrList = _networkHelper.GetIPv4AddrList();
             foreach (string ip in IpAddrList) {
-                Debug.WriteLine("[ReceivePage.xaml.cs Page_Loaded] IPv4 address: " + ip);
+                _logger.Debug("Receive page loaded with IPv4 address {0}", ip);
                 HashtagTextBlock.Text += $"#{ip.Substring(ip.LastIndexOf(".") + 1)} ";
             }
         }

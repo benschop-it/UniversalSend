@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Interfaces;
 
@@ -10,6 +10,7 @@ namespace UniversalSend.Models.Managers {
 
         #region Private Fields
 
+        private readonly ILogger _logger;
         private readonly IReceiveTaskManager _receiveTaskManager;
 
         #endregion Private Fields
@@ -17,6 +18,7 @@ namespace UniversalSend.Models.Managers {
         #region Public Constructors
 
         public ReceiveManager(IReceiveTaskManager receiveTaskManager) {
+            _logger = LogManager.GetLogger<ReceiveManager>();
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
         }
 
@@ -48,7 +50,6 @@ namespace UniversalSend.Models.Managers {
         #region Public Methods
 
         public void CancelReceivedEvent() {
-            Debug.WriteLine("CancelReceivedEvent");
             _receiveTaskManager.ReceivingTasks.Clear();
             CancelReceived?.Invoke(null, EventArgs.Empty);
         }
@@ -70,17 +71,14 @@ namespace UniversalSend.Models.Managers {
         }
 
         public void SendDataReceivedEvent(IReceiveTask receiveTask) {
-            Debug.WriteLine("SendDataReceivedEvent");
             SendDataReceived?.Invoke(receiveTask, EventArgs.Empty);
         }
 
         public void SendRequestV2Event(ISendRequestDataV2 sendRequestData) {
-            Debug.WriteLine("SendRequestV2Event");
             SendRequestReceived?.Invoke(sendRequestData, EventArgs.Empty);
         }
 
         public void SendProgressEvent(ISendRequestProgress sendRequestProgress) {
-            Debug.WriteLine("SendRequestProgressEvent");
             SendRequestProgressReceived?.Invoke(sendRequestProgress, EventArgs.Empty);
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ItemControls;
 using UniversalSend.Misc;
@@ -32,7 +31,6 @@ namespace UniversalSend.Controls.ContentDialogControls {
 
         private async void ViewStorageItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                Debug.WriteLine("ViewStorageItem_PropertyChanged called.");
             });
         }
 

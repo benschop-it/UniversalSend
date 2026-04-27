@@ -4,7 +4,6 @@ using UniversalSend.Interfaces;
 using UniversalSend.Misc;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
-using UniversalSend.Interfaces;
 using UniversalSend.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;

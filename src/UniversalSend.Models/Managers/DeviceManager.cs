@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
@@ -15,6 +15,7 @@ namespace UniversalSend.Models.Managers {
 
         #region Private Fields
 
+        private readonly ILogger _logger;
         private IHttpClientHelper _httpClientHelper;
         private INetworkHelper _networkHelper;
         private IRegisterRequestDataManager _registerRequestDataManager;
@@ -28,6 +29,7 @@ namespace UniversalSend.Models.Managers {
             IRegisterRequestDataManager registerRequestDataManager,
             IHttpClientHelper httpClientHelper
         ) {
+            _logger = LogManager.GetLogger<DeviceManager>();
             _networkHelper = networkHelper ?? throw new ArgumentNullException(nameof(networkHelper));
             _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _registerRequestDataManager = registerRequestDataManager ?? throw new ArgumentNullException(nameof(registerRequestDataManager));
@@ -51,7 +53,7 @@ namespace UniversalSend.Models.Managers {
 
         public void AddKnownDevices(IDevice device) {
             if (device == null) {
-                Debug.WriteLine("AddKnownDevices: device was null, skipping.");
+                _logger.Debug("AddKnownDevices skipped because device was null.");
                 return;
             }
 
@@ -60,12 +62,12 @@ namespace UniversalSend.Models.Managers {
                 existing != null ||
                 ProgramData.LocalDevice.Fingerprint == device.Fingerprint
             ) {
-                Debug.WriteLine($"AddKnownDevices: skipping device alias='{device.Alias}', ip='{device.IP}', fingerprint='{device.Fingerprint}', existingMatch={(existing != null)}, localFingerprintMatch={ProgramData.LocalDevice.Fingerprint == device.Fingerprint}.");
+                _logger.Debug("AddKnownDevices skipped alias='{0}', ip='{1}', fingerprint='{2}', existingMatch={3}, localFingerprintMatch={4}.", device.Alias, device.IP, device.Fingerprint, existing != null, ProgramData.LocalDevice.Fingerprint == device.Fingerprint);
                 return;
             }
 
             KnownDevices.Add(device);
-            Debug.WriteLine($"AddKnownDevices: added device alias='{device.Alias}', ip='{device.IP}', port={device.Port}, fingerprint='{device.Fingerprint}'. TotalKnownDevices={KnownDevices.Count}.");
+            _logger.Debug("AddKnownDevices added alias='{0}', ip='{1}', port={2}, fingerprint='{3}'. TotalKnownDevices={4}.", device.Alias, device.IP, device.Port, device.Fingerprint, KnownDevices.Count);
             KnownDevicesChanged?.Invoke(null, EventArgs.Empty);
         }
 
@@ -108,11 +110,11 @@ namespace UniversalSend.Models.Managers {
         public async Task<IDevice> FindDeviceByIPAsync(string IP) {
             var serializedDevice = JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice));
 
-            Debug.WriteLine($"URL:http://{IP}:53317/api/localsend/v1/register\nJson:{serializedDevice}");
+            _logger.Debug("FindDeviceByIPAsync sending register request to http://{0}:53317/api/localsend/v1/register with payload: {1}", IP, serializedDevice);
 
             string responseString = await _httpClientHelper.PostJsonAsync($"http://{IP}:53317/api/localsend/v1/register", serializedDevice);
 
-            Debug.WriteLine($"responseString: {responseString}");
+            _logger.Debug("FindDeviceByIPAsync received response: {0}", responseString);
 
             try {
                 AnnouncementV2 registerResponseData = JsonConvert.DeserializeObject<AnnouncementV2>(responseString);
@@ -129,7 +131,8 @@ namespace UniversalSend.Models.Managers {
                 device.Fingerprint = registerResponseData.Fingerprint;
                 device.ProtocolVersion = registerResponseData.Protocol;
                 return device;
-            } catch {
+            } catch (Exception ex) {
+                _logger.Debug("FindDeviceByIPAsync failed to deserialize response.", ex);
             }
             return null;
         }

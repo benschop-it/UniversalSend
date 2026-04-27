@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Strings;
 using Windows.Security.ExchangeActiveSyncProvisioning;
@@ -18,6 +18,7 @@ namespace UniversalSend.Models.Misc {
 
         #region Private Fields
 
+        private readonly ILogger _logger;
         private ISystemHelper _systemHelper;
 
         #endregion Private Fields
@@ -25,6 +26,7 @@ namespace UniversalSend.Models.Misc {
         #region Public Constructors
 
         public Settings(ISystemHelper systemHelper) {
+            _logger = LogManager.GetLogger<Settings>();
             _systemHelper = systemHelper ?? throw new ArgumentNullException(nameof(systemHelper));
         }
 
@@ -68,7 +70,7 @@ namespace UniversalSend.Models.Misc {
             try {
                 UserSettings.Values[key] = value;
             } catch (Exception ex) {
-                Debug.WriteLine($"Exception storing settings: {ex.Message}");
+                _logger.Error("Exception storing settings.", ex);
             }
             return true;
         }

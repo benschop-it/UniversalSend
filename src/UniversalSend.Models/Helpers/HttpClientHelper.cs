@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
+using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Interfaces.Internal;
 using Windows.Data.Json;
 using Windows.Storage.Streams;
@@ -17,12 +19,14 @@ namespace UniversalSend.Models.Helpers {
 
         // Static HttpClient instance to avoid frequent creation
         private readonly HttpClient _httpClient = new HttpClient();
+        private readonly ILogger _logger;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public HttpClientHelper() {
+            _logger = LogManager.GetLogger<HttpClientHelper>();
             // Set default timeout
             //_httpClient.Timeout = TimeSpan.FromSeconds(30);
             // Set default request headers
@@ -42,7 +46,7 @@ namespace UniversalSend.Models.Helpers {
                 var response = await _httpClient.DeleteAsync(url);
                 return response.IsSuccessStatusCode;
             } catch (Exception ex) {
-                System.Diagnostics.Debug.WriteLine($"DELETE request failed: {ex.Message}");
+                _logger.Error("DELETE request failed.", ex);
                 throw;
             }
         }
@@ -80,7 +84,7 @@ namespace UniversalSend.Models.Helpers {
                 Stream stream = await response.Content.ReadAsStreamAsync();
                 return stream.AsRandomAccessStream();
             } catch (Exception ex) {
-                System.Diagnostics.Debug.WriteLine($"GET stream request failed: {ex.Message}");
+                _logger.Error("GET stream request failed.", ex);
                 throw;
             }
         }
@@ -95,8 +99,7 @@ namespace UniversalSend.Models.Helpers {
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync();
             } catch (Exception ex) {
-                // Handle exception, customize handling logic if needed
-                System.Diagnostics.Debug.WriteLine($"GET request failed: {ex.Message}");
+                _logger.Error("GET request failed.", ex);
                 throw;
             }
         }
@@ -150,7 +153,7 @@ namespace UniversalSend.Models.Helpers {
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync();
             } catch (Exception ex) {
-                System.Diagnostics.Debug.WriteLine($"POST request failed: {ex.Message}");
+                _logger.Error("POST request failed.", ex);
                 return "";
             }
         }
@@ -173,7 +176,7 @@ namespace UniversalSend.Models.Helpers {
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync();
             } catch (Exception ex) {
-                System.Diagnostics.Debug.WriteLine($"PUT request failed: {ex.Message}");
+                _logger.Error("PUT request failed.", ex);
                 throw;
             }
         }

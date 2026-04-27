@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Views;
@@ -36,10 +35,8 @@ namespace UniversalSend.Misc {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher
                 .RunAsync(CoreDispatcherPriority.Normal, () => {
                     if (((ContentControl)Window.Current.Content).Content is RootPage15063) {
-                        Debug.WriteLine("On the root page!");
                         tcs.SetResult(false);
                     } else {
-                        Debug.WriteLine($"On the {((ContentControl)Window.Current.Content).Content.GetType().FullName} page!");
                         var frame = Window.Current.Content as Frame;
                         frame?.Navigate(typeof(ConfirmReceiptPage), new CancelReceiptPageParameter {
                             CompletionSource = tcs

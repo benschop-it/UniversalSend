@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UniversalSend.Models;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using Windows.UI.Xaml;
@@ -11,6 +11,7 @@ namespace UniversalSend.Controls {
 
     public sealed partial class DeviceInfoControl : UserControl {
 
+        private readonly ILogger _logger;
         private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
 
         #region Private Fields
@@ -25,6 +26,7 @@ namespace UniversalSend.Controls {
         #region Public Constructors
 
         public DeviceInfoControl() {
+            _logger = LogManager.GetLogger<DeviceInfoControl>();
             IDevice localDevice = _deviceManager.GetLocalDevice();
             DeviceName = localDevice.Alias;
             IP = localDevice.IP;
@@ -47,8 +49,6 @@ namespace UniversalSend.Controls {
             foreach (string ip in ipList) {
                 IP += $"{ip}\n";
             }
-
-            Debug.WriteLine("[DeviceInfoControl.xaml.cs UserControl_Loaded] IPv4 addresses: " + IP);
 
             if (IP.Length > 1) {
                 IP = IP.Substring(0, IP.Length - 1);

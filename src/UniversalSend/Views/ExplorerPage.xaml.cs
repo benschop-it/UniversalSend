@@ -154,8 +154,7 @@ namespace UniversalSend.Views {
                 // Set TargetFile, the caller of the "custom file save picker" will receive this object
                 args.Request.TargetFile = file;
             } catch (Exception ex) {
-                // Output exception information
-                Debug.WriteLine(ex.ToString());
+                _logger.Error("FileSavePicker target file request failed.", ex);
             } finally {
                 // Complete the asynchronous operation
                 deferral.Complete();
@@ -429,7 +428,6 @@ namespace UniversalSend.Views {
 
         private void ViewModeButton_Click(object sender, RoutedEventArgs e) {
             UpdateViewMode();
-            Debug.WriteLine(_currentViewMode.ToString());
             _settings.SetSetting(Constants.ExplorerPage_ViewMode, _currentViewMode.ToString());
         }
 

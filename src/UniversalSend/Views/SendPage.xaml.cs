@@ -106,7 +106,6 @@ namespace UniversalSend.Views {
         }
 
         private async void DeviceManager_KnownDevicesChanged(object sender, EventArgs e) {
-            Debug.WriteLine("Refresh known device list");
             await Task.Delay(1000);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 KnownDeviceListView.ItemsSource = null;
@@ -266,11 +265,9 @@ namespace UniversalSend.Views {
             }
             Inited = true;
             UpdateView();
-            Debug.WriteLine("SendPageLoaded");
         }
 
         private async void Register_NewDeviceRegister(object sender, EventArgs e) {
-            Debug.WriteLine("Refresh known device list");
             await Task.Delay(1000);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 KnownDeviceListView.ItemsSource = null;

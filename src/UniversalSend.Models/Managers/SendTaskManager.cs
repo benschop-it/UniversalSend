@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
@@ -17,6 +17,7 @@ namespace UniversalSend.Models.Managers {
 
         #region Private Fields
 
+        private readonly ILogger _logger;
         private IFileRequestDataManager _fileRequestDataManager;
         private IHttpClientHelper _httpClientHelper;
         private IInfoDataManager _infoDataManager;
@@ -38,6 +39,7 @@ namespace UniversalSend.Models.Managers {
             IHttpClientHelper httpClientHelper,
             IFileRequestDataManager fileRequestDataManager
         ) {
+            _logger = LogManager.GetLogger<SendTaskManager>();
             _universalSendFileManager = universalSendFileManager ?? throw new System.ArgumentNullException(nameof(universalSendFileManager));
             _infoDataManager = infoDataManager ?? throw new System.ArgumentNullException(nameof(infoDataManager));
             _storageHelper = storageHelper ?? throw new System.ArgumentNullException(nameof(storageHelper));
@@ -94,13 +96,12 @@ namespace UniversalSend.Models.Managers {
                 IFileRequestDataV2 fileRequestData = _fileRequestDataManager.CreateFromUniversalSendFileV2(task.File);
                 sendRequestData.Files.Add(task.File.Id, (FileRequestDataV2)fileRequestData);
             }
-            Debug.WriteLine($"Sending send request:\nURL: {destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/send-request");
 
             var serializedSendRequestData = JsonConvert.SerializeObject(sendRequestData);
+            _logger.Debug("SendSendRequestV2Async sending prepare-upload request to http://{0}:{1}/api/localsend/v2/prepare-upload with payload: {2}", destinationDevice.IP, destinationDevice.Port, serializedSendRequestData);
 
-            Debug.WriteLine($"SendSendRequestAsync: {serializedSendRequestData}");
             string responseStr = await _httpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/prepare-upload", serializedSendRequestData);
-            Debug.WriteLine($"Receiver responded: {responseStr}");
+            _logger.Debug("SendSendRequestV2Async received response: {0}", responseStr);
 
             try {
                 FileResponseDataV2 fileResponseData = JsonConvert.DeserializeObject<FileResponseDataV2>(responseStr);
@@ -126,15 +127,13 @@ namespace UniversalSend.Models.Managers {
             // /api/localsend/v2/upload?sessionId=some session id&fileId=some file id&token=some token
             _sendManager.SendStartedEvent();
             foreach (ISendTaskV2 task in SendTasksV2) {
-                Debug.WriteLine($"Preparing to send file: {task.File.FileName}");
-
                 if (string.IsNullOrEmpty(task.File.TransferToken)) {
                     task.TaskState = ReceiveTaskStates.Error;
                     _sendManager.SendStateChangedEvent();
                     continue;
                 }
 
-                Debug.WriteLine($"Sending file: {task.File.FileName}");
+                _logger.Debug("SendSendTasksV2Async sending file '{0}'.", task.File.FileName);
                 task.TaskState = ReceiveTaskStates.Sending;
 
                 if (task.File.FileType == "text") {

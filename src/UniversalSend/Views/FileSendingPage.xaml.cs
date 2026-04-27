@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using UniversalSend.Controls;
 using UniversalSend.Models;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Data;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
@@ -18,6 +18,7 @@ namespace UniversalSend.Views {
 
         #region Private Fields
 
+        private readonly ILogger _logger;
         private int _sendedItemsCount = 0;
         private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
         private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
@@ -29,6 +30,7 @@ namespace UniversalSend.Views {
 
         public FileSendingPage() {
             InitializeComponent();
+            _logger = LogManager.GetLogger<FileSendingPage>();
             _sendManager.SendStateChanged += SendManager_SendStateChanged;
         }
 
@@ -46,7 +48,7 @@ namespace UniversalSend.Views {
             base.OnNavigatedTo(e);
             if (Device == null)
             {
-                Debug.WriteLine("[FileSendingPage.xaml.cs OnNavigatedTo] No device parameter passed. Navigating back.");
+                _logger.Warn("OnNavigatedTo called without a device parameter. Navigating back.");
                 Frame.GoBack();
             }
 

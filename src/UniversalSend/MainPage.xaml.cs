@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using UniversalSend.Interfaces;
 using UniversalSend.Models;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Helpers;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Managers;
@@ -32,6 +32,7 @@ namespace UniversalSend {
 
         #region Private Fields
 
+        private readonly ILogger _logger;
         private bool _normalLaunch = true;
         private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
         private ISendManager _sendManager => App.Services.GetRequiredService<ISendManager>();
@@ -50,6 +51,7 @@ namespace UniversalSend {
 
         public MainPage() {
             this.InitializeComponent();
+            _logger = LogManager.GetLogger<MainPage>();
         }
 
         #endregion Public Constructors
@@ -98,7 +100,7 @@ namespace UniversalSend {
             string deviceFamilyVersion = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
             ulong build = (version & 0x00000000FFFF0000L) >> 16;
-            Debug.WriteLine($"System version build number: {build}");
+            _logger.Debug("System version build number: {0}", build);
             if (build >= 16299) {
                 Frame.Navigate(typeof(RootPage));
             } else {
@@ -119,18 +121,12 @@ namespace UniversalSend {
             List<ISendTaskV2> sendTasks = new List<ISendTaskV2>();
             if (shareOperation.Data.Contains(StandardDataFormats.Text)) {
                 string text = await shareOperation.Data.GetTextAsync();
-
-                // To output the text from this example, you need a TextBlock control
-                // with a name of "sharedContent".
-                Debug.WriteLine($"ShareActivated-Text:{text}");
                 sendTasks.Add(_sendTaskManager.CreateSendTaskV2(text));
             } else if (shareOperation.Data.Contains(StandardDataFormats.ApplicationLink)) {
                 Uri uri = await shareOperation.Data.GetApplicationLinkAsync();
-                Debug.WriteLine($"ShareActivated-ApplicationLink:{uri.ToString()}");
                 sendTasks.Add(_sendTaskManager.CreateSendTaskV2(uri.ToString()));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Bitmap)) {
                 RandomAccessStreamReference accessStreamReference = await shareOperation.Data.GetBitmapAsync();
-                Debug.WriteLine($"ShareActivated-Bitmap");
                 var randomAccessStreamWithContentType = await (await shareOperation.Data.GetBitmapAsync()).OpenReadAsync();
                 byte[] buffer = new byte[randomAccessStreamWithContentType.Size];
                 await randomAccessStreamWithContentType.ReadAsync(buffer.AsBuffer(), (uint)randomAccessStreamWithContentType.Size, InputStreamOptions.None);
@@ -139,15 +135,12 @@ namespace UniversalSend {
                 sendTasks.Add(await _sendTaskManager.CreateSendTaskV2(storageFile));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Html)) {
                 string htmlStr = await shareOperation.Data.GetHtmlFormatAsync();
-                Debug.WriteLine($"ShareActivated-Html:{htmlStr}");
                 sendTasks.Add(_sendTaskManager.CreateSendTaskV2(htmlStr));
             } else if (shareOperation.Data.Contains(StandardDataFormats.Rtf)) {
                 string rtfStr = await shareOperation.Data.GetRtfAsync();
-                Debug.WriteLine($"ShareActivated-Rtf:{rtfStr}");
                 sendTasks.Add(_sendTaskManager.CreateSendTaskV2(rtfStr));
             } else if (shareOperation.Data.Contains(StandardDataFormats.StorageItems)) {
                 List<IStorageItem> items = (await shareOperation.Data.GetStorageItemsAsync()).ToList();
-                Debug.WriteLine($"ShareActivated-StorageItems: number of items: {items.Count}");
                 foreach (var item in items) {
                     if (item is StorageFile) {
                         sendTasks.Add(await _sendTaskManager.CreateSendTaskV2(item as StorageFile));
@@ -155,7 +148,6 @@ namespace UniversalSend {
                 }
             } else if (shareOperation.Data.Contains(StandardDataFormats.WebLink)) {
                 Uri uri = await shareOperation.Data.GetWebLinkAsync();
-                Debug.WriteLine($"ShareActivated-WebLink:{uri.ToString()}");
                 sendTasks.Add(_sendTaskManager.CreateSendTaskV2(uri.ToString()));
             }
             return sendTasks;
