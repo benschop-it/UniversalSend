@@ -8,7 +8,7 @@
         string Version { get; set; }
         string DeviceModel { get; set; }
         string DeviceType { get; set; }
-        string FingerPrint { get; set; }
+        string Fingerprint { get; set; }
         int Port { get; set; }
         string Protocol { get; set; }
         bool Download { get; set; }

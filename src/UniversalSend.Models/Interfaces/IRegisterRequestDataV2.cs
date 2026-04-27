@@ -8,9 +8,9 @@
         string DeviceModel { get; set; }
         string DeviceType { get; set; }
         string Fingerprint { get; set; }
-        string Port { get; set; }
+        int Port { get; set; }
         string Protocol { get; set; }
-        string Download { get; set; }
+        bool Download { get; set; }
 
         #endregion Public Properties
     }

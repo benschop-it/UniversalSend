@@ -26,7 +26,7 @@ namespace UniversalSend.Models.HttpData {
         public string Preview { get; set; }
 
         [JsonProperty("metadata")]
-        public MetaData Metadata { get; set; }
+        public FileMetadataV2 Metadata { get; set; }
 
         #endregion Public Properties
 

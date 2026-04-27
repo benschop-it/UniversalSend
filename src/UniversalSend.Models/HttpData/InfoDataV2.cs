@@ -20,7 +20,7 @@ namespace UniversalSend.Models.HttpData {
         public string DeviceType { get; set; }
 
         [JsonProperty("fingerprint")]
-        public string FingerPrint { get; set; }
+        public string Fingerprint { get; set; }
 
         [JsonProperty("port")]
         public int Port { get; set; }

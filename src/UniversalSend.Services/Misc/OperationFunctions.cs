@@ -70,7 +70,7 @@ namespace UniversalSend.Services.Misc {
                 return null;
             }
 
-            if (!int.TryParse(registerRequestData.Port, out int port)) {
+            if (registerRequestData.Port <= 0) {
                 _logger.Debug($"RegisterRequestFuncV2: invalid remote port '{registerRequestData.Port}'.");
                 return null;
             }
@@ -78,7 +78,7 @@ namespace UniversalSend.Services.Misc {
             IDevice device = _deviceManager.GetDeviceFromRequestDataV2(
                 registerRequestData,
                 mutableHttpServerRequest.RemoteAddress,
-                port
+                registerRequestData.Port
             );
             _register.NewDeviceRegisterEvent(device);
             return null;

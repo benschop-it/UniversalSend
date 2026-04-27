@@ -126,10 +126,12 @@ namespace UniversalSend.Models.Managers {
                 device.IP = IP;
                 device.Port = 53317;
                 device.Alias = registerResponseData.Alias;
+                device.Version = registerResponseData.Version;
                 device.DeviceModel = registerResponseData.DeviceModel;
                 device.DeviceType = registerResponseData.DeviceType;
                 device.Fingerprint = registerResponseData.Fingerprint;
-                device.ProtocolVersion = registerResponseData.Protocol;
+                device.ProtocolVersion = registerResponseData.Version;
+                device.HttpProtocol = registerResponseData.Protocol;
                 return device;
             } catch (Exception ex) {
                 _logger.Debug("FindDeviceByIPAsync failed to deserialize response.", ex);
@@ -140,13 +142,14 @@ namespace UniversalSend.Models.Managers {
         public IDevice GetDeviceFromRequestDataV2(IRegisterRequestDataV2 registerRequestData, string ip, int port) {
             IDevice device = new Device {
                 Alias = registerRequestData.Alias,
-                HttpProtocol = "http",
-                ProtocolVersion = "2.1",
+                HttpProtocol = registerRequestData.Protocol,
+                ProtocolVersion = registerRequestData.Version,
                 DeviceModel = registerRequestData.DeviceModel,
                 DeviceType = registerRequestData.DeviceType,
                 Fingerprint = registerRequestData.Fingerprint,
                 IP = ip,
-                Port = port
+                Port = port,
+                Version = registerRequestData.Version
             };
             return device;
         }
@@ -159,7 +162,8 @@ namespace UniversalSend.Models.Managers {
             device.DeviceType = responseData.DeviceType;
             device.Fingerprint = responseData.Fingerprint;
             device.Port = responseData.Port;
-            device.ProtocolVersion = responseData.Protocol;
+            device.ProtocolVersion = responseData.Version;
+            device.HttpProtocol = responseData.Protocol;
             device.IP = ip;
             return device;
         }

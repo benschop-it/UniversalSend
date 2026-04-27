@@ -17,6 +17,7 @@ namespace UniversalSend.Models.Managers {
             universalSendFile.FileType = "text";
             universalSendFile.Sha256 = null;
             universalSendFile.Preview = text;
+            universalSendFile.Metadata = null;
             return universalSendFile;
         }
 
@@ -28,6 +29,7 @@ namespace UniversalSend.Models.Managers {
             universalSendFile.FileType = fileRequestData.FileType;
             universalSendFile.Sha256 = fileRequestData.Sha256;
             universalSendFile.Preview = fileRequestData.Preview;
+            universalSendFile.Metadata = fileRequestData.Metadata;
 
             return universalSendFile;
         }
@@ -40,6 +42,7 @@ namespace UniversalSend.Models.Managers {
             universalSendFile.FileType = fileRequestData.FileType;
             universalSendFile.Sha256 = fileRequestData.Sha256;
             universalSendFile.Preview = fileRequestData.Preview;
+            universalSendFile.Metadata = fileRequestData.Metadata;
             universalSendFile.TransferToken = token;
             return universalSendFile;
         }

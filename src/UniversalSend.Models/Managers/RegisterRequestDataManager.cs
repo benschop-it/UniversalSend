@@ -11,10 +11,13 @@ namespace UniversalSend.Models.Managers {
         public IRegisterRequestDataV2 CreateFromDevice(IDevice device) {
             RegisterRequestDataV2 registerRequestData = new RegisterRequestDataV2();
             registerRequestData.Alias = device.Alias;
+            registerRequestData.Version = device.ProtocolVersion;
             registerRequestData.DeviceModel = device.DeviceModel;
             registerRequestData.DeviceType = device.DeviceType;
             registerRequestData.Fingerprint = device.Fingerprint;
-            registerRequestData.Protocol = device.ProtocolVersion;
+            registerRequestData.Port = device.Port;
+            registerRequestData.Protocol = device.HttpProtocol;
+            registerRequestData.Download = true;
             return registerRequestData;
         }
 

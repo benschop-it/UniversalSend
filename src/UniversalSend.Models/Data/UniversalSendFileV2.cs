@@ -26,6 +26,9 @@ namespace UniversalSend.Models.Data {
         [JsonProperty("preview")]
         public string Preview { get; set; }
 
+        [JsonProperty("metadata")]
+        public FileMetadataV2 Metadata { get; set; }
+
         [JsonProperty("transferToken")]
         public string TransferToken { get; set; }
 

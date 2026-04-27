@@ -22,14 +22,30 @@ namespace UniversalSend.Models.HttpData {
         [JsonProperty("fingerprint")]
         public string Fingerprint { get; set; }
 
+        [JsonProperty("token")]
+        private string Token {
+            set {
+                if (string.IsNullOrWhiteSpace(Fingerprint)) {
+                    Fingerprint = value;
+                }
+            }
+        }
+
         [JsonProperty("port")]
-        public string Port { get; set; }
+        public int Port { get; set; }
 
         [JsonProperty("protocol")]
         public string Protocol { get; set; }
 
         [JsonProperty("download")]
-        public string Download { get; set; }
+        public bool Download { get; set; }
+
+        [JsonProperty("hasWebInterface")]
+        private bool HasWebInterface {
+            set {
+                Download = value;
+            }
+        }
 
         #endregion Public Properties
 

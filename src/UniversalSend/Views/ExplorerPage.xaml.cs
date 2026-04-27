@@ -1,14 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ContentDialogControls;
 using UniversalSend.Misc;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
-using UniversalSend.Models.Managers;
 using UniversalSend.Strings;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;

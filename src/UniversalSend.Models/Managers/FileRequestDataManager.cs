@@ -12,10 +12,14 @@ namespace UniversalSend.Models.Managers {
 
         public async Task<IFileRequestDataV2> CreateFromStorageFileV2Async(IStorageFile storageFile) {
             FileRequestDataV2 fileRequestData = new FileRequestDataV2();
+            var basicProperties = await storageFile.GetBasicPropertiesAsync();
             fileRequestData.FileType = storageFile.FileType;
-            fileRequestData.Size = (long)(await storageFile.GetBasicPropertiesAsync()).Size;
+            fileRequestData.Size = (long)basicProperties.Size;
             fileRequestData.FileName = storageFile.Name;
             fileRequestData.Id = Guid.NewGuid().ToString();
+            fileRequestData.Metadata = new FileMetadataV2 {
+                Modified = basicProperties.DateModified.ToString("o")
+            };
             return fileRequestData;
         }
 
@@ -30,6 +34,12 @@ namespace UniversalSend.Models.Managers {
             }
             if (!string.IsNullOrEmpty(universalSendFile.Preview)) {
                 fileRequestData.Preview = universalSendFile.Preview;
+            }
+            if (universalSendFile.Metadata != null) {
+                fileRequestData.Metadata = new FileMetadataV2 {
+                    Modified = universalSendFile.Metadata.Modified,
+                    Accessed = universalSendFile.Metadata.Accessed
+                };
             }
             return fileRequestData;
         }

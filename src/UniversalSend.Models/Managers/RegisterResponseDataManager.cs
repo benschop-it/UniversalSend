@@ -20,7 +20,11 @@ namespace UniversalSend.Models.Managers {
         }
 
         public IRegisterResponseDataV2 DeserializeRegisterResponseDataV2(string json) {
-            var payload = JsonConvert.DeserializeObject<IRegisterResponseDataV2>(json);
+            var payload = JsonConvert.DeserializeObject<RegisterResponseDataV2>(json);
+            if (payload == null) {
+                return null;
+            }
+
             if (payload.Fingerprint == ProgramData.LocalDevice.Fingerprint) {
                 return null; // Ignore self
             }
@@ -35,8 +39,8 @@ namespace UniversalSend.Models.Managers {
                 DeviceType = ProgramData.LocalDevice.DeviceType,
                 Fingerprint = ProgramData.LocalDevice.Fingerprint,
                 Port = ProgramData.LocalDevice.Port,
-                Protocol = "http",
-                Download = false,
+                Protocol = ProgramData.LocalDevice.HttpProtocol,
+                Download = true,
                 Announce = announce
             };
             return registerResponseData;
@@ -49,9 +53,7 @@ namespace UniversalSend.Models.Managers {
                 DeviceModel = ProgramData.LocalDevice.DeviceModel,
                 DeviceType = ProgramData.LocalDevice.DeviceType,
                 Fingerprint = ProgramData.LocalDevice.Fingerprint,
-                //Port = ProgramData.LocalDevice.Port,
-                //Protocol = "http",
-                Download = false
+                Download = true
             };
             return registerResponseData;
         }

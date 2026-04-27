@@ -11,16 +11,16 @@ namespace UniversalSend.Models.Interfaces {
         string FileType { get; set; }
         string Sha256 { get; set; }
         string Preview { get; set; }
-        MetaData Metadata { get; set; }
+        FileMetadataV2 Metadata { get; set; }
 
         #endregion Public Properties
     }
 
-    public class MetaData {
+    public class FileMetadataV2 {
         [JsonProperty("modified")]
-        string Modified { get; set; }
+        public string Modified { get; set; }
 
         [JsonProperty("accessed")]
-        string Accessed { get; set; }
+        public string Accessed { get; set; }
     }
 }

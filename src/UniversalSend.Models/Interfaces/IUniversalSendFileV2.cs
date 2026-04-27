@@ -11,6 +11,7 @@ namespace UniversalSend.Models.Interfaces {
         string FileType { get; set; }
         string Sha256 { get; set; }
         string Preview { get; set; }
+        FileMetadataV2 Metadata { get; set; }
         string TransferToken { get; set; }
 
         #endregion Public Properties
