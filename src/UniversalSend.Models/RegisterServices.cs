@@ -38,7 +38,7 @@ namespace UniversalSend.Models {
             services.AddSingleton<IFileRequestDataManager, FileRequestDataManager>();
             services.AddSingleton<IFileResponseDataManager, FileResponseDataManager>();
 
-            services.AddTransient<IContentDialogManager, ContentDialogManager>();
+            services.AddSingleton<IContentDialogManager, ContentDialogManager>();
             services.AddTransient<IDevice, Device>();
             services.AddTransient<IFavorite, Favorite>();
             services.AddTransient<IFileRequestDataV2, FileRequestDataV2>();
