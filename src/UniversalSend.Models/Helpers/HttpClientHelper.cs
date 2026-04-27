@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
+using UniversalSend.Models.HttpData;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Models.Interfaces.Internal;
 using Windows.Data.Json;
@@ -147,14 +148,32 @@ namespace UniversalSend.Models.Helpers {
             HttpContent content,
             Dictionary<string, string> headers = null
         ) {
+            HttpRequestResult result = await PostAsync(url, content, headers);
+
+            return result.IsSuccessStatusCode ? result.Content : "";
+        }
+
+        public async Task<HttpRequestResult> PostAsync(
+            string url,
+            HttpContent content,
+            Dictionary<string, string> headers = null
+        ) {
             try {
                 ApplyHeaders(headers);
                 var response = await _httpClient.PostAsync(url, content);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync();
+                string responseContent = response.Content == null ? string.Empty : await response.Content.ReadAsStringAsync();
+
+                return new HttpRequestResult {
+                    StatusCode = (int)response.StatusCode,
+                    Content = responseContent
+                };
             } catch (Exception ex) {
                 _logger.Error("POST request failed.", ex);
-                return "";
+
+                return new HttpRequestResult {
+                    StatusCode = 0,
+                    Content = string.Empty
+                };
             }
         }
 

@@ -100,13 +100,19 @@ namespace UniversalSend.Models.Managers {
             var serializedSendRequestData = JsonConvert.SerializeObject(sendRequestData);
             _logger.Debug("SendSendRequestV2Async sending prepare-upload request to http://{0}:{1}/api/localsend/v2/prepare-upload with payload: {2}", destinationDevice.IP, destinationDevice.Port, serializedSendRequestData);
 
-            string responseStr = await _httpClientHelper.PostJsonAsync($"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/prepare-upload", serializedSendRequestData);
-            _logger.Debug("SendSendRequestV2Async received response: {0}", responseStr);
+            HttpRequestResult response = await _httpClientHelper.PostAsync(
+                $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/prepare-upload",
+                new StringContent(serializedSendRequestData, System.Text.Encoding.UTF8, "application/json")
+            );
+            _logger.Debug("SendSendRequestV2Async received status {0} and response: {1}", response.StatusCode, response.Content);
+
+            if (!response.IsSuccessStatusCode) {
+                return false;
+            }
 
             try {
-                FileResponseDataV2 fileResponseData = JsonConvert.DeserializeObject<FileResponseDataV2>(responseStr);
+                FileResponseDataV2 fileResponseData = JsonConvert.DeserializeObject<FileResponseDataV2>(response.Content);
                 if (fileResponseData == null) {
-                    SendTasksV2.Clear();
                     return false;
                 }
 
@@ -136,25 +142,34 @@ namespace UniversalSend.Models.Managers {
                 _logger.Debug("SendSendTasksV2Async sending file '{0}'.", task.File.FileName);
                 task.TaskState = ReceiveTaskStates.Sending;
 
-                if (task.File.FileType == "text") {
-                    await _httpClientHelper.PostStringAsync(
+                HttpRequestResult uploadResponse;
+                if (IsTextSendTask(task)) {
+                    uploadResponse = await _httpClientHelper.PostAsync(
                         $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/upload?sessionId={task.SessionId}&fileId={task.File.Id}&token={task.File.TransferToken}",
                         new StringContent(task.File.Preview)
                     );
                 } else {
                     byte[] bytes = await _storageHelper.ReadBytesFromFileAsync(task.StorageFile);
-                    await _httpClientHelper.PostBinaryAsync(
+                    uploadResponse = await _httpClientHelper.PostAsync(
                         $"http://{destinationDevice.IP}:{destinationDevice.Port}/api/localsend/v2/upload?sessionId={task.SessionId}&fileId={task.File.Id}&token={task.File.TransferToken}",
-                        bytes
+                        new ByteArrayContent(bytes)
                     );
                 }
 
-                task.TaskState = ReceiveTaskStates.Done;
+                task.TaskState = uploadResponse.IsSuccessStatusCode ? ReceiveTaskStates.Done : ReceiveTaskStates.Error;
                 _sendManager.SendStateChangedEvent();
             }
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private static bool IsTextSendTask(ISendTaskV2 task) {
+            return task.StorageFile == null || string.Equals(task.File.FileType, "text/plain", StringComparison.OrdinalIgnoreCase);
+        }
+
+        #endregion Private Methods
 
     }
 }

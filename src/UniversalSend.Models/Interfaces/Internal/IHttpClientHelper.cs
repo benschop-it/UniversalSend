@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using UniversalSend.Models.HttpData;
 using Windows.Data.Json;
 using Windows.Storage.Streams;
 
@@ -14,6 +15,7 @@ namespace UniversalSend.Models.Interfaces.Internal {
         Task<JsonObject> GetJsonObjectAsync(string url, Dictionary<string, string> headers = null);
         Task<IRandomAccessStream> GetStreamAsync(string url, Dictionary<string, string> headers = null);
         Task<string> GetStringAsync(string url, Dictionary<string, string> headers = null);
+        Task<HttpRequestResult> PostAsync(string url, HttpContent content, Dictionary<string, string> headers = null);
         Task<string> PostBinaryAsync(string url, byte[] binaryData, string contentType = "application/octet-stream", Dictionary<string, string> headers = null);
         Task<string> PostFormAsync(string url, Dictionary<string, string> formData, Dictionary<string, string> headers = null);
         Task<string> PostJsonAsync(string url, string jsonContent, Dictionary<string, string> headers = null);
