@@ -110,14 +110,14 @@ namespace UniversalSend.Models.Managers {
         public async Task<IDevice> FindDeviceByIPAsync(string IP) {
             var serializedDevice = JsonConvert.SerializeObject(_registerRequestDataManager.CreateFromDevice(ProgramData.LocalDevice));
 
-            _logger.Debug("FindDeviceByIPAsync sending register request to http://{0}:53317/api/localsend/v1/register with payload: {1}", IP, serializedDevice);
+            _logger.Debug("FindDeviceByIPAsync sending register request to http://{0}:53317/api/localsend/v2/register with payload: {1}", IP, serializedDevice);
 
-            string responseString = await _httpClientHelper.PostJsonAsync($"http://{IP}:53317/api/localsend/v1/register", serializedDevice);
+            string responseString = await _httpClientHelper.PostJsonAsync($"http://{IP}:53317/api/localsend/v2/register", serializedDevice);
 
             _logger.Debug("FindDeviceByIPAsync received response: {0}", responseString);
 
             try {
-                AnnouncementV2 registerResponseData = JsonConvert.DeserializeObject<AnnouncementV2>(responseString);
+                RegisterResponseDataV2 registerResponseData = JsonConvert.DeserializeObject<RegisterResponseDataV2>(responseString);
                 if (registerResponseData == null) {
                     return null;
                 }
@@ -131,7 +131,7 @@ namespace UniversalSend.Models.Managers {
                 device.DeviceType = registerResponseData.DeviceType;
                 device.Fingerprint = registerResponseData.Fingerprint;
                 device.ProtocolVersion = registerResponseData.Version;
-                device.HttpProtocol = registerResponseData.Protocol;
+                device.HttpProtocol = "http";
                 return device;
             } catch (Exception ex) {
                 _logger.Debug("FindDeviceByIPAsync failed to deserialize response.", ex);

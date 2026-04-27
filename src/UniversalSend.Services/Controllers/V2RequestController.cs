@@ -53,8 +53,15 @@ namespace UniversalSend.Services.Controllers {
 
         #region Public Methods
 
+        [UriFormat("v2/info")]
+        public GetResponse GetInfo() {
+            _logger.Debug("GET v2/info called.");
+
+            return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
+        }
+
         [UriFormat("v2/info?fingerprint={fingerprint}")]
-        public GetResponse GetInfo(string fingerprint) {
+        public GetResponse GetInfoWithFingerprint(string fingerprint) {
             _logger.Debug($"GET v2/info called with fingerprint: {fingerprint}.");
 
             return new GetResponse(GetResponse.ResponseStatus.OK, _infoDataManager.GetInfoDataV2FromDevice());
