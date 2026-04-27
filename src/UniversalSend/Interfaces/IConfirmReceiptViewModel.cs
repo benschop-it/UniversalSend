@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using System.Collections.ObjectModel;
 using UniversalSend.Misc;
 using UniversalSend.Models.Interfaces;
 
@@ -8,6 +9,7 @@ namespace UniversalSend.Interfaces {
         RelayCommand AcceptCommand { get; }
         RelayCommand CancelCommand { get; }
         ConfirmReceiptPageParameter ConfirmReceiptPageParameter { get; }
+        ObservableCollection<SelectableReceiveItem> Files { get; }
         ISendRequestDataV2 SendRequestDataV2 { get; }
 
         void Initialize(ConfirmReceiptPageParameter parameter);

@@ -127,6 +127,11 @@ namespace UniversalSend.Services.Controllers {
                     return new PostResponse(PostResponse.ResponseStatus.Rejected);
                 }
 
+                if (requestData?.Files == null || requestData.Files.Count == 0) {
+                    _receiveTaskManager.CancelReceivingSession(sessionId);
+                    return new PostResponse(PostResponse.ResponseStatus.Finished);
+                }
+
                 _receiveManager.SendRequestV2Event(requestData);
 
                 FileResponseDataV2 responseData = new FileResponseDataV2();

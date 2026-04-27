@@ -115,6 +115,11 @@ namespace UniversalSend.Models.Managers {
 
             LastPrepareUploadStatusCode = response.StatusCode;
 
+            if (response.StatusCode == 204) {
+                LastPrepareUploadErrorMessage = "The receiver did not accept any files from this transfer.";
+                return false;
+            }
+
             if (!response.IsSuccessStatusCode) {
                 LastPrepareUploadErrorMessage = GetPrepareUploadErrorMessage(response.StatusCode);
                 return false;

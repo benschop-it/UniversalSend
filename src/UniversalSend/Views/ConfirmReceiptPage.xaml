@@ -2,6 +2,7 @@
     x:Class="UniversalSend.Views.ConfirmReceiptPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:UniversalSend.Interfaces"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -50,6 +51,28 @@
             <Run Text="{Binding SendRequestDataV2.Files.Count}" FontWeight="SemiBold" />
             <Run Text=" file(s)" FontWeight="SemiBold" />
         </TextBlock>
+
+        <ListView Grid.Row="5"
+                  ItemsSource="{Binding Files}"
+                  Margin="24,0,24,24"
+                  SelectionMode="None"
+                  Visibility="{Binding IsCancelled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:SelectableReceiveItem">
+                    <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox IsChecked="{x:Bind IsAccepted, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,12,0" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{x:Bind FileName}" TextWrapping="WrapWholeWords" />
+                            <TextBlock Text="{x:Bind Subtitle}" Style="{ThemeResource CaptionTextBlockStyle}" Opacity="0.8" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <!-- Options -->
         <Button Grid.Row="6"
