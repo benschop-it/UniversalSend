@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UniversalSend.Models;
 using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Controllers;
@@ -33,6 +34,9 @@ namespace UniversalSend.Services.Misc {
         private readonly ISettings _settings;
         private readonly ITokenFactory _tokenFactory;
         private readonly IUniversalSendFileManager _universalSendFileManager;
+        private readonly IWebSendManager _webSendManager;
+        private readonly IStorageHelper _storageHelper;
+        private readonly IFileRequestDataManager _fileRequestDataManager;
         private readonly CoreDispatcher _dispatcher;
         private readonly IConfirmReceiptHandler _confirmReceiptHandler;
         private UdpDiscoveryService _udpDiscovery;
@@ -53,6 +57,9 @@ namespace UniversalSend.Services.Misc {
             IReceiveTaskManager receiveTaskManager,
             IRegisterDataManager registerDataManager,
             IRegisterResponseDataManager registerResponseDataManager,
+            IWebSendManager webSendManager,
+            IStorageHelper storageHelper,
+            IFileRequestDataManager fileRequestDataManager,
             IHttpRequestParser httpRequestParser,
             IConfiguration configuration,
             IEncodingCache encodingCache,
@@ -72,6 +79,9 @@ namespace UniversalSend.Services.Misc {
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
             _registerDataManager = registerDataManager ?? throw new ArgumentNullException(nameof(registerDataManager));
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
+            _webSendManager = webSendManager ?? throw new ArgumentNullException(nameof(webSendManager));
+            _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
+            _fileRequestDataManager = fileRequestDataManager ?? throw new ArgumentNullException(nameof(fileRequestDataManager));
             _httpRequestParser = httpRequestParser ?? throw new ArgumentNullException(nameof(httpRequestParser));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _encodingCache = encodingCache ?? throw new ArgumentNullException(nameof(encodingCache));
@@ -109,7 +119,10 @@ namespace UniversalSend.Services.Misc {
                     _universalSendFileManager,
                     _receiveTaskManager,
                     _registerResponseDataManager,
-                    _confirmReceiptHandler
+                    _confirmReceiptHandler,
+                    _webSendManager,
+                    _storageHelper,
+                    _fileRequestDataManager
                 };
             });
 
@@ -151,6 +164,11 @@ namespace UniversalSend.Services.Misc {
 
             _logger.Debug($"HTTP server started on port {port}");
             return true;
+        }
+
+        public string GetBrowserDownloadUrl() {
+            var localDevice = ProgramData.LocalDevice;
+            return $"http://{localDevice.IP}:{localDevice.Port}";
         }
 
         public void StopHttpServer() {

@@ -21,6 +21,7 @@ namespace UniversalSend.Models {
             services.AddSingleton<INetworkHelper, NetworkHelper>();
             services.AddSingleton<IReceiveManager, ReceiveManager>();
             services.AddSingleton<IReceiveTaskManager, ReceiveTaskManager>();
+            services.AddSingleton<IWebSendManager, WebSendManager>();
             services.AddSingleton<IRegister, Register>();
             services.AddSingleton<IRegisterDataManager, RegisterDataManager>();
             services.AddSingleton<IRegisterRequestDataManager, RegisterRequestDataManager>();

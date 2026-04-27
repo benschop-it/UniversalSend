@@ -124,6 +124,7 @@
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Data\UniversalSendFileV2.cs" />
+    <Compile Include="HttpData\DownloadPrepareResponseData.cs" />
     <Compile Include="HttpData\HttpRequestResult.cs" />
     <Compile Include="HttpData\RegisterResponseDataV2.cs" />
     <Compile Include="HttpData\FileRequestDataV2.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Interfaces\IFileResponseDataManager.cs" />
     <Compile Include="Interfaces\ISendTaskV2.cs" />
     <Compile Include="Interfaces\IUniversalSendFileV2.cs" />
+    <Compile Include="Interfaces\IWebSendManager.cs" />
     <Compile Include="Managers\RegisterRequestDataManager.cs" />
     <Compile Include="Managers\FileRequestDataManager.cs" />
     <Compile Include="Interfaces\ISystemHelper.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Managers\ContentDialogManager.cs" />
     <Compile Include="Data\Device.cs" />
     <Compile Include="Managers\DeviceManager.cs" />
+    <Compile Include="Managers\WebSendManager.cs" />
     <Compile Include="Misc\DispatchProvider.cs" />
     <Compile Include="Misc\Favorite.cs" />
     <Compile Include="Managers\FavoriteManager.cs" />
@@ -234,3 +237,4 @@
   </Target>
   -->
 </Project>
+

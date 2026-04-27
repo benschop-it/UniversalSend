@@ -9,6 +9,8 @@ namespace UniversalSend.Services.Interfaces {
 
         Task<bool> StartHttpServerAsync(int port);
 
+        string GetBrowserDownloadUrl();
+
         void StopHttpServer();
 
         #endregion Public Methods

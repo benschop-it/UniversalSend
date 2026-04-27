@@ -25,6 +25,7 @@ namespace UniversalSend.Models.Managers {
         private ISendTaskV2 _sendTask;
         private IStorageHelper _storageHelper;
         private IUniversalSendFileManager _universalSendFileManager;
+        private IWebSendManager _webSendManager;
 
         #endregion Private Fields
 
@@ -37,7 +38,8 @@ namespace UniversalSend.Models.Managers {
             ISendTaskV2 sendTask,
             ISendManager sendManager,
             IHttpClientHelper httpClientHelper,
-            IFileRequestDataManager fileRequestDataManager
+            IFileRequestDataManager fileRequestDataManager,
+            IWebSendManager webSendManager
         ) {
             _logger = LogManager.GetLogger<SendTaskManager>();
             _universalSendFileManager = universalSendFileManager ?? throw new System.ArgumentNullException(nameof(universalSendFileManager));
@@ -47,6 +49,7 @@ namespace UniversalSend.Models.Managers {
             _sendManager = sendManager ?? throw new System.ArgumentNullException(nameof(sendManager));
             _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _fileRequestDataManager = fileRequestDataManager ?? throw new ArgumentNullException(nameof(fileRequestDataManager));
+            _webSendManager = webSendManager ?? throw new ArgumentNullException(nameof(webSendManager));
         }
 
         #endregion Public Constructors
@@ -92,6 +95,11 @@ namespace UniversalSend.Models.Managers {
             }
             _sendManager.SendCreatedEvent();
         }
+
+        public void PublishForWebShare() {
+            _webSendManager.BeginShare(SendTasksV2);
+        }
+
         public async Task<bool> SendSendRequestV2Async(IDevice destinationDevice) {
             LastPrepareUploadStatusCode = 0;
             LastPrepareUploadErrorMessage = null;

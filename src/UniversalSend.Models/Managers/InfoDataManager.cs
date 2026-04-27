@@ -5,6 +5,20 @@ namespace UniversalSend.Models.Managers {
 
     internal class InfoDataManager : IInfoDataManager {
 
+        #region Private Fields
+
+        private readonly IWebSendManager _webSendManager;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public InfoDataManager(IWebSendManager webSendManager) {
+            _webSendManager = webSendManager ?? throw new System.ArgumentNullException(nameof(webSendManager));
+        }
+
+        #endregion Public Constructors
+
         #region Public Methods
 
         public InfoDataV2 GetInfoDataV2FromDevice() {
@@ -18,7 +32,7 @@ namespace UniversalSend.Models.Managers {
             infoData.Fingerprint = device.Fingerprint;
             infoData.Port = device.Port;
             infoData.Protocol = device.HttpProtocol;
-            infoData.Download = false;
+            infoData.Download = _webSendManager.GetActiveShare() != null;
             return infoData;
         }
 

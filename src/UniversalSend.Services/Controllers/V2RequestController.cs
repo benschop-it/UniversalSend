@@ -25,6 +25,9 @@ namespace UniversalSend.Services.Controllers {
         private readonly ITokenFactory _tokenFactory;
         private readonly IUniversalSendFileManager _universalSendFileManager;
         private readonly IConfirmReceiptHandler _confirmReceiptHandler;
+        private readonly IWebSendManager _webSendManager;
+        private readonly IStorageHelper _storageHelper;
+        private readonly IFileRequestDataManager _fileRequestDataManager;
 
         #endregion Private Fields
 
@@ -37,7 +40,10 @@ namespace UniversalSend.Services.Controllers {
             IUniversalSendFileManager universalSendFileManager,
             IReceiveTaskManager receiveTaskManager,
             IRegisterResponseDataManager registerResponseDataManager,
-            IConfirmReceiptHandler confirmReceiptHandler
+            IConfirmReceiptHandler confirmReceiptHandler,
+            IWebSendManager webSendManager,
+            IStorageHelper storageHelper,
+            IFileRequestDataManager fileRequestDataManager
         ) {
             _logger = LogManager.GetLogger<V2RequestController>();
             _infoDataManager = infoDataManager ?? throw new ArgumentNullException(nameof(infoDataManager));
@@ -47,6 +53,9 @@ namespace UniversalSend.Services.Controllers {
             _receiveTaskManager = receiveTaskManager ?? throw new ArgumentNullException(nameof(receiveTaskManager));
             _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
             _confirmReceiptHandler = confirmReceiptHandler ?? throw new ArgumentNullException(nameof(confirmReceiptHandler));
+            _webSendManager = webSendManager ?? throw new ArgumentNullException(nameof(webSendManager));
+            _storageHelper = storageHelper ?? throw new ArgumentNullException(nameof(storageHelper));
+            _fileRequestDataManager = fileRequestDataManager ?? throw new ArgumentNullException(nameof(fileRequestDataManager));
         }
 
         #endregion Public Constructors
@@ -175,7 +184,48 @@ namespace UniversalSend.Services.Controllers {
             ).AsAsyncOperation();
         }
 
+        [UriFormat("v2/prepare-download")]
+        public PostResponse PostPrepareDownload() {
+            var share = _webSendManager.GetActiveShare();
+            if (share == null) {
+                return new PostResponse(PostResponse.ResponseStatus.Rejected);
+            }
+
+            var responseData = new DownloadPrepareResponseData {
+                Info = _infoDataManager.GetInfoDataV2FromDevice(),
+                SessionId = share.SessionId,
+            };
+
+            foreach (var item in share.Files) {
+                responseData.Files[item.Key] = _fileRequestDataManager.CreateFromUniversalSendFileV2(item.Value.File);
+            }
+
+            return new PostResponse(PostResponse.ResponseStatus.OK, string.Empty, responseData);
+        }
+
+        [UriFormat("v2/download?sessionId={sessionId}&fileId={fileId}")]
+        public IGetResponse GetDownload(string sessionId, string fileId) {
+            var share = _webSendManager.GetActiveShare();
+            if (share == null || !string.Equals(share.SessionId, sessionId, StringComparison.Ordinal) || !share.Files.TryGetValue(fileId, out ISendTaskV2 sendTask)) {
+                return new GetResponse(GetResponse.ResponseStatus.NotFound);
+            }
+
+            return new BinaryGetResponse(GetResponse.ResponseStatus.OK, GetDownloadContent(sendTask));
+        }
+
         #endregion Public Methods
+
+        #region Private Methods
+
+        private byte[] GetDownloadContent(ISendTaskV2 sendTask) {
+            if (sendTask.StorageFile == null) {
+                return System.Text.Encoding.UTF8.GetBytes(sendTask.File.Preview ?? string.Empty);
+            }
+
+            return _storageHelper.ReadBytesFromFileAsync(sendTask.StorageFile).GetAwaiter().GetResult();
+        }
+
+        #endregion Private Methods
 
     }
 }

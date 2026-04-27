@@ -24,6 +24,7 @@ namespace UniversalSend.Models.Interfaces {
         ISendTaskV2 CreateSendTaskV2(string text);
         ISendTaskV2 CreateSendTaskFromFileRequestDataAndStorageFileV2(IFileRequestDataV2 fileRequestData, IStorageFile storageFile);
         Task CreateSendTasksV2(List<IStorageFile> files);
+        void PublishForWebShare();
         Task<bool> SendSendRequestV2Async(IDevice destinationDevice);
         Task SendSendTasksV2Async(IDevice destinationDevice);
 
