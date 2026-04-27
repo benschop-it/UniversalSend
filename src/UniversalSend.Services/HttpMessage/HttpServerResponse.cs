@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UniversalSend.Services.HttpMessage.Headers;
 using UniversalSend.Services.HttpMessage.Headers.Response;
@@ -54,6 +55,8 @@ namespace UniversalSend.Services.HttpMessage {
 
         // Content
         public byte[] Content { get; set; }
+
+        public Stream ContentStream { get; set; }
 
         public string ContentCharset {
             get {
@@ -135,6 +138,8 @@ namespace UniversalSend.Services.HttpMessage {
         }
 
         public HttpResponseStatus ResponseStatus { get; set; }
+
+        public long? StreamContentLength { get; set; }
 
         #endregion Public Properties
 

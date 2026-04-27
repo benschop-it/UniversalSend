@@ -210,22 +210,18 @@ namespace UniversalSend.Services.Controllers {
                 return new GetResponse(GetResponse.ResponseStatus.NotFound);
             }
 
-            return new BinaryGetResponse(GetResponse.ResponseStatus.OK, GetDownloadContent(sendTask), sendTask.File.FileType);
+            if (sendTask.StorageFile == null) {
+                return new BinaryGetResponse(GetResponse.ResponseStatus.OK, System.Text.Encoding.UTF8.GetBytes(sendTask.File.Preview ?? string.Empty), sendTask.File.FileType);
+            }
+
+            return new BinaryGetResponse(
+                GetResponse.ResponseStatus.OK,
+                _storageHelper.OpenReadStreamAsync(sendTask.StorageFile).GetAwaiter().GetResult(),
+                sendTask.File.Size,
+                sendTask.File.FileType);
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private byte[] GetDownloadContent(ISendTaskV2 sendTask) {
-            if (sendTask.StorageFile == null) {
-                return System.Text.Encoding.UTF8.GetBytes(sendTask.File.Preview ?? string.Empty);
-            }
-
-            return _storageHelper.ReadBytesFromFileAsync(sendTask.StorageFile).GetAwaiter().GetResult();
-        }
-
-        #endregion Private Methods
 
     }
 }

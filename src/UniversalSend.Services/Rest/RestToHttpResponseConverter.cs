@@ -29,6 +29,10 @@ namespace UniversalSend.Services.Rest {
             if (methodNotAllowedResponse != null)
                 return GetMethodNotAllowedResponse(methodNotAllowedResponse);
 
+            var binaryGetResponse = restResponse as BinaryGetResponse;
+            if (binaryGetResponse != null)
+                return GetBinaryGetResponse(binaryGetResponse);
+
             var postResponse = restResponse as PostResponse;
             if (postResponse != null)
                 return GetPostResponse(postResponse, restServerRequest);
@@ -76,6 +80,20 @@ namespace UniversalSend.Services.Rest {
             }
 
             return defaultResponse;
+        }
+
+        private static HttpServerResponse GetBinaryGetResponse(BinaryGetResponse response) {
+            var serverResponse = GetDefaultResponse(response);
+            serverResponse.ContentType = serverResponse.ContentType ?? "application/octet-stream";
+
+            if (response.ContentBytes != null) {
+                serverResponse.Content = response.ContentBytes;
+            } else {
+                serverResponse.ContentStream = response.ContentStream;
+                serverResponse.StreamContentLength = response.StreamContentLength;
+            }
+
+            return serverResponse;
         }
 
         private string GetMediaTypeAsString(MediaType acceptMediaType) {

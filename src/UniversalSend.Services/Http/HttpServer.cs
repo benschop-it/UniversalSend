@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -106,12 +107,32 @@ namespace UniversalSend.Services.Http {
 
         private static async Task WriteResponseAsync(HttpServerResponse response, StreamSocket socket) {
             using (var output = socket.OutputStream) {
-                await output.WriteAsync(response.ToBytes().AsBuffer());
-                await output.FlushAsync();
+                if (response.ContentStream != null) {
+                    using (response.ContentStream) {
+                        if (response.ContentStream.CanSeek) {
+                            response.ContentStream.Position = 0;
+                        }
+
+                        await output.WriteAsync(response.ToBytes().AsBuffer());
+                        using (var outputStream = output.AsStreamForWrite()) {
+                            await response.ContentStream.CopyToAsync(outputStream);
+                            await outputStream.FlushAsync();
+                        }
+                    }
+                } else {
+                    await output.WriteAsync(response.ToBytes().AsBuffer());
+                    await output.FlushAsync();
+                }
             }
         }
 
         private async Task<HttpServerResponse> AddContentEncodingAsync(HttpServerResponse httpResponse, IEnumerable<string> acceptEncodings) {
+            if (httpResponse.ContentStream != null) {
+                long contentLength = httpResponse.StreamContentLength ?? (httpResponse.ContentStream.CanSeek ? httpResponse.ContentStream.Length : 0L);
+                httpResponse.AddHeader(new ContentLengthHeader((int)contentLength));
+                return httpResponse;
+            }
+
             var contentEncoder = _contentEncoderFactory.GetEncoder(acceptEncodings);
             var encodedContent = await contentEncoder.Encode(httpResponse.Content);
 
