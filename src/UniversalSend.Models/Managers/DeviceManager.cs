@@ -19,6 +19,7 @@ namespace UniversalSend.Models.Managers {
         private IHttpClientHelper _httpClientHelper;
         private INetworkHelper _networkHelper;
         private IRegisterRequestDataManager _registerRequestDataManager;
+        private IRegisterResponseDataManager _registerResponseDataManager;
 
         #endregion Private Fields
 
@@ -27,12 +28,14 @@ namespace UniversalSend.Models.Managers {
         public DeviceManager(
             INetworkHelper networkHelper,
             IRegisterRequestDataManager registerRequestDataManager,
-            IHttpClientHelper httpClientHelper
+            IHttpClientHelper httpClientHelper,
+            IRegisterResponseDataManager registerResponseDataManager
         ) {
             _logger = LogManager.GetLogger<DeviceManager>();
             _networkHelper = networkHelper ?? throw new ArgumentNullException(nameof(networkHelper));
             _httpClientHelper = httpClientHelper ?? throw new ArgumentNullException(nameof(httpClientHelper));
             _registerRequestDataManager = registerRequestDataManager ?? throw new ArgumentNullException(nameof(registerRequestDataManager));
+            _registerResponseDataManager = registerResponseDataManager ?? throw new ArgumentNullException(nameof(registerResponseDataManager));
         }
 
         #endregion Public Constructors
@@ -117,25 +120,34 @@ namespace UniversalSend.Models.Managers {
             _logger.Debug("FindDeviceByIPAsync received response: {0}", responseString);
 
             try {
-                RegisterResponseDataV2 registerResponseData = JsonConvert.DeserializeObject<RegisterResponseDataV2>(responseString);
-                if (registerResponseData == null) {
+                IRegisterResponseDataV2 registerResponseData = _registerResponseDataManager.DeserializeRegisterResponseDataV2(responseString);
+                if (registerResponseData != null) {
+                    return CreateDeviceFromRegisterResponseDataV2(registerResponseData, IP, 53317);
+                }
+            } catch (Exception ex) {
+                _logger.Debug("FindDeviceByIPAsync failed to deserialize v2 register response.", ex);
+            }
+
+            _logger.Debug("FindDeviceByIPAsync falling back to v1 info for {0}.", IP);
+
+            try {
+                string infoResponseString = await _httpClientHelper.GetStringAsync($"http://{IP}:53317/api/localsend/v1/info?fingerprint={ProgramData.LocalDevice.Fingerprint}");
+                _logger.Debug("FindDeviceByIPAsync received v1 info response: {0}", infoResponseString);
+
+                InfoDataV2 infoData = JsonConvert.DeserializeObject<InfoDataV2>(infoResponseString);
+                if (infoData == null) {
                     return null;
                 }
 
-                IDevice device = new Device();
-                device.IP = IP;
-                device.Port = 53317;
-                device.Alias = registerResponseData.Alias;
-                device.Version = registerResponseData.Version;
-                device.DeviceModel = registerResponseData.DeviceModel;
-                device.DeviceType = registerResponseData.DeviceType;
-                device.Fingerprint = registerResponseData.Fingerprint;
-                device.ProtocolVersion = registerResponseData.Version;
-                device.HttpProtocol = "http";
-                return device;
+                if (infoData.Fingerprint == ProgramData.LocalDevice.Fingerprint) {
+                    return null;
+                }
+
+                return CreateDeviceFromInfoDataV2(infoData, IP, 53317);
             } catch (Exception ex) {
-                _logger.Debug("FindDeviceByIPAsync failed to deserialize response.", ex);
+                _logger.Debug("FindDeviceByIPAsync failed to retrieve legacy v1 info response.", ex);
             }
+
             return null;
         }
 
@@ -190,6 +202,34 @@ namespace UniversalSend.Models.Managers {
         #endregion Public Methods
 
         #region Private Methods
+
+        private IDevice CreateDeviceFromInfoDataV2(IInfoDataV2 infoData, string ip, int port) {
+            return new Device {
+                Alias = infoData.Alias,
+                Version = infoData.Version,
+                DeviceModel = infoData.DeviceModel,
+                DeviceType = infoData.DeviceType,
+                Fingerprint = infoData.Fingerprint,
+                HttpProtocol = string.IsNullOrWhiteSpace(infoData.Protocol) ? "http" : infoData.Protocol,
+                IP = ip,
+                Port = infoData.Port > 0 ? infoData.Port : port,
+                ProtocolVersion = string.IsNullOrWhiteSpace(infoData.Version) ? "1.0" : infoData.Version,
+            };
+        }
+
+        private IDevice CreateDeviceFromRegisterResponseDataV2(IRegisterResponseDataV2 registerResponseData, string ip, int port) {
+            return new Device {
+                Alias = registerResponseData.Alias,
+                Version = registerResponseData.Version,
+                DeviceModel = registerResponseData.DeviceModel,
+                DeviceType = registerResponseData.DeviceType,
+                Fingerprint = registerResponseData.Fingerprint,
+                HttpProtocol = "http",
+                IP = ip,
+                Port = port,
+                ProtocolVersion = registerResponseData.Version,
+            };
+        }
 
         private async Task SearchKnownDeviceAsync(string ip) {
             IDevice device = await FindDeviceByIPAsync(ip);
