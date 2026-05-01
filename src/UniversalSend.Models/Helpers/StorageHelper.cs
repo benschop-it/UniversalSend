@@ -34,16 +34,33 @@ namespace UniversalSend.Models.Helpers {
         #region Public Methods
 
         public async Task<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName) {
-            if (!await IsItemExsitAsync(storageFolder, fileName)) {
-                return await storageFolder.CreateFileAsync(fileName);
-            } else {
-                string fileType = fileName.Substring(fileName.Length - fileName.LastIndexOf("."));
-                for (int i = 1; i < 999; i++) {
-                    if (!await IsItemExsitAsync(storageFolder, fileType + $"({i})" + fileType)) {
-                        return await storageFolder.CreateFileAsync(fileType + $"({i})" + fileType);
-                    }
+            if (storageFolder == null || string.IsNullOrWhiteSpace(fileName)) {
+                return null;
+            }
+
+            var parts = SplitRelativePath(fileName);
+            if (parts.Count == 0) {
+                return null;
+            }
+
+            var leafFileName = parts[parts.Count - 1];
+            var targetFolder = await EnsureFolderPathAsync(storageFolder, parts.Take(parts.Count - 1));
+
+            if (!await IsItemExsitAsync(targetFolder, leafFileName)) {
+                return await targetFolder.CreateFileAsync(leafFileName);
+            }
+
+            var dotIndex = leafFileName.LastIndexOf('.');
+            var baseName = dotIndex > 0 ? leafFileName.Substring(0, dotIndex) : leafFileName;
+            var extension = dotIndex > 0 ? leafFileName.Substring(dotIndex) : string.Empty;
+
+            for (int i = 1; i < 999; i++) {
+                var candidate = $"{baseName}({i}){extension}";
+                if (!await IsItemExsitAsync(targetFolder, candidate)) {
+                    return await targetFolder.CreateFileAsync(candidate);
                 }
             }
+
             return null;
         }
 
@@ -53,17 +70,14 @@ namespace UniversalSend.Models.Helpers {
         }
 
         public async Task<StorageFile> CreateFileInDownloadsFolderAsync(string fileName) {
-            return await DownloadsFolder.CreateFileAsync(fileName);
+            var parts = SplitRelativePath(fileName);
+            var leafFileName = parts.Count == 0 ? fileName : parts[parts.Count - 1];
+            return await DownloadsFolder.CreateFileAsync(leafFileName, CreationCollisionOption.GenerateUniqueName);
         }
 
         public async Task<StorageFolder> CreateFolderInAppLocalFolderAsync(string folderName) {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
-            IStorageItem storageItem = await folder.GetItemAsync(folderName);
-            if (storageItem == null || storageItem is StorageFile) {
-                return await folder.CreateFolderAsync(folderName);
-            } else {
-                return await folder.GetFolderAsync(folderName);
-            }
+            return await EnsureFolderPathAsync(folder, SplitRelativePath(folderName));
         }
 
         public async Task<StorageFile> CreateTempFile(string fileName) {
@@ -103,7 +117,26 @@ namespace UniversalSend.Models.Helpers {
         }
 
         public async Task<bool> IsItemExsitAsync(StorageFolder parentFolder, string itemName) {
-            IStorageItem storageItem = await parentFolder.TryGetItemAsync(itemName);
+            if (parentFolder == null || string.IsNullOrWhiteSpace(itemName)) {
+                return false;
+            }
+
+            var parts = SplitRelativePath(itemName);
+            if (parts.Count == 0) {
+                return false;
+            }
+
+            var currentFolder = parentFolder;
+            for (int i = 0; i < parts.Count - 1; i++) {
+                var folderItem = await currentFolder.TryGetItemAsync(parts[i]);
+                if (!(folderItem is StorageFolder nextFolder)) {
+                    return false;
+                }
+
+                currentFolder = nextFolder;
+            }
+
+            IStorageItem storageItem = await currentFolder.TryGetItemAsync(parts[parts.Count - 1]);
             return storageItem == null ? false : true;
         }
 
@@ -169,6 +202,36 @@ namespace UniversalSend.Models.Helpers {
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private static List<string> SplitRelativePath(string relativePath) {
+            return (relativePath ?? string.Empty)
+                .Replace('\\', '/')
+                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => !string.Equals(x, ".", StringComparison.Ordinal) && !string.Equals(x, "..", StringComparison.Ordinal))
+                .ToList();
+        }
+
+        private static async Task<StorageFolder> EnsureFolderPathAsync(StorageFolder rootFolder, IEnumerable<string> folderParts) {
+            var currentFolder = rootFolder;
+            foreach (var part in folderParts) {
+                if (string.IsNullOrWhiteSpace(part)) {
+                    continue;
+                }
+
+                var existing = await currentFolder.TryGetItemAsync(part);
+                if (existing is StorageFolder existingFolder) {
+                    currentFolder = existingFolder;
+                } else {
+                    currentFolder = await currentFolder.CreateFolderAsync(part, CreationCollisionOption.OpenIfExists);
+                }
+            }
+
+            return currentFolder;
+        }
+
+        #endregion Private Methods
 
     }
 }

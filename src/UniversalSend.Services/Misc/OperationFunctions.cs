@@ -106,7 +106,6 @@ namespace UniversalSend.Services.Misc {
             IReceiveTask task = await _receiveTaskManager.WriteFileContentToReceivingTaskV2(sessionId, fileId, token, mutableHttpServerRequest.Content);
 
             if (task != null) {
-                _receiveManager.SendDataReceivedEvent(task);
                 _logger.Debug("Writing data to file.");
                 var headerList = mutableHttpServerRequest.Headers.ToList();
                 var item = headerList.Find(x => x.Name.Equals("host"));
@@ -116,7 +115,14 @@ namespace UniversalSend.Services.Misc {
 
                 string host = item.Value;
                 string ip = host.Substring(0, host.LastIndexOf(":"));
-                await WriteFileAsync(task, ip);
+
+                if (IsTextTask(task)) {
+                    _receiveManager.SendDataReceivedEvent(task);
+                    await WriteFileAsync(task, ip);
+                } else {
+                    await WriteFileAsync(task, ip);
+                    _receiveManager.SendDataReceivedEvent(task);
+                }
             } else {
                 _receiveManager.SendDataReceivedEvent(null);
             }
@@ -146,7 +152,6 @@ namespace UniversalSend.Services.Misc {
             IReceiveTask task = await _receiveTaskManager.WriteFileContentToReceivingTaskV2(sessionId, fileId, token, mutableHttpServerRequest.Content);
 
             if (task != null) {
-                _receiveManager.SendDataReceivedEvent(task);
                 _logger.Debug("Writing data to file.");
                 var headerList = mutableHttpServerRequest.Headers.ToList();
                 var item = headerList.Find(x => x.Name.Equals("host"));
@@ -156,7 +161,14 @@ namespace UniversalSend.Services.Misc {
 
                 string host = item.Value;
                 string ip = host.Substring(0, host.LastIndexOf(":"));
-                await WriteFileAsync(task, ip);
+
+                if (IsTextTask(task)) {
+                    _receiveManager.SendDataReceivedEvent(task);
+                    await WriteFileAsync(task, ip);
+                } else {
+                    await WriteFileAsync(task, ip);
+                    _receiveManager.SendDataReceivedEvent(task);
+                }
             } else {
                 _receiveManager.SendDataReceivedEvent(null);
             }

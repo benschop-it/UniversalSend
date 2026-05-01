@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UniversalSend.Models.Common;
@@ -177,6 +178,14 @@ namespace UniversalSend.Models.Managers {
             LastPrepareUploadStatusCode = response.StatusCode;
 
             if (response.StatusCode == 204) {
+                // LocalSend uses 204 Finished to indicate that no upload phase is needed.
+                // This is valid for text/message transfers where the receiver already processed
+                // the preview content during prepare-upload.
+                if (SendTasksV2.Count > 0 && SendTasksV2.All(IsTextSendTask)) {
+                    LastPrepareUploadErrorMessage = null;
+                    return true;
+                }
+
                 LastPrepareUploadErrorMessage = "The receiver did not accept any files from this transfer.";
                 return false;
             }
@@ -211,6 +220,15 @@ namespace UniversalSend.Models.Managers {
             // /api/localsend/v2/upload?sessionId=some session id&fileId=some file id&token=some token
             ClearWebShare();
             _sendManager.SendStartedEvent();
+
+            if (LastPrepareUploadStatusCode == 204 && SendTasksV2.Count > 0 && SendTasksV2.All(IsTextSendTask)) {
+                foreach (ISendTaskV2 task in SendTasksV2) {
+                    task.TaskState = ReceiveTaskStates.Done;
+                    _sendManager.SendStateChangedEvent();
+                }
+                return;
+            }
+
             foreach (ISendTaskV2 task in SendTasksV2) {
                 if (string.IsNullOrEmpty(task.File.TransferToken)) {
                     task.TaskState = ReceiveTaskStates.Error;

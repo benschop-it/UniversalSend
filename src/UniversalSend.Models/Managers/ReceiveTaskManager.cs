@@ -142,18 +142,20 @@ namespace UniversalSend.Models.Managers {
 
             if (IsTextTask(task)) {
                 task.FileContent = fileContent;
+
+                if (_dispatcher.HasThreadAccess) {
+                    task.TaskState = ReceiveTaskStates.Done;
+                } else {
+                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => task.TaskState = ReceiveTaskStates.Done);
+                }
+
+                CompleteSessionIfFinished(sessionId);
             } else {
                 task.TempStorageFile = await PersistToTempFileAsync(task, fileContent);
                 task.FileContent = null;
+                // File tasks are only marked as completed after the temp file has been moved
+                // to the final destination in WriteReceiveTaskToFileV2Async.
             }
-
-            if (_dispatcher.HasThreadAccess) {
-                task.TaskState = ReceiveTaskStates.Done;
-            } else {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => task.TaskState = ReceiveTaskStates.Done);
-            }
-
-            CompleteSessionIfFinished(sessionId);
 
             return task;
         }
@@ -164,7 +166,7 @@ namespace UniversalSend.Models.Managers {
             if (folder == null) {
                 storageFile = await _storageHelper.CreateFileInDownloadsFolderAsync(receiveTask.FileV2.FileName);
             } else {
-                storageFile = await folder.CreateFileAsync(receiveTask.FileV2.FileName, CreationCollisionOption.GenerateUniqueName);
+                storageFile = await _storageHelper.CreateFileAsync(folder, receiveTask.FileV2.FileName);
             }
 
             if (receiveTask.TempStorageFile != null) {
@@ -173,6 +175,15 @@ namespace UniversalSend.Models.Managers {
             } else {
                 await _storageHelper.WriteBytesToFileAsync(storageFile, receiveTask.FileContent);
             }
+
+            if (_dispatcher.HasThreadAccess) {
+                receiveTask.TaskState = ReceiveTaskStates.Done;
+            } else {
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => receiveTask.TaskState = ReceiveTaskStates.Done);
+            }
+
+            CompleteSessionIfFinished(receiveTask.SessionId);
+
             return storageFile;
         }
 
