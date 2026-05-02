@@ -26,10 +26,13 @@ namespace UniversalSend.Models.Managers {
         }
 
         public async Task ShowContentDialogAsync(object Content) {
-            _contentDialog.Hide();
-            _contentDialog = new ContentDialog();
-            _contentDialog.Content = Content;
-            await _contentDialog.ShowAsync();
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher
+                .RunAsync(CoreDispatcherPriority.Normal, async () => {
+                    _contentDialog.Hide();
+                    _contentDialog = new ContentDialog();
+                    _contentDialog.Content = Content;
+                    await _contentDialog.ShowAsync();
+                });
         }
 
         public async Task<ContentDialogResult> ShowContentDialogAsync(
@@ -39,19 +42,32 @@ namespace UniversalSend.Models.Managers {
             string SecondaryButtonText,
             string CloseButtonText
         ) {
-            _contentDialog.Hide();
-            _contentDialog = new ContentDialog();
-            _contentDialog.Title = Title;
-            _contentDialog.Content = Content;
-            if (string.IsNullOrEmpty(SecondaryButtonText)) {
-                _contentDialog.PrimaryButtonText = PrimaryButtonText;
-                _contentDialog.DefaultButton = ContentDialogButton.Primary;
-            }
-            if (string.IsNullOrEmpty(SecondaryButtonText))
-                _contentDialog.SecondaryButtonText = SecondaryButtonText;
-            _contentDialog.CloseButtonText = CloseButtonText;
+            var tcs = new TaskCompletionSource<ContentDialogResult>();
 
-            return await _contentDialog.ShowAsync();
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher
+                .RunAsync(CoreDispatcherPriority.Normal, async () => {
+                    _contentDialog.Hide();
+                    _contentDialog = new ContentDialog();
+                    _contentDialog.Title = Title;
+                    _contentDialog.Content = Content;
+
+                    if (!string.IsNullOrEmpty(PrimaryButtonText)) {
+                        _contentDialog.PrimaryButtonText = PrimaryButtonText;
+                        _contentDialog.DefaultButton = ContentDialogButton.Primary;
+                    }
+
+                    if (!string.IsNullOrEmpty(SecondaryButtonText)) {
+                        _contentDialog.SecondaryButtonText = SecondaryButtonText;
+                    }
+
+                    if (!string.IsNullOrEmpty(CloseButtonText)) {
+                        _contentDialog.CloseButtonText = CloseButtonText;
+                    }
+
+                    tcs.TrySetResult(await _contentDialog.ShowAsync());
+                });
+
+            return await tcs.Task;
         }
 
         #endregion Public Methods

@@ -8,6 +8,7 @@ namespace UniversalSend.Models.Managers {
     internal class WebSendManager : IWebSendManager {
 
         private const int MaxPinAttempts = 3;
+        private readonly HashSet<string> _approvedClients = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private readonly object _syncRoot = new object();
         private WebSendSession _activeShare;
         private int _pinAttempts;
@@ -29,6 +30,7 @@ namespace UniversalSend.Models.Managers {
 
             lock (_syncRoot) {
                 _activeShare = session;
+                _approvedClients.Clear();
                 _pinAttempts = 0;
                 return true;
             }
@@ -62,13 +64,38 @@ namespace UniversalSend.Models.Managers {
                 }
 
                 _activeShare = null;
+                _approvedClients.Clear();
                 _pinAttempts = 0;
+            }
+        }
+
+        public void ApproveClient(string remoteAddress) {
+            if (string.IsNullOrWhiteSpace(remoteAddress)) {
+                return;
+            }
+
+            lock (_syncRoot) {
+                if (_activeShare == null) {
+                    return;
+                }
+
+                _approvedClients.Add(remoteAddress);
             }
         }
 
         public IWebSendSession GetActiveShare() {
             lock (_syncRoot) {
                 return _activeShare;
+            }
+        }
+
+        public bool IsClientApproved(string remoteAddress) {
+            if (string.IsNullOrWhiteSpace(remoteAddress)) {
+                return false;
+            }
+
+            lock (_syncRoot) {
+                return _activeShare != null && _approvedClients.Contains(remoteAddress);
             }
         }
 

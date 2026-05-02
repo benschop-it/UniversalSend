@@ -37,6 +37,7 @@ namespace UniversalSend.Services.Misc {
         private readonly IWebSendManager _webSendManager;
         private readonly IStorageHelper _storageHelper;
         private readonly IFileRequestDataManager _fileRequestDataManager;
+        private readonly IContentDialogManager _contentDialogManager;
         private readonly CoreDispatcher _dispatcher;
         private readonly IConfirmReceiptHandler _confirmReceiptHandler;
         private UdpDiscoveryService _udpDiscovery;
@@ -65,7 +66,8 @@ namespace UniversalSend.Services.Misc {
             IEncodingCache encodingCache,
             IInstanceCreatorCache instanceCreatorCache,
             IDispatcherProvider dispatcherProvider,
-            IConfirmReceiptHandler confirmReceiptHandler
+            IConfirmReceiptHandler confirmReceiptHandler,
+            IContentDialogManager contentDialogManager
         ) {
             _logger = LogManager.GetLogger<ServiceHttpServer>();
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
@@ -88,6 +90,7 @@ namespace UniversalSend.Services.Misc {
             _instanceCreatorCache = instanceCreatorCache ?? throw new ArgumentNullException(nameof(instanceCreatorCache));
             _dispatcher = dispatcherProvider?.Dispatcher ?? throw new ArgumentNullException(nameof(dispatcherProvider));
             _confirmReceiptHandler = confirmReceiptHandler ?? throw new ArgumentNullException(nameof(confirmReceiptHandler));
+            _contentDialogManager = contentDialogManager ?? throw new ArgumentNullException(nameof(contentDialogManager));
         }
 
         #endregion Public Constructors
@@ -130,7 +133,7 @@ namespace UniversalSend.Services.Misc {
             HttpServerConfiguration = new HttpServerConfiguration();
             HttpServerConfiguration.ListenOnPort(port)
                 .RegisterRoute("api/localsend/", restRouteHandler)
-                .RegisterRoute(new BrowserDownloadRouteHandler(_webSendManager))
+                .RegisterRoute(new BrowserDownloadRouteHandler(_webSendManager, _settings, _contentDialogManager))
                 .EnableCors();
 
             HttpServer = new HttpServer(HttpServerConfiguration, _httpRequestParser);

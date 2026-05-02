@@ -142,6 +142,9 @@ namespace UniversalSend.Models.Misc {
             SetInitSetting(Constants.Lab_UseInternalExplorer, "False");
 
             // Web share - Require PIN (default: on)
+            SetInitSetting(Constants.WebShare_AutoAccept, false);
+
+            // Web share - Require PIN (default: on)
             SetInitSetting(Constants.WebShare_RequirePin, true);
 
             // Web share - PIN (default: random 6-digit)

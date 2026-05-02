@@ -11,8 +11,10 @@ namespace UniversalSend.Models.Interfaces {
         string GetBrowserDownloadUrl(int port, string ipAddress);
 
         void ClearShare(string sessionId = null);
+        void ApproveClient(string remoteAddress);
 
         IWebSendSession GetActiveShare();
+        bool IsClientApproved(string remoteAddress);
 
         /// <summary>
         /// Validates the PIN for a prepare-download request.

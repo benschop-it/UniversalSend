@@ -29,12 +29,16 @@ namespace UniversalSend.Controls.ContentDialogControls {
             // Show the URL
             UrlTextBlock.Text = _sendTaskManager.LastWebShareUrl ?? string.Empty;
 
+            var autoAcceptSetting = _settings.GetSettingContent(Constants.WebShare_AutoAccept);
+            bool autoAccept = autoAcceptSetting is bool autoAcceptBool ? autoAcceptBool : bool.TryParse(autoAcceptSetting?.ToString(), out bool autoAcceptParsed) && autoAcceptParsed;
+
             // Load PIN settings
             var requirePinSetting = _settings.GetSettingContent(Constants.WebShare_RequirePin);
             bool requirePin = requirePinSetting is bool b ? b : bool.TryParse(requirePinSetting?.ToString(), out bool parsed) && parsed;
 
             _currentPin = _sendTaskManager.LastWebSharePin;
 
+            AutoAcceptToggle.IsOn = autoAccept;
             RequirePinToggle.IsOn = requirePin;
             _isLoaded = true;
             UpdatePinDisplay();
@@ -47,7 +51,11 @@ namespace UniversalSend.Controls.ContentDialogControls {
         }
 
         private void AutoAcceptToggle_Toggled(object sender, RoutedEventArgs e) {
-            // Auto-accept is a UI-only hint for now; the session doesn't enforce it yet.
+            if (!_isLoaded || AutoAcceptToggle == null) {
+                return;
+            }
+
+            _settings.SetSetting(Constants.WebShare_AutoAccept, AutoAcceptToggle.IsOn);
         }
 
         private void RequirePinToggle_Toggled(object sender, RoutedEventArgs e) {
