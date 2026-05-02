@@ -15,6 +15,7 @@ The project is based on the LocalSend protocol:
 
 - Windows 10 version 15063 or newer
 - UWP-capable device
+- For Windows 10 Mobile: a phone that can sideload apps
 
 ## Current status
 
@@ -37,7 +38,6 @@ The project is based on the LocalSend protocol:
 - Manual send by IP address or hashtag
 - Web Share / browser download share
 - Optional PIN for Web Share
-- Share target activation from other apps
 - Paste from clipboard
   - Text paste is supported
   - Image paste is supported only when the source app exposes usable image clipboard data
@@ -45,21 +45,10 @@ The project is based on the LocalSend protocol:
 
 ## Known limitations
 
-- HTTPS / encryption is not expected to work reliably on Windows 10 Mobile due to OS limitations.
+- HTTPS / encryption will not work on Windows 10 Mobile due to OS limitations. Turn off Encryption on target devices you want to send or receive from.
 - Clipboard image copy is unreliable on Windows 10 Mobile. Many apps expose only text or no usable bitmap data through the clipboard.
-- Because of that platform limitation, clipboard paste should be considered text-first on phones. For images, the file picker or Share UI is usually more reliable.
-- Single-file transfer progress/details can still be improved.
+- Because of that platform limitation, clipboard paste should be considered text-first on phones. For images, the file picker or Share UI can be used.
 - Full parity with the latest desktop LocalSend implementations is still ongoing.
-
-## Clipboard behavior
-
-Clipboard paste has been improved to better match current app behavior:
-
-- Repeated clipboard sends now replace older clipboard-origin items in the send queue instead of reusing stale content.
-- Image-related clipboard formats are preferred over text when both are present.
-- Temporary files created for pasted bitmap data use unique names to avoid collisions.
-
-On Windows 10 Mobile, image copy support depends heavily on the source app and OS clipboard support. If an image cannot be pasted, use file picking or sharing from the source app instead.
 
 ## Project structure
 
@@ -67,9 +56,20 @@ On Windows 10 Mobile, image copy support depends heavily on the source app and O
 - `UniversalSend.Models` - models, managers, helpers, settings, abstractions
 - `UniversalSend.Services` - HTTP, REST, UDP discovery, and transport infrastructure
 
-## References
+## Open source project references
 
-| Area | Project |
-| --- | --- |
-| Send and receive protocol | [localsend/protocol](https://github.com/localsend/protocol) |
-| HTTP server foundation | [tomkuijsten/restup](https://github.com/tomkuijsten/restup) |
+| Function      | Project name and link                                                                                           |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
+| Send and receive protocol    | [localsend/protocol](https://github.com/localsend/protocol)                                                           |
+| HTTP Server | [tomkuijsten/restup](https://github.com/tomkuijsten/restup)<br>This code has been integrated in the project |
+
+## How to build and deploy
+
+To build and deploy the app, you need Visual Studio 2017 build **15.9.75**. It is **very important to not update beyond that version**,
+because newer version have removed support for the SDKs that the phone needs. Check Google/ChatGPT on how to install version 15.9.75.
+If all goes well, you should be able to deply and debug on your phone (target ARM).
+
+## How to use AI to developer Windows 10 Mobile apps
+
+If you want to use AI to help develop apps for Windows 10 Mobile, you can install the latest version of VS2026 with CoPilot.
+If you open the solution in both VS2017 and in VS2026, you can write your code in VS2026 with AI, then build in VS2017 and run on the phone.
