@@ -12,10 +12,14 @@ using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Interfaces;
 using Windows.Storage;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace UniversalSend.Views {
@@ -98,6 +102,19 @@ namespace UniversalSend.Views {
             UpdateView();
         }
 
+        private void ReplaceClipboardItemInSendQueue(ISendTaskV2 task) {
+            _sendTaskManager.ClearWebShare();
+
+            for (int i = _sendTaskManager.SendTasksV2.Count - 1; i >= 0; i--) {
+                if (IsClipboardTask(_sendTaskManager.SendTasksV2[i])) {
+                    _sendTaskManager.SendTasksV2.RemoveAt(i);
+                }
+            }
+
+            _sendTaskManager.SendTasksV2.Add(task);
+            UpdateView();
+        }
+
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
             _sendTaskManager.ClearWebShare();
             _sendTaskManager.SendTasksV2.Clear();
@@ -125,11 +142,71 @@ namespace UniversalSend.Views {
             await OpenFolderAsync();
         }
 
+        private async void PasteButton_Click(object sender, RoutedEventArgs e) {
+            DataPackageView clipboard = Clipboard.GetContent();
+            bool containsImage = clipboard.Contains(StandardDataFormats.StorageItems) || clipboard.Contains(StandardDataFormats.Bitmap);
+
+            if (clipboard.Contains(StandardDataFormats.StorageItems)) {
+                try {
+                    IReadOnlyList<IStorageItem> storageItems = await clipboard.GetStorageItemsAsync();
+                    StorageFile imageFile = storageItems?
+                        .OfType<StorageFile>()
+                        .FirstOrDefault(x => x.ContentType?.StartsWith("image/", StringComparison.OrdinalIgnoreCase) == true);
+
+                    if (imageFile != null) {
+                        ReplaceClipboardItemInSendQueue(await _sendTaskManager.CreateSendTaskV2(imageFile));
+                        return;
+                    }
+                } catch (Exception ex) {
+                    Debug.WriteLine($"Paste storage item failed: {ex}");
+                }
+            }
+
+            if (clipboard.Contains(StandardDataFormats.Bitmap)) {
+                try {
+                    RandomAccessStreamReference bitmapRef = await clipboard.GetBitmapAsync();
+                    if (bitmapRef != null) {
+                        using (IRandomAccessStreamWithContentType stream = await bitmapRef.OpenReadAsync()) {
+                            if (stream == null || stream.Size == 0) {
+                                return;
+                            }
+
+                            var reader = new DataReader(stream.GetInputStreamAt(0));
+                            await reader.LoadAsync((uint)stream.Size);
+                            byte[] bytes = new byte[(int)stream.Size];
+                            reader.ReadBytes(bytes);
+
+                            StorageFile tempFile = await _storageHelper.CreateTempFile($"Clipboard-{DateTime.Now:yyyyMMdd-HHmmss-fff}.png");
+                            await _storageHelper.WriteBytesToFileAsync(tempFile, bytes);
+                            ReplaceClipboardItemInSendQueue(await _sendTaskManager.CreateSendTaskV2(tempFile));
+                            return;
+                        }
+                    }
+                } catch (Exception ex) {
+                    Debug.WriteLine($"Paste bitmap failed: {ex}");
+                }
+
+                await MessageDialogManager.ShowMessageAsync("Clipboard image data could not be read.", "Paste");
+                return;
+            }
+
+            if (!containsImage && clipboard.Contains(StandardDataFormats.Text)) {
+                string text = await clipboard.GetTextAsync();
+                if (!string.IsNullOrWhiteSpace(text)) {
+                    ReplaceClipboardItemInSendQueue(_sendTaskManager.CreateSendTaskV2(text));
+                    return;
+                }
+            }
+
+            await MessageDialogManager.ShowMessageAsync("Clipboard does not contain text or an image.", "Paste");
+        }
+
         private void InitButton() {
             SendItemButtonControl MediaButton = new SendItemButtonControl("\uEB9F", "Media");
             SendItemButtonControl TextButton = new SendItemButtonControl("\uEA37", "Text");
             TextButton.RootButton.Click += TextButton_Click;
-            SendItemButtonControl ClipboardContentButton = new SendItemButtonControl("\uF0E3", "Clipboard");
+            SendItemButtonControl ClipboardContentButton = new SendItemButtonControl("\uF0E3", "Paste");
+            ClipboardContentButton.RootButton.Click += PasteButton_Click;
             SendItemButtonControl FileButton = new SendItemButtonControl("\uE7C3", "File");
             FileButton.RootButton.Click += FileButton_Click;
             SendItemButtonControl FolderButton = new SendItemButtonControl("\uE8B7", "Folder");
@@ -138,7 +215,8 @@ namespace UniversalSend.Views {
             SendItemButtonControl AddMediaButton = new SendItemButtonControl("\uEB9F", "Media");
             SendItemButtonControl AddTextButton = new SendItemButtonControl("\uEA37", "Text");
             AddTextButton.RootButton.Click += TextButton_Click;
-            SendItemButtonControl AddClipboardContentButton = new SendItemButtonControl("\uF0E3", "Clipboard");
+            SendItemButtonControl AddClipboardContentButton = new SendItemButtonControl("\uF0E3", "Paste");
+            AddClipboardContentButton.RootButton.Click += PasteButton_Click;
             SendItemButtonControl AddFileButton = new SendItemButtonControl("\uE7C3", "File");
             AddFileButton.RootButton.Click += FileButton_Click;
             SendItemButtonControl AddFolderButton = new SendItemButtonControl("\uE8B7", "Folder");
@@ -146,15 +224,15 @@ namespace UniversalSend.Views {
 
             // To-Do: create media selector
             //SelectSendItemButtonsStackPanel.Children.Add(MediaButton);
-            SelectSendItemButtonsStackPanel.Children.Add(TextButton);
-            //SelectSendItemButtonsStackPanel.Children.Add(ClipboardContentButton);
             SelectSendItemButtonsStackPanel.Children.Add(FileButton);
+            SelectSendItemButtonsStackPanel.Children.Add(ClipboardContentButton);
+            SelectSendItemButtonsStackPanel.Children.Add(TextButton);
             SelectSendItemButtonsStackPanel.Children.Add(FolderButton);
 
             //AddFlyoutVariableSizedWrapGrid.Children.Add(AddMediaButton);
-            AddFlyoutVariableSizedWrapGrid.Children.Add(AddTextButton);
-            //AddFlyoutVariableSizedWrapGrid.Children.Add(AddClipboardContentButton);
             AddFlyoutVariableSizedWrapGrid.Children.Add(AddFileButton);
+            AddFlyoutVariableSizedWrapGrid.Children.Add(AddClipboardContentButton);
+            AddFlyoutVariableSizedWrapGrid.Children.Add(AddTextButton);
             AddFlyoutVariableSizedWrapGrid.Children.Add(AddFolderButton);
         }
 
@@ -369,7 +447,7 @@ namespace UniversalSend.Views {
                 long totalSize = 0;
                 SendQueueItemsStackpanel.Children.Clear();
                 foreach (var item in _sendTaskManager.SendTasksV2) {
-                    SendQueueItemsStackpanel.Children.Add(new Border { Background = new SolidColorBrush { Color = Colors.DarkGray }, Height = 45, Width = 45, Margin = new Thickness(2) });
+                    SendQueueItemsStackpanel.Children.Add(CreateSendQueueThumbnail(item));
                     totalSize += item.File.Size;
                 }
                 FileCountTextBlock.Text = $"{LocalizeManager.GetLocalizedString("SendPage_FileCount")}{_sendTaskManager.SendTasksV2.Count}";
@@ -379,6 +457,113 @@ namespace UniversalSend.Views {
                 SendQueueStackPanel.Visibility = Visibility.Collapsed;
                 SendQueueItemsStackpanel.Children.Clear();
             }
+        }
+
+        private FrameworkElement CreateSendQueueThumbnail(ISendTaskV2 task) {
+            var root = new StackPanel {
+                Width = 72,
+                Margin = new Thickness(2),
+            };
+
+            var border = new Border {
+                Width = 64,
+                Height = 64,
+                Background = new SolidColorBrush(Colors.DimGray),
+                CornerRadius = new CornerRadius(4),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Child = CreateThumbnailContent(task),
+            };
+
+            ToolTipService.SetToolTip(border, task?.File?.FileName ?? string.Empty);
+            root.Children.Add(border);
+
+            root.Children.Add(new TextBlock {
+                Text = task?.File?.FileName ?? string.Empty,
+                TextWrapping = TextWrapping.NoWrap,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                FontSize = 11,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                TextAlignment = TextAlignment.Center,
+            });
+
+            return root;
+        }
+
+        private FrameworkElement CreateThumbnailContent(ISendTaskV2 task) {
+            if (task?.StorageFile != null && IsImageTask(task)) {
+                var image = new Image {
+                    Stretch = Stretch.UniformToFill,
+                };
+                _ = LoadThumbnailAsync(task.StorageFile, image);
+                return image;
+            }
+
+            return new Viewbox {
+                Child = new FontIcon {
+                    Glyph = GetQueueIconGlyph(task),
+                    Foreground = new SolidColorBrush(Colors.White),
+                }
+            };
+        }
+
+        private async Task LoadThumbnailAsync(IStorageFile file, Image image) {
+            try {
+                var bitmap = new BitmapImage();
+
+                if (file is StorageFile storageFile) {
+                    using (var thumb = await storageFile.GetThumbnailAsync(ThumbnailMode.SingleItem, 96)) {
+                        if (thumb == null) {
+                            return;
+                        }
+
+                        await bitmap.SetSourceAsync(thumb);
+                    }
+                } else {
+                    using (var stream = await file.OpenReadAsync()) {
+                        await bitmap.SetSourceAsync(stream);
+                    }
+                }
+
+                image.Source = bitmap;
+            } catch (Exception ex) {
+                Debug.WriteLine($"Thumbnail load failed for '{file?.Path}': {ex}");
+            }
+        }
+
+        private static bool IsImageTask(ISendTaskV2 task) {
+            return task?.File != null &&
+                   !string.IsNullOrWhiteSpace(task.File.FileType) &&
+                   task.File.FileType.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetQueueIconGlyph(ISendTaskV2 task) {
+            if (task?.File == null) {
+                return "\uE7C3";
+            }
+
+            if (!string.IsNullOrWhiteSpace(task.File.FileType)) {
+                if (task.File.FileType.StartsWith("text/", StringComparison.OrdinalIgnoreCase)) {
+                    return "\uEA37";
+                }
+
+                if (task.File.FileType.StartsWith("image/", StringComparison.OrdinalIgnoreCase)) {
+                    return "\uEB9F";
+                }
+            }
+
+            return "\uE7C3";
+        }
+
+        private static bool IsClipboardTask(ISendTaskV2 task) {
+            if (task?.File == null) {
+                return false;
+            }
+
+            if (task.StorageFile != null) {
+                return task.File.FileName?.StartsWith("Clipboard-", StringComparison.OrdinalIgnoreCase) == true;
+            }
+
+            return string.Equals(task.File.FileType, "text/plain", StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion Private Methods

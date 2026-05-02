@@ -3,7 +3,7 @@
 ## Project overview
 
 - UniversalSend is a Windows UWP application for discovering nearby devices and sending content between them.
-  The application is based on LocalSend, which is written in Rust and maintained at `https://github.com/localsend/localsend`.
+  The application is based on LocalSend, which is written in Dart and Rust and maintained at `https://github.com/localsend/localsend`.
   This archive is cloned locally at `d:\dev\Private\localsend`.
   The protocol is described at `https://github.com/localsend/protocol` and cloned locally at `d:\dev\Private\protocol\`.
 
