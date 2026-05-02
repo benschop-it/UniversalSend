@@ -128,7 +128,10 @@ namespace UniversalSend.Services.Misc {
 
             //restRouteHandler.RegisterController<V2RequestController>(); // Register controller
             HttpServerConfiguration = new HttpServerConfiguration();
-            HttpServerConfiguration.ListenOnPort(port).RegisterRoute("api/localsend/", restRouteHandler).EnableCors();
+            HttpServerConfiguration.ListenOnPort(port)
+                .RegisterRoute("api/localsend/", restRouteHandler)
+                .RegisterRoute(new BrowserDownloadRouteHandler(_webSendManager))
+                .EnableCors();
 
             HttpServer = new HttpServer(HttpServerConfiguration, _httpRequestParser);
             try {
@@ -186,23 +189,32 @@ namespace UniversalSend.Services.Misc {
         #region Private Methods
 
         private async void OnParserProgressChanged(object sender, HttpParseProgressEventArgs e) {
-            Dictionary<string, string> parameters = StringHelper.GetURLQueryParameters(e.Uri.ToString());
-            if (parameters.Count > 0) {
-                if (parameters.ContainsKey("fileId") && parameters.ContainsKey("token")) {
-                    var fileId = parameters["fileId"];
-                    var token = parameters["token"];
+            if (e != null && e.Uri != null)
+            {
+                Dictionary<string, string> parameters = StringHelper.GetURLQueryParameters(e.Uri.ToString());
+                if (parameters.Count > 0)
+                {
+                    if (parameters.ContainsKey("fileId") && parameters.ContainsKey("token"))
+                    {
+                        var fileId = parameters["fileId"];
+                        var token = parameters["token"];
 
-                    var receivingTasks = _receiveTaskManager.ReceivingTasks;
+                        var receivingTasks = _receiveTaskManager.ReceivingTasks;
 
-                    foreach (IReceiveTask task in receivingTasks) {
-                        IUniversalSendFileV2 file = task.FileV2;
-                        if (file.Id == fileId && file.TransferToken == token) {
-                            if (_dispatcher.HasThreadAccess) {
-                                UpdateTask(task, e);
-                            } else {
-                                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateTask(task, e));
+                        foreach (IReceiveTask task in receivingTasks)
+                        {
+                            IUniversalSendFileV2 file = task.FileV2;
+                            if (file.Id == fileId && file.TransferToken == token)
+                            {
+                                if (_dispatcher.HasThreadAccess)
+                                {
+                                    UpdateTask(task, e);
+                                } else
+                                {
+                                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateTask(task, e));
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }

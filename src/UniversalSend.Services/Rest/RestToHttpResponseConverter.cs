@@ -84,7 +84,11 @@ namespace UniversalSend.Services.Rest {
 
         private static HttpServerResponse GetBinaryGetResponse(BinaryGetResponse response) {
             var serverResponse = GetDefaultResponse(response);
-            serverResponse.ContentType = serverResponse.ContentType ?? "application/octet-stream";
+            if (response.Headers != null && response.Headers.TryGetValue("Content-Type", out string contentType) && !string.IsNullOrWhiteSpace(contentType)) {
+                serverResponse.AddHeader("Content-Type", contentType);
+            } else {
+                serverResponse.ContentType = serverResponse.ContentType ?? "application/octet-stream";
+            }
 
             if (response.ContentBytes != null) {
                 serverResponse.Content = response.ContentBytes;

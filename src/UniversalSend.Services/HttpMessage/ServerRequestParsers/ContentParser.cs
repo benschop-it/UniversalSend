@@ -33,7 +33,8 @@ namespace UniversalSend.Services.HttpMessage.ServerRequestParsers {
         public override void HandleRequestPart(byte[] stream, MutableHttpServerRequest resultThisFar) {
             if (resultThisFar.ContentLength == 0) {
                 IsFinished = true;
-                IsSucceeded = stream.Length == 0;
+                IsSucceeded = true;
+                resultThisFar.Content = Array.Empty<byte>();
             } else {
                 EnsureContentBuffer(resultThisFar.ContentLength);
 

@@ -217,6 +217,28 @@ namespace UniversalSend.Services.Controllers {
             return HandlePrepareDownload(sessionId, pin);
         }
 
+        [UriFormat("v2/browser-download")]
+        public IGetResponse GetBrowserDownloadPage() {
+            var share = _webSendManager.GetActiveShare();
+            if (share == null) {
+                return new GetResponse(GetResponse.ResponseStatus.NotFound);
+            }
+
+            var html = BuildBrowserDownloadPage(share);
+            return new BinaryGetResponse(GetResponse.ResponseStatus.OK, System.Text.Encoding.UTF8.GetBytes(html), "text/html; charset=utf-8");
+        }
+
+        [UriFormat("v2/browser-download?sessionId={sessionId}")]
+        public IGetResponse GetBrowserDownloadPage(string sessionId) {
+            var share = _webSendManager.GetActiveShare();
+            if (share == null || string.IsNullOrWhiteSpace(sessionId) || !string.Equals(share.SessionId, sessionId, StringComparison.Ordinal)) {
+                return new GetResponse(GetResponse.ResponseStatus.NotFound);
+            }
+
+            var html = BuildBrowserDownloadPage(share);
+            return new BinaryGetResponse(GetResponse.ResponseStatus.OK, System.Text.Encoding.UTF8.GetBytes(html), "text/html; charset=utf-8");
+        }
+
         private PostResponse HandlePrepareDownload(string sessionId, string pin) {
             var share = _webSendManager.GetActiveShare();
             if (share == null) {
@@ -250,6 +272,29 @@ namespace UniversalSend.Services.Controllers {
             return new PostResponse(PostResponse.ResponseStatus.OK, string.Empty, responseData);
         }
 
+        [UriFormat("v2/download?fileId={fileId}")]
+        public IGetResponse GetDownload(string fileId) {
+            var share = _webSendManager.GetActiveShare();
+            if (share == null || string.IsNullOrWhiteSpace(fileId) || !share.Files.TryGetValue(fileId, out ISendTaskV2 sendTask)) {
+                return new GetResponse(GetResponse.ResponseStatus.NotFound);
+            }
+
+            var downloadHeaders = new Dictionary<string, string> {
+                ["Content-Disposition"] = $"attachment; filename=\"{Uri.EscapeDataString(sendTask.File.FileName)}\"",
+            };
+
+            if (sendTask.StorageFile == null) {
+                return new BinaryGetResponse(GetResponse.ResponseStatus.OK, System.Text.Encoding.UTF8.GetBytes(sendTask.File.Preview ?? string.Empty), sendTask.File.FileType, downloadHeaders);
+            }
+
+            return new BinaryGetResponse(
+                GetResponse.ResponseStatus.OK,
+                _storageHelper.OpenReadStreamAsync(sendTask.StorageFile).GetAwaiter().GetResult(),
+                sendTask.File.Size,
+                sendTask.File.FileType,
+                downloadHeaders);
+        }
+
         [UriFormat("v2/download?sessionId={sessionId}&fileId={fileId}")]
         public IGetResponse GetDownload(string sessionId, string fileId) {
             var share = _webSendManager.GetActiveShare();
@@ -280,6 +325,26 @@ namespace UniversalSend.Services.Controllers {
         private static bool IsSelfDiscovery(string fingerprint) {
             return !string.IsNullOrWhiteSpace(fingerprint) &&
                    string.Equals(fingerprint, UniversalSend.Models.ProgramData.LocalDevice.Fingerprint, StringComparison.Ordinal);
+        }
+
+        private static string BuildBrowserDownloadPage(IWebSendSession share) {
+            var html = new System.Text.StringBuilder();
+            html.Append("<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />");
+            html.Append("<title>UniversalSend Download</title>");
+            html.Append("<style>body{font-family:Segoe UI,Arial,sans-serif;margin:24px;}h1{font-size:24px;}ul{padding-left:20px;}li{margin:12px 0;}a{word-break:break-all;}</style>");
+            html.Append("</head><body>");
+            html.Append("<h1>UniversalSend Download</h1>");
+            html.Append("<p>Select a file to download.</p>");
+            html.Append("<ul>");
+
+            foreach (var item in share.Files) {
+                var fileName = System.Net.WebUtility.HtmlEncode(item.Value.File.FileName ?? item.Key);
+                var url = $"/api/localsend/v2/download?fileId={Uri.EscapeDataString(item.Key)}";
+                html.Append($"<li><a href=\"{url}\">{fileName}</a></li>");
+            }
+
+            html.Append("</ul></body></html>");
+            return html.ToString();
         }
 
         #endregion Private Methods

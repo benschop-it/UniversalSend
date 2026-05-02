@@ -43,7 +43,8 @@ namespace UniversalSend.Models.Managers {
         }
 
         public string GetBrowserDownloadUrl(int port, string ipAddress) {
-            if (!HasActiveShare || string.IsNullOrWhiteSpace(ipAddress) || port <= 0) {
+            var share = GetActiveShare();
+            if (share == null || string.IsNullOrWhiteSpace(ipAddress) || port <= 0) {
                 return string.Empty;
             }
 

@@ -24,8 +24,19 @@ namespace UniversalSend.Services.Controllers {
         #region Public Methods
 
         public static void TryRunOperationByRequestUri(MutableHttpServerRequest mutableHttpServerRequest) {
+            if (mutableHttpServerRequest?.Uri == null) {
+                _logger.Debug("TryRunOperationByRequestUri: request URI is null; skipping side-effect handlers.");
+                return;
+            }
+
             //_logger.Debug($"TryRunOperationByRequestUri for URI:{mutableHttpServerRequest.Uri.ToString()}.");
             string uri = StringHelper.GetURLFromURLWithQueryParmeters(mutableHttpServerRequest.Uri.ToString());
+
+            if (!uri.StartsWith("/api/localsend/", StringComparison.OrdinalIgnoreCase)) {
+                _logger.Debug($"TryRunOperationByRequestUri: '{uri}' is not a side-effect API route; skipping.");
+                return;
+            }
+
             _logger.Debug($"TryRunOperationByRequestUri: raw='{mutableHttpServerRequest.Uri}', normalized='{uri}', registered=[{string.Join(", ", UriOperations.Keys)}]");
             if (UriOperations.ContainsKey(uri)) {
                 _logger.Debug($"TryRunOperationByRequestUri: executing side-effect handler for '{uri}'.");

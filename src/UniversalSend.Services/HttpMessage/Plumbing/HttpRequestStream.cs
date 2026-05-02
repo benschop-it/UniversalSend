@@ -18,7 +18,7 @@ namespace UniversalSend.Services.HttpMessage.Plumbing {
 
         #region Private Fields
 
-        private static readonly int[] INPUTSTREAM_EMPTY_DELAYMS = new int[] { 1, 10, 10 };
+        private static readonly int[] INPUTSTREAM_EMPTY_DELAYMS = new int[] { 10, 25, 50, 100, 250, 500 };
 
         private IInputStream _requestStream;
 

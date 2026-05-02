@@ -10,6 +10,7 @@ namespace UniversalSend.Controls.ContentDialogControls {
 
     public sealed partial class WebShareControl : UserControl {
 
+        private bool _isLoaded;
         private readonly ISettings _settings = App.Services.GetRequiredService<ISettings>();
         private readonly IWebSendManager _webSendManager = App.Services.GetRequiredService<IWebSendManager>();
         private readonly ISendTaskManager _sendTaskManager = App.Services.GetRequiredService<ISendTaskManager>();
@@ -35,6 +36,7 @@ namespace UniversalSend.Controls.ContentDialogControls {
             _currentPin = _sendTaskManager.LastWebSharePin;
 
             RequirePinToggle.IsOn = requirePin;
+            _isLoaded = true;
             UpdatePinDisplay();
         }
 
@@ -49,6 +51,10 @@ namespace UniversalSend.Controls.ContentDialogControls {
         }
 
         private void RequirePinToggle_Toggled(object sender, RoutedEventArgs e) {
+            if (!_isLoaded || RequirePinToggle == null) {
+                return;
+            }
+
             bool requirePin = RequirePinToggle.IsOn;
             _settings.SetSetting(Constants.WebShare_RequirePin, requirePin);
 
@@ -112,6 +118,10 @@ namespace UniversalSend.Controls.ContentDialogControls {
         }
 
         private void UpdatePinDisplay() {
+            if (RequirePinToggle == null || PinDisplayPanel == null || PinValueTextBlock == null) {
+                return;
+            }
+
             bool showPin = RequirePinToggle.IsOn && !string.IsNullOrWhiteSpace(_currentPin);
             PinDisplayPanel.Visibility = showPin ? Visibility.Visible : Visibility.Collapsed;
             PinValueTextBlock.Text = _currentPin ?? string.Empty;

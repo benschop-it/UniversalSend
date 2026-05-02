@@ -180,6 +180,12 @@ namespace UniversalSend.Services.Http {
                         request.RemoteAddress = args.Socket.Information?.RemoteAddress?.CanonicalName;
                         request.RemotePort = TryParsePort(args.Socket.Information?.RemotePort);
 
+                        if (request == null || !request.IsComplete || request.Method == null || request.Uri == null) {
+                            requestLog.AppendLine($"[HttpServer.ProcessRequestAsync] Invalid or incomplete request: {request}");
+                            await WriteResponseAsync(HttpServerResponse.Create(new Version(1, 1), HttpResponseStatus.BadRequest), args.Socket);
+                            return;
+                        }
+
                         OperationController.TryRunOperationByRequestUri(request);
 
                         requestLog.AppendLine($"[HttpServer.ProcessRequestAsync] {request}");
