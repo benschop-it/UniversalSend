@@ -12,3 +12,4 @@
 - Treat this as a mature codebase with established layering.
 - Prefer small, compatible changes that fit the current architecture over broad modernization.
 - For the current LocalSend compatibility status and remaining differences versus the Rust implementation, see `docs/localsend-interop-summary.md`.
+- Use the project's logger instead of `Debug.WriteLine` in code changes.

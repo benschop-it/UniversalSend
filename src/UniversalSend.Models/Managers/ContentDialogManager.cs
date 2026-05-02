@@ -26,13 +26,22 @@ namespace UniversalSend.Models.Managers {
         }
 
         public async Task ShowContentDialogAsync(object Content) {
+            var tcs = new TaskCompletionSource<bool>();
+
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher
                 .RunAsync(CoreDispatcherPriority.Normal, async () => {
-                    _contentDialog.Hide();
-                    _contentDialog = new ContentDialog();
-                    _contentDialog.Content = Content;
-                    await _contentDialog.ShowAsync();
+                    try {
+                        _contentDialog.Hide();
+                        _contentDialog = new ContentDialog();
+                        _contentDialog.Content = Content;
+                        await _contentDialog.ShowAsync();
+                        tcs.TrySetResult(true);
+                    } catch (Exception ex) {
+                        tcs.TrySetException(ex);
+                    }
                 });
+
+            await tcs.Task;
         }
 
         public async Task<ContentDialogResult> ShowContentDialogAsync(

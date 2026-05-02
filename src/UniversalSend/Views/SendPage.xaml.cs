@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalSend.Controls.ContentDialogControls;
 using UniversalSend.Controls.SendPage;
 using UniversalSend.Interfaces;
 using UniversalSend.Misc;
+using UniversalSend.Models.Common;
 using UniversalSend.Models.Interfaces;
 using UniversalSend.Services.Interfaces;
 using Windows.Storage;
@@ -29,6 +29,7 @@ namespace UniversalSend.Views {
         #region Private Fields
 
         private bool Inited = false;
+        private readonly ILogger _logger;
 
         private ISendTaskManager _sendTaskManager => App.Services.GetRequiredService<ISendTaskManager>();
         private IDeviceManager _deviceManager => App.Services.GetRequiredService<IDeviceManager>();
@@ -46,6 +47,7 @@ namespace UniversalSend.Views {
 
         public SendPage() {
             this.InitializeComponent();
+            _logger = LogManager.GetLogger<SendPage>();
             RootGrid.Margin = _uiManager.RootElementMargin;
         }
 
@@ -158,7 +160,7 @@ namespace UniversalSend.Views {
                         return;
                     }
                 } catch (Exception ex) {
-                    Debug.WriteLine($"Paste storage item failed: {ex}");
+                    _logger.Warn("Paste storage item failed.", ex);
                 }
             }
 
@@ -183,7 +185,7 @@ namespace UniversalSend.Views {
                         }
                     }
                 } catch (Exception ex) {
-                    Debug.WriteLine($"Paste bitmap failed: {ex}");
+                    _logger.Warn("Paste bitmap failed.", ex);
                 }
 
                 await MessageDialogManager.ShowMessageAsync("Clipboard image data could not be read.", "Paste");
@@ -526,7 +528,7 @@ namespace UniversalSend.Views {
 
                 image.Source = bitmap;
             } catch (Exception ex) {
-                Debug.WriteLine($"Thumbnail load failed for '{file?.Path}': {ex}");
+                _logger.Warn($"Thumbnail load failed for '{file?.Path ?? string.Empty}'.", ex);
             }
         }
 
