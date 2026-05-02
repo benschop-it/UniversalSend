@@ -69,6 +69,9 @@ To build and deploy the app, you need Visual Studio 2017 build **15.9.75**. It i
 because newer version have removed support for the SDKs that the phone needs. Check Google/ChatGPT on how to install version 15.9.75.
 If all goes well, you should be able to deply and debug on your phone (target ARM).
 
+First copy the certificate (Zerqle.cer) to your phone and install it. Then install all the dependencies via the Windows Device Portal.
+Finally, install the application via the Windows Device Portal.
+
 ## How to use AI to developer Windows 10 Mobile apps
 
 If you want to use AI to help develop apps for Windows 10 Mobile, you can install the latest version of VS2026 with CoPilot.
